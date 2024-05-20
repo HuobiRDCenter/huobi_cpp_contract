@@ -37,7 +37,21 @@ namespace huobi_futures
 
                         float value;
 
-                        JS_OBJ(symbol, contract_code, amount, volume, value);
+                        std::optional<JS::Nullable<float>> trade_amount;
+
+                        std::optional<JS::Nullable<float>> trade_volume;
+
+                        std::optional<JS::Nullable<float>> trade_turnover;
+
+                        std::optional<string> contract_type;
+
+                        std::optional<string> pair;
+
+                        std::optional<string> business_type;
+
+
+                        JS_OBJ(symbol, contract_code, amount, volume, value, trade_amount, trade_volume, trade_turnover,
+                               contract_type, pair, business_type);
                     };
                     std::optional<std::vector<Data>> data;
 

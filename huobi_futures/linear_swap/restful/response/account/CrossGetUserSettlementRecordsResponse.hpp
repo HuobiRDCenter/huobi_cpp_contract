@@ -61,6 +61,7 @@ namespace huobi_futures
                                 float fee;
 
                                 string fee_asset;
+                                std::optional<string> pair;
 
                                 struct Position
                                 {
@@ -84,12 +85,14 @@ namespace huobi_futures
 
                                     string settlement_type;
 
+                                    std::optional<string> pair;
+
                                     JS_OBJ(symbol, contract_code, direction, volume, cost_open, cost_hold_pre, cost_hold,
-                                           settlement_profit_unreal, settlement_price, settlement_type);
+                                           settlement_profit_unreal, settlement_price, settlement_type, pair);
                                 };
                                 std::vector<Position> positions;
 
-                                JS_OBJ(symbol, contract_code, offset_profitloss, fee, fee_asset, positions);
+                                JS_OBJ(symbol, contract_code, offset_profitloss, fee, fee_asset, pair, positions);
                             };
 
                             std::vector<Contract> contract_detail;

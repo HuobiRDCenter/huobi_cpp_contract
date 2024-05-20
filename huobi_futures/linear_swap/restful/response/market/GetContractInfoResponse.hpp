@@ -35,11 +35,24 @@ namespace huobi_futures
 
                         string settlement_date;
 
+                        std::optional<string> delivery_time;
+
                         string create_date;
 
                         int32_t contract_status;
 
-                        JS_OBJ(symbol, contract_code, contract_size, price_tick, settlement_date, create_date, contract_status);
+                        std::optional<string> support_margin_mode;
+
+                        std::optional<string> contract_type;
+
+                        std::optional<string> pair;
+
+                        std::optional<string> business_type;
+
+                        std::optional<string> delivery_date;
+
+                        JS_OBJ(symbol, contract_code, contract_size, price_tick, settlement_date, delivery_time, create_date,
+                               contract_status, support_margin_mode, contract_type, pair, business_type, delivery_date);
                     };
 
                     std::optional<std::vector<Data>> data;

@@ -86,12 +86,19 @@ namespace huobi_futures
                             int64_t update_time;
 
                             float real_profit;
+                            std::optional<JS::Nullable<float>> reduce_only;
+
+                            std::optional<string> contract_type;
+
+                            std::optional<string> pair;
+
+                            std::optional<string> business_type;
 
                             JS_OBJ(symbol, contract_code, volume, price, order_price_type, order_type, direction, offset,
                                    lever_rate, order_id, order_id_str, client_order_id, created_at, trade_volume,
                                    trade_turnover, fee, fee_asset, trade_avg_price, margin_frozen, margin_asset, profit,
                                    status, order_source, liquidation_type, canceled_at, margin_mode, margin_account,
-                                   is_tpsl, update_time, real_profit);
+                                   is_tpsl, update_time, real_profit, reduce_only, contract_type, pair, business_type);
                         };
 
                         std::vector<Order> orders;

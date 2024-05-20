@@ -94,6 +94,13 @@ namespace huobi_futures
                         int32_t is_tpsl;
 
                         float real_profit;
+                        std::optional<float> reduce_only;
+                        std::optional<string> canceled_source;
+                        std::optional<string> contract_type;
+
+                        std::optional<string> pair;
+
+                        std::optional<string> business_type;
 
                         struct Trade
                         {
@@ -125,7 +132,7 @@ namespace huobi_futures
                                order_source, order_price_type, margin_asset, margin_frozen, profit, instrument_price, final_interest,
                                adjust_value, fee, fee_asset, liquidation_type, order_id, order_id_str, client_order_id, order_type, status,
                                trade_avg_price, trade_turnover, trade_volume, total_page, current_page, total_size, margin_mode, margin_account,
-                               is_tpsl, real_profit, trades);
+                               is_tpsl, real_profit, reduce_only, canceled_source, contract_type, pair, business_type, trades);
                     };
 
                     std::optional<Data> data;

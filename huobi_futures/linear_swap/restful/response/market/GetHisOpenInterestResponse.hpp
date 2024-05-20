@@ -31,6 +31,12 @@ namespace huobi_futures
 
                         string contract_code;
 
+                        std::optional<string> contract_type;
+
+                        std::optional<string> pair;
+
+                        std::optional<string> business_type;
+
                         struct Tick
                         {
                             float volume;
@@ -45,7 +51,7 @@ namespace huobi_futures
                         };
                         std::vector<Tick> tick;
 
-                        JS_OBJ(symbol, contract_code, tick);
+                        JS_OBJ(symbol, contract_code, contract_type, pair, business_type, tick);
                     };
                     std::optional<Data> data;
 

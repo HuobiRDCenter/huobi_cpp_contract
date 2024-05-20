@@ -35,6 +35,12 @@ namespace huobi_futures
 
                         string margin_account;
 
+                        std::optional<string> contract_type;
+
+                        std::optional<string> pair;
+
+                        std::optional<string> business_type;
+
                         struct LeverInfo
                         {
                             int32_t lever_rate;
@@ -54,7 +60,7 @@ namespace huobi_futures
                         };
                         std::vector<LeverInfo> list;
 
-                        JS_OBJ(symbol, contract_code, margin_mode, margin_account, list);
+                        JS_OBJ(symbol, contract_code, margin_mode, margin_account, contract_type, pair, business_type, list);
                     };
                     std::optional<std::vector<Data>> data;
 

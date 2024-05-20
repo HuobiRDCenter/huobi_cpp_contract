@@ -59,8 +59,16 @@ namespace huobi_futures
 
                         string margin_account;
 
+                        std::optional<string> position_mode;
+                        std::optional<string> withdraw_available;
+                        std::optional<JS::Nullable<float>> risk_rate;
+                        std::optional<JS::Nullable<float>> liquidation_price;
+                        std::optional<string> adl_risk_percent;
+                        std::optional<string> trade_partition;
+
                         JS_OBJ(symbol, contract_code, volume, available, frozen, cost_open, cost_hold, profit_unreal, profit_rate, profit,\
-                               margin_asset, position_margin, lever_rate, direction, last_price, margin_mode, margin_account);
+                               margin_asset, position_margin, lever_rate, direction, last_price, margin_mode, margin_account,
+                               position_mode, withdraw_available, risk_rate, liquidation_price, adl_risk_percent, trade_partition);
                     };
                     std::optional<std::vector<Data>> data;
 

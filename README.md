@@ -1,8 +1,8 @@
-# Huobi Futures Cpp Demo (but only supports linear swap now)
+# Huobi Cpp SDK For Contracts v3
 
-This is Huobi Cpp Demo as interface library, you can import it to your application.
+This is Huobi Cpp SDK v3, you can import to your project and use this SDK to query all market data, trading and manage your account. The SDK supports RESTful API invoking, and subscribing the market, account and order update from the WebSocket connection.
 
-The Demo API supports both RESTful and websocket to get/sub the market, account and order infomation.
+If you already use SDK v1 or v2, it is strongly suggested migrate to v3 as we refactor the implementation to make it simpler and easy to maintain. The SDK v3 is completely consistent with the API documentation of the new HTX open platform. Compared to SDK versions v1 and v2, due to changes in parameters of many interfaces, in order to match the latest interface parameter situation, v3 version has made adjustments to parameters of more than 80 interfaces to ensure that requests can be correctly initiated and accurate response data can be obtained. Meanwhile, the v3 version has added over 130 new interfaces available for use, greatly expanding the number of available interfaces.
 
 ## Table of Contents
 
@@ -14,18 +14,20 @@ The Demo API supports both RESTful and websocket to get/sub the market, account 
   - [Folder structure](#Folder-Structure)
   - [Client](#Client)
   - [Response](#Response)
-  
+
 - [Request examples](#Request-examples)
+
   - [Market data](#Market-data)
 
 - [Subscription examples](#Subscription-examples)
+
   - [Subscribe trade update](#Subscribe-trade-update)
 
-  
+
 
 ## Quick Start
 
-The SDK is run and test in c++17, you can import the source code after dowload it.
+The SDK is run and test in C++ 17, you can import the source code after dowload it.
 
 The folder **huobi_futures** is SDK API code source as interface library.
 The folder **test** is a unit test what you can find usage of each API interface in.
@@ -88,7 +90,7 @@ void init_config()
     config.insert(pair<string,string>("AccountId", "10000000"));
     config.insert(pair<string,string>("SubUid", "10000000"));
 }
- ```
+```
 
 And use it as follow:
 
@@ -108,6 +110,8 @@ This is the folder and namespace structure of SDK source code and the descriptio
 
 - **huobi_futures**: The SDK API lib
   - **linear_swap**: the linear swap api src inclue RESTful and websocket
+  - **coin_futures**: the coin futures api src inclue RESTful and websocket
+  - **coin_swap**: the coin swap api src inclue RESTful and websocket
   - **json_struct**: json string to class object class
   - **nlohmann_json**: string to json object
   - **url_base**: wrap curl lib as class
@@ -116,20 +120,26 @@ This is the folder and namespace structure of SDK source code and the descriptio
 - **test**: The unit test project
   - **xxx_test.hpp**: The google cpp unit test file
 
-You can find all demo in xxx_test.hpp to get/sub linear swap private/public data
+You can find all demo in xxx_test.hpp to get/sub private/public data
 
 ### Client
 
 In this SDK, the client is the object to access the Huobi API. All the client are listed in below table. Each client is very small and simple.
 
-| Access Type | Client | Privacy | Data Category  |
-| ----------- | -------| ------- | ------------ |
-| RESTful     | AccountClient | Private | account info |
-|             | MarketClient | Public | market info |
-|             | OrderClient | Private | about order |
-| Websocket   | WSMarketClinet | Public | market info |
+| Access Type | Client         | Privacy        | Data Category             |
+| ----------- | -------------- | -------------- | ------------------------- |
+| RESTful     | AccountClient  | Private        | account info              |
+|             | MarketClient   | Public         | market info               |
+|             | OrderClient    | Private        | about order               |
+|    | ReferenceClient | Public         | basic info               |
+|    | TransferClient | Public         | transfer info               |
+|    | TriggerOrderClient | Public         | about trigger order               |
+|    | UnifiedAccountClient | Public         | unified account info              |
+| Websocket   | WSMarketClinet | Public         | market info               |
 |             | WSNotifyClinet | Public/Private | market info/ account info |
-|             |                |         |              |
+|             | WSIndexClinet | Public/Private | index info |
+|             | WSSystemClinet | Public/Private | system info |
+
 
 #### Public vs. Private
 
@@ -185,7 +195,7 @@ ws.RunForever();
 
 #### Custom host
 
-Each client Init support an optional host parameter, by default it is "api.btcgateway.pro". If you need to use different host, you can specify the custom host. 
+Each client Init support an optional host parameter, by default it is "api.hbdm.com". If you need to use different host, you can specify the custom host.
 
 ```cpp
 AccountClient acClient("AccessKey", "SecretKey", "Host");
@@ -201,11 +211,18 @@ ws.RunForever();
 ### Response
 
 All response data are defined as follow:
+
 - **huobi_futures/linear_swap/restful/response/xxx.hpp**: all RESTful response data
-- **huobi_futures/inear_swap/ws/response/xxx.hpp**: all websockt response data
+- **huobi_futures/linear_swap/ws/response/xxx.hpp**: all websockt response data
+- **huobi_futures/coin_futures/restful/response/xxx.hpp**: all RESTful response data
+- **huobi_futures/coin_futures/ws/response/xxx.hpp**: all websockt response data
+- **huobi_futures/coin_swap/restful/response/xxx.hpp**: all RESTful response data
+- **huobi_futures/coin_swap/ws/response/xxx.hpp**: all websockt response data
 
 ## Request Examples
+
 ### Market data
+
 ```cpp
 MarketClient mkClient;
 auto result = mkClient.GetContractInfo();
@@ -213,7 +230,9 @@ auto result = mkClient.GetContractInfo();
 ```
 
 ## Subscription Examples
+
 ### Subscribe trade update
+
 ```cpp
 NotifyClient ws("AccessKey", "SecretKey");
 ws.IsolatedSubPositions("XRP-USDT", [](const SubPositionsResponse &data) {

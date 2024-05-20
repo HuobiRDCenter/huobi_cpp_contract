@@ -78,6 +78,7 @@ namespace huobi_futures
                             string margin_mode;
 
                             string margin_account;
+                            std::optional<JS::Nullable<float>> reduce_only;
 
                             std::optional<string> tpsl_order_type;
 
@@ -89,7 +90,7 @@ namespace huobi_futures
                                    lever_rate, order_id, order_id_str, relation_order_id, order_price_type,
                                    status, order_source, trigger_price, triggered_price, order_price, created_at, 
                                    update_time, triggered_at, order_insert_at, canceled_at, fail_code, fail_reason,
-                                   margin_mode, margin_account, tpsl_order_type, source_order_id, relation_tpsl_order_id);
+                                   margin_mode, margin_account, reduce_only, tpsl_order_type, source_order_id, relation_tpsl_order_id);
                         };
 
                         std::vector<Order> orders;

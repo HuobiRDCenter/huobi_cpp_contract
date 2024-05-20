@@ -89,6 +89,9 @@ typedef huobi_futures::linear_swap::restful::response_market::GetStrKLineRespons
 #include "huobi_futures/linear_swap/restful/response/market/GetBasisResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_market::GetBasisResponse GetBasisResponse;
 
+#include "huobi_futures/linear_swap/restful/response/market/GetBatchMergedResponseV2.hpp"
+typedef huobi_futures::linear_swap::restful::response_market::GetBatchMergedResponseV2 GetBatchMergedResponseV2;
+
 namespace huobi_futures
 {
     namespace linear_swap
@@ -104,7 +107,11 @@ namespace huobi_futures
                     pb = std::make_shared<url_base::PublicUrlBuilder>(host);
                 }
 
-                std::shared_ptr<GetContractInfoResponse> GetContractInfo(const string &contract_code = "")
+                std::shared_ptr<GetContractInfoResponse> GetContractInfo(const string &contract_code = "",
+                                                                         const string &support_margin_mode = "",
+                                                                         const string &pair = "",
+                                                                         const string &contract_type = "",
+                                                                         const string &business_type = "")
                 {
                     // location
                     stringstream location;
@@ -114,7 +121,23 @@ namespace huobi_futures
                     stringstream option;
                     if (contract_code != "")
                     {
-                        option << "contract_code=" << contract_code;
+                        option << "&contract_code=" << contract_code;
+                    }
+                    if (support_margin_mode != "")
+                    {
+                        option << "&support_margin_mode=" << support_margin_mode;
+                    }
+                    if (pair != "")
+                    {
+                        option << "&pair=" << pair;
+                    }
+                    if (contract_type != "")
+                    {
+                        option << "&contract_type=" << contract_type;
+                    }
+                    if (business_type != "")
+                    {
+                        option << "&business_type=" << business_type;
                     }
                     if (!option.str().empty())
                     {
@@ -150,19 +173,44 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetPriceLimitResponse> GetPriceLimit(const string &contract_code)
+                std::shared_ptr<GetPriceLimitResponse> GetPriceLimit(const string &contract_code, const string &pair = "",
+                                                                     const string &contract_type = "",
+                                                                     const string &business_type = "")
                 {
                     // location
                     stringstream location;
-                    location << "/linear-swap-api/v1/swap_price_limit?contract_code=" << contract_code;
-
+                    location << "/linear-swap-api/v1/swap_price_limit" << contract_code;
+                    // option
+                    stringstream option;
+                    if (contract_code != "")
+                    {
+                        option << "&contract_code=" << contract_code;
+                    }
+                    if (pair != "")
+                    {
+                        option << "&pair=" << pair;
+                    }
+                    if (contract_type != "")
+                    {
+                        option << "&contract_type=" << contract_type;
+                    }
+                    if (business_type != "")
+                    {
+                        option << "&business_type=" << business_type;
+                    }
+                    if (!option.str().empty())
+                    {
+                        location << "?" << option.str();
+                    }
                     string url = pb->Build(location.str());
 
                     auto result = url_base::HttpRequest::Instance().Get<GetPriceLimitResponse>(url);
                     return result;
                 }
 
-                std::shared_ptr<GetOpenInterestResponse> GetOpenInterest(const string &contract_code = "")
+                std::shared_ptr<GetOpenInterestResponse> GetOpenInterest(const string &contract_code = "", const string &pair = "",
+                                                                         const string &contract_type = "",
+                                                                         const string &business_type = "")
                 {
                     // location
                     stringstream location;
@@ -172,7 +220,19 @@ namespace huobi_futures
                     stringstream option;
                     if (contract_code != "")
                     {
-                        option << "contract_code=" << contract_code;
+                        option << "&contract_code=" << contract_code;
+                    }
+                    if (pair != "")
+                    {
+                        option << "&pair=" << pair;
+                    }
+                    if (contract_type != "")
+                    {
+                        option << "&contract_type=" << contract_type;
+                    }
+                    if (business_type != "")
+                    {
+                        option << "&business_type=" << business_type;
                     }
                     if (!option.str().empty())
                     {
@@ -206,7 +266,8 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetBboResponse> GetBbo(const string &contract_code = "")
+                std::shared_ptr<GetBboResponse> GetBbo(const string &contract_code = "",
+                                                       const string &business_type = "")
                 {
                     // location
                     stringstream location;
@@ -217,6 +278,10 @@ namespace huobi_futures
                     if (contract_code != "")
                     {
                         option << "contract_code=" << contract_code;
+                    }
+                    if (business_type != "")
+                    {
+                        option << "&business_type=" << business_type;
                     }
 
                     if (!option.str().empty())
@@ -325,7 +390,8 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetTradeResponse> GetTrade(const string &contract_code)
+                std::shared_ptr<GetTradeResponse> GetTrade(const string &contract_code,
+                                                           const string &business_type = "")
                 {
                     // location
                     stringstream location;
@@ -334,8 +400,11 @@ namespace huobi_futures
                     // option
                     stringstream option;
                     option << "contract_code=" << contract_code;
-
-                    if (!contract_code.empty())
+                    if (business_type != "")
+                    {
+                        option << "&business_type=" << business_type;
+                    }
+                    if (!option.str().empty())
                     {
                         location << "?" << option.str();
                     }
@@ -367,7 +436,8 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetRiskInfoResponse> GetRiskInfo(const string &contract_code = "")
+                std::shared_ptr<GetRiskInfoResponse> GetRiskInfo(const string &contract_code = "",
+                                                                 const string &business_type = "")
                 {
                     // location
                     stringstream location;
@@ -378,6 +448,10 @@ namespace huobi_futures
                     if (contract_code != "")
                     {
                         option << "contract_code=" << contract_code;
+                    }
+                    if (business_type != "")
+                    {
+                        option << "&business_type=" << business_type;
                     }
                     if (!option.str().empty())
                     {
@@ -434,7 +508,9 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetAdjustfactorResponse> CrossGetAdjustfactor(const string &contract_code = "")
+                std::shared_ptr<GetAdjustfactorResponse> CrossGetAdjustfactor(const string &contract_code = "", const string &pair = "",
+                                                                              const string &contract_type = "",
+                                                                              const string &business_type = "")
                 {
                     // location
                     stringstream location;
@@ -445,6 +521,18 @@ namespace huobi_futures
                     if (contract_code != "")
                     {
                         option << "contract_code=" << contract_code;
+                    }
+                    if (pair != "")
+                    {
+                        option << "&pair=" << pair;
+                    }
+                    if (contract_type != "")
+                    {
+                        option << "&contract_type=" << contract_type;
+                    }
+                    if (business_type != "")
+                    {
+                        option << "&business_type=" << business_type;
                     }
                     if (!option.str().empty())
                     {
@@ -457,7 +545,9 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetEstimatedSettlementPriceResponse> GetEstimatedSettlementPrice(const string &contract_code = "")
+                std::shared_ptr<GetEstimatedSettlementPriceResponse> GetEstimatedSettlementPrice(const string &contract_code = "", const string &pair = "",
+                                                                                                 const string &contract_type = "",
+                                                                                                 const string &business_type = "")
                 {
                     // location
                     stringstream location;
@@ -468,6 +558,18 @@ namespace huobi_futures
                     if (contract_code != "")
                     {
                         option << "contract_code=" << contract_code;
+                    }
+                    if (pair != "")
+                    {
+                        option << "&pair=" << pair;
+                    }
+                    if (contract_type != "")
+                    {
+                        option << "&contract_code=" << contract_type;
+                    }
+                    if (business_type != "")
+                    {
+                        option << "&business_type=" << business_type;
                     }
                     if (!option.str().empty())
                     {
@@ -480,7 +582,9 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetHisOpenInterestResponse> GetHisOpenInterest(const string &contract_code, const string &period, int amount_type, int size = 48)
+                std::shared_ptr<GetHisOpenInterestResponse> GetHisOpenInterest(const string &contract_code, const string &period,
+                                                                               int amount_type, int size = 48, const string &pair = "",
+                                                                               const string &contract_type = "")
                 {
                     // location
                     stringstream location;
@@ -489,6 +593,14 @@ namespace huobi_futures
                     // option
                     stringstream option;
                     option << "contract_code=" << contract_code << "&period=" << period << "&amount_type=" << amount_type << "&size=" << size;
+                    if (pair != "")
+                    {
+                        option << "&pair=" << pair;
+                    }
+                    if (contract_type != "")
+                    {
+                        option << "&contract_type=" << contract_type;
+                    }
                     if (!option.str().empty())
                     {
                         location << "?" << option.str();
@@ -523,7 +635,9 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetLadderMarginResponse> CrossGetLadderMargin(const string &contract_code = "")
+                std::shared_ptr<GetLadderMarginResponse> CrossGetLadderMargin(const string &contract_code = "", const string &pair = "",
+                                                                              const string &contract_type = "",
+                                                                              const string &business_type = "")
                 {
                     // location
                     stringstream location;
@@ -534,6 +648,18 @@ namespace huobi_futures
                     if (contract_code != "")
                     {
                         option << "contract_code=" << contract_code;
+                    }
+                    if (pair != "")
+                    {
+                        option << "&pair=" << pair;
+                    }
+                    if (contract_type != "")
+                    {
+                        option << "&contract_type=" << contract_type;
+                    }
+                    if (business_type != "")
+                    {
+                        option << "&business_type=" << business_type;
                     }
                     if (!option.str().empty())
                     {
@@ -632,7 +758,9 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetTradeStatusResponse> CrossGetTradeStatus(const string &contract_code = "")
+                std::shared_ptr<GetTradeStatusResponse> CrossGetTradeStatus(const string &contract_code = "", const string &pair = "",
+                                                                            const string &contract_type = "",
+                                                                            const string &business_type = "")
                 {
                     // location
                     stringstream location;
@@ -643,6 +771,18 @@ namespace huobi_futures
                     if (contract_code != "")
                     {
                         option << "contract_code=" << contract_code;
+                    }
+                    if (pair != "")
+                    {
+                        option << "&pair=" << pair;
+                    }
+                    if (contract_type != "")
+                    {
+                        option << "&contract_type=" << contract_type;
+                    }
+                    if (business_type != "")
+                    {
+                        option << "&business_type=" << business_type;
                     }
                     if (!option.str().empty())
                     {
@@ -678,7 +818,8 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetHisFundingRateResponse> GetHisFundingRate(const string &contract_code = "")
+                std::shared_ptr<GetHisFundingRateResponse> GetHisFundingRate(const string &contract_code = "",
+                                                                             int page_index = 0, int page_size = 0)
                 {
                     // location
                     stringstream location;
@@ -689,6 +830,14 @@ namespace huobi_futures
                     if (contract_code != "")
                     {
                         option << "contract_code=" << contract_code;
+                    }
+                    if (page_index != 0)
+                    {
+                        option << "&page_index=" << page_index;
+                    }
+                    if (page_size != 0)
+                    {
+                        option << "&page_size=" << page_size;
                     }
                     if (!option.str().empty())
                     {
@@ -810,6 +959,26 @@ namespace huobi_futures
                     string url = pb->Build(location.str());
 
                     auto result = url_base::HttpRequest::Instance().Get<GetBasisResponse>(url);
+                    return result;
+                }
+
+                std::shared_ptr<GetBatchMergedResponseV2> GetBatchMerged(const string &contract_code, const string &business_type)
+                {
+                    // location
+                    stringstream location;
+                    location << "/v2/linear-swap-ex/market/detail/batch_merged";
+
+                    // option
+                    stringstream option;
+                    option << "contract_code=" << contract_code << "&business_type=" << business_type;
+                    if (!option.str().empty())
+                    {
+                        location << "?" << option.str();
+                    }
+
+                    string url = pb->Build(location.str());
+
+                    auto result = url_base::HttpRequest::Instance().Get<GetBatchMergedResponseV2>(url);
                     return result;
                 }
 

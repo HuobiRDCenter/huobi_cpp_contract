@@ -35,7 +35,13 @@ namespace huobi_futures
 
                         float low_limit;
 
-                        JS_OBJ(symbol, contract_code, high_limit, low_limit);
+                        std::optional<string> contract_type;
+
+                        std::optional<string> pair;
+
+                        std::optional<string> business_type;
+
+                        JS_OBJ(symbol, contract_code, high_limit, low_limit, contract_type, pair, business_type);
                     };
 
                     std::optional<std::vector<Data>> data;

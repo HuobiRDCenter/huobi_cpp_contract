@@ -33,7 +33,12 @@ namespace huobi_futures
 
                         string contract_code;
 
-                        JS_OBJ(estimated_clawback, insurance_fund, contract_code);
+                        std::optional<string> pair;
+
+                        std::optional<string> business_type;
+
+
+                        JS_OBJ(estimated_clawback, insurance_fund, contract_code, pair, business_type);
                     };
 
                     std::optional<std::vector<Data>> data;

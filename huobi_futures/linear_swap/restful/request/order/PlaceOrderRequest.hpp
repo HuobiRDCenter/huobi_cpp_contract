@@ -20,6 +20,12 @@ namespace huobi_futures
                 {
                     string contract_code;
 
+                    string contract_type;
+
+                    string pair;
+
+                    int64_t reduce_only;
+
                     int64_t client_order_id;
 
                     float price;

@@ -44,8 +44,9 @@ namespace huobi_futures
                             string margin_mode;
 
                             string margin_account;
+                            std::optional<string> query_id;
 
-                            JS_OBJ(symbol, contract_code, margin_asset, margin_balance, liquidation_price, risk_rate, margin_mode, margin_account);
+                            JS_OBJ(symbol, contract_code, margin_asset, margin_balance, liquidation_price, risk_rate, margin_mode, margin_account, query_id);
                         };
 
                         std::vector<AccountInfo> list;

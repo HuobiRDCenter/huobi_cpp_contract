@@ -39,7 +39,17 @@ namespace huobi_futures
 
                         string fee_asset;
 
-                        JS_OBJ(symbol, contract_code, open_maker_fee, open_taker_fee, close_maker_fee, close_taker_fee, fee_asset);
+                        std::optional<string> contract_type;
+
+                        std::optional<string> pair;
+
+                        std::optional<string> business_type;
+
+                        std::optional<string> delivery_fee;
+
+
+                        JS_OBJ(symbol, contract_code, open_maker_fee, open_taker_fee, close_maker_fee, close_taker_fee, fee_asset,
+                                contract_type, pair, business_type, delivery_fee);
                     };
 
                     std::optional<std::vector<Data>> data;

@@ -31,6 +31,13 @@ namespace huobi_futures
 
                         string margin_mode;
 
+                        std::optional<string> contract_type;
+
+                        std::optional<string> pair;
+
+                        std::optional<string> business_type;
+
+
                         struct List
                         {
                             struct Ladders
@@ -54,7 +61,7 @@ namespace huobi_futures
                         };
                         std::vector<List> list;
 
-                        JS_OBJ(symbol, contract_code, margin_mode, list);
+                        JS_OBJ(symbol, contract_code, margin_mode, contract_type, pair, business_type, list);
                     };
 
                     std::optional<std::vector<Data>> data;

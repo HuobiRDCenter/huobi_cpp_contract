@@ -44,6 +44,32 @@ typedef huobi_futures::linear_swap::restful::response_order::GetMatchResultsResp
 #include "huobi_futures/linear_swap/restful/response/order/GetMatchResultsExactResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_order::GetMatchResultsExactResponse GetMatchResultsExactResponse;
 
+#include "huobi_futures/linear_swap/restful/response/order/LinearCancelAfterResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::LinearCancelAfterResponse LinearCancelAfterResponse;
+
+#include "huobi_futures/linear_swap/restful/response/order/SwapCrossHisordersExactResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::SwapCrossHisordersExactResponse SwapCrossHisordersExactResponse;
+
+#include "huobi_futures/linear_swap/restful/response/order/SwapCrossHisordersResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::SwapCrossHisordersResponse SwapCrossHisordersResponse;
+
+#include "huobi_futures/linear_swap/restful/response/order/SwapCrossSwitchPositionModeResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::SwapCrossSwitchPositionModeResponse SwapCrossSwitchPositionModeResponse;
+
+#include "huobi_futures/linear_swap/restful/response/order/SwapHisordersExactResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::SwapHisordersExactResponse SwapHisordersExactResponse;
+
+#include "huobi_futures/linear_swap/restful/response/order/SwapHisordersResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::SwapHisordersResponse SwapHisordersResponse;
+
+#include "huobi_futures/linear_swap/restful/response/order/SwapMatchResultsResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::SwapMatchResultsResponse SwapMatchResultsResponse;
+
+#include "huobi_futures/linear_swap/restful/response/order/SwapPositionSideResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::SwapPositionSideResponse SwapPositionSideResponse;
+
+#include "huobi_futures/linear_swap/restful/response/order/SwapSwitchPositionModeResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::SwapSwitchPositionModeResponse SwapSwitchPositionModeResponse;
 namespace huobi_futures
 {
     namespace linear_swap
@@ -197,7 +223,8 @@ namespace huobi_futures
 
                 std::shared_ptr<CancelOrderResponse> CrossCancelOrder(const string &contract_code, const string &order_id = "",
                                                                       const string &client_order_id = "", const string &direction = "",
-                                                                      const string &offset = "")
+                                                                      const string &offset = "", const string &pair = "",
+                                                                      const string &contract_type = "")
                 {
                     // path
                     stringstream path;
@@ -228,6 +255,14 @@ namespace huobi_futures
                     if (offset != "")
                     {
                         content << ",\"offset\":\"" << offset << "\"";
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
+                    if (contract_type != "")
+                    {
+                        content << ",\"contract_type\":\"" << contract_type << "\"";
                     }
 
                     // data
@@ -271,7 +306,9 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<SwitchLeverRateResponse> CrossSwitchLeverRate(const string &contract_code, int lever_rate)
+                std::shared_ptr<SwitchLeverRateResponse> CrossSwitchLeverRate(const string &contract_code, int lever_rate,
+                                                                              const string &pair = "",
+                                                                              const string &contract_type = "")
                 {
                     // path
                     stringstream path;
@@ -281,7 +318,14 @@ namespace huobi_futures
                     stringstream content;
                     content << ",\"contract_code\":\"" << contract_code << "\""
                             << ",\"lever_rate\":" << lever_rate;
-
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
+                    if (contract_type != "")
+                    {
+                        content << ",\"contract_type\":\"" << contract_type << "\"";
+                    }
                     // data
                     stringstream data;
                     if (!content.str().empty())
@@ -408,7 +452,7 @@ namespace huobi_futures
                 }
 
                 std::shared_ptr<GetOrderDetailResponse> CrossGetOrderDetail(const string &contract_code, const string &order_id, long created_at = 0,
-                                                                            int order_type = 0, int page_index = 0, int page_size = 0)
+                                                                            int order_type = 0, int page_index = 0, int page_size = 0, const string &pair = "")
                 {
                     // path
                     stringstream path;
@@ -432,6 +476,10 @@ namespace huobi_futures
                     if (page_size != 0)
                     {
                         content << ",\"page_size\":" << page_size;
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
                     }
 
                     // data
@@ -492,7 +540,7 @@ namespace huobi_futures
                 }
 
                 std::shared_ptr<GetOpenOrderResponse> CrossGetOpenOrder(const string &contract_code, int page_index = 0, int page_size = 0,
-                                                                        const string &sort_by = "", int trade_type = 0)
+                                                                        const string &sort_by = "", int trade_type = 0, const string &pair = "")
                 {
                     // path
                     stringstream path;
@@ -516,6 +564,10 @@ namespace huobi_futures
                     if (trade_type != 0)
                     {
                         content << ",\"trade_type\":" << trade_type;
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
                     }
 
                     // data
@@ -930,7 +982,7 @@ namespace huobi_futures
                 }
 
                 std::shared_ptr<PlaceOrderResponse> CrossLightningClosePosition(const string &contract_code, long volume, const string &direction,
-                                                                                long client_order_id = 0, const string &order_price_type = "")
+                                                                                long client_order_id = 0, const string &order_price_type = "", const string &pair = "")
                 {
                     // path
                     stringstream path;
@@ -949,6 +1001,10 @@ namespace huobi_futures
                     {
                         content << ",\"order_price_type\":\"" << order_price_type << "\"";
                     }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
 
                     // data
                     stringstream data;
@@ -962,6 +1018,683 @@ namespace huobi_futures
 
                     // post
                     auto result = url_base::HttpRequest::Instance().Post<PlaceOrderResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<LinearCancelAfterResponse> LinearCancelAfter(int on_off, int time_out)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v1/linear-cancel-after";
+
+                    // option
+                    stringstream content;
+                    if (on_off != 0)
+                    {
+                        content << ",\"on_off\":" << on_off;
+                    }
+                    if (time_out != 0)
+                    {
+                        content << ",\"time_out\":" << time_out;
+                    }
+
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<LinearCancelAfterResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapSwitchPositionModeResponse> SwapSwitchPositionMode(const string &margin_account, const string &position_mode)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v1/swap_switch_position_mode";
+
+                    // option
+                    stringstream content;
+                    if (margin_account != "")
+                    {
+                        content << ",\"margin_account\":\"" << margin_account << "\"";
+                    }
+                    if (position_mode != "")
+                    {
+                        content << ",\"position_mode\":\"" << position_mode << "\"";
+                    }
+
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapSwitchPositionModeResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapCrossSwitchPositionModeResponse> SwapCrossSwitchPositionMode(const string &margin_account, const string &position_mode)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v1/swap_cross_switch_position_mode";
+
+                    // option
+                    stringstream content;
+                    if (margin_account != "")
+                    {
+                        content << ",\"margin_account\":\"" << margin_account << "\"";
+                    }
+                    if (position_mode != "")
+                    {
+                        content << ",\"position_mode\":\"" << position_mode << "\"";
+                    }
+
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapCrossSwitchPositionModeResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapHisordersResponse> SwapHisorders(const string &contract, const string &direct,
+                                                                     const string &status, int trade_type, long start_time,
+                                                                     long end_time, long from_id, int type)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v3/swap_hisorders";
+
+                    // option
+                    stringstream content;
+                    if (contract != "")
+                    {
+                        content << ",\"contract\":\"" << contract << "\"";
+                    }
+                    if (direct != "")
+                    {
+                        content << ",\"direct\":\"" << direct << "\"";
+                    }
+                    if (status != "")
+                    {
+                        content << ",\"status\":\"" << status << "\"";
+                    }
+                    if (trade_type != 0)
+                    {
+                        content << ",\"trade_type\":" << trade_type;
+                    }
+                    if (start_time != 0)
+                    {
+                        content << ",\"start_time\":" << start_time;
+                    }
+                    if (end_time != 0)
+                    {
+                        content << ",\"end_time\":" << end_time;
+                    }
+                    if (from_id != 0)
+                    {
+                        content << ",\"from_id\":" << from_id;
+                    }
+                    if (type != 0)
+                    {
+                        content << ",\"type\":" << type;
+                    }
+
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapHisordersResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapCrossHisordersResponse> SwapCrossHisorders(const string &contract, const string &pair,
+                                                                     const string &direct, const string &status, int trade_type, long start_time,
+                                                                     long end_time, long from_id, int type)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v3/swap_cross_hisorders";
+
+                    // option
+                    stringstream content;
+                    if (contract != "")
+                    {
+                        content << ",\"contract\":\"" << contract << "\"";
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
+                    if (direct != "")
+                    {
+                        content << ",\"direct\":\"" << direct << "\"";
+                    }
+                    if (status != "")
+                    {
+                        content << ",\"status\":\"" << status << "\"";
+                    }
+                    if (trade_type != 0)
+                    {
+                        content << ",\"trade_type\":" << trade_type;
+                    }
+                    if (start_time != 0)
+                    {
+                        content << ",\"start_time\":" << start_time;
+                    }
+                    if (end_time != 0)
+                    {
+                        content << ",\"end_time\":" << end_time;
+                    }
+                    if (from_id != 0)
+                    {
+                        content << ",\"from_id\":" << from_id;
+                    }
+                    if (type != 0)
+                    {
+                        content << ",\"type\":" << type;
+                    }
+
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapCrossHisordersResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapHisordersExactResponse> SwapHisordersExact(const string &contract, const string &pair,
+                                                                               const string &direct, const string &status,const string &price_type,
+                                                                               int trade_type, long start_time,
+                                                                               long end_time, long from_id, int type)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v3/swap_hisorders_exact";
+
+                    // option
+                    stringstream content;
+                    if (contract != "")
+                    {
+                        content << ",\"contract\":\"" << contract << "\"";
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
+                    if (direct != "")
+                    {
+                        content << ",\"direct\":\"" << direct << "\"";
+                    }
+                    if (status != "")
+                    {
+                        content << ",\"status\":\"" << status << "\"";
+                    }
+                    if (price_type != "")
+                    {
+                        content << ",\"price_type\":\"" << price_type << "\"";
+                    }
+                    if (trade_type != 0)
+                    {
+                        content << ",\"trade_type\":" << trade_type;
+                    }
+                    if (start_time != 0)
+                    {
+                        content << ",\"start_time\":" << start_time;
+                    }
+                    if (end_time != 0)
+                    {
+                        content << ",\"end_time\":" << end_time;
+                    }
+                    if (from_id != 0)
+                    {
+                        content << ",\"from_id\":" << from_id;
+                    }
+                    if (type != 0)
+                    {
+                        content << ",\"type\":" << type;
+                    }
+
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapHisordersExactResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapCrossHisordersExactResponse> SwapCrossHisordersExact(const string &contract, const string &pair,
+                                                                               const string &direct, const string &status,const string &price_type,
+                                                                               int trade_type, long start_time,
+                                                                               long end_time, long from_id, int type)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v3/swap_cross_hisorders_exact";
+
+                    // option
+                    stringstream content;
+                    if (contract != "")
+                    {
+                        content << ",\"contract\":\"" << contract << "\"";
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
+                    if (direct != "")
+                    {
+                        content << ",\"direct\":\"" << direct << "\"";
+                    }
+                    if (status != "")
+                    {
+                        content << ",\"status\":\"" << status << "\"";
+                    }
+                    if (price_type != "")
+                    {
+                        content << ",\"price_type\":\"" << price_type << "\"";
+                    }
+                    if (trade_type != 0)
+                    {
+                        content << ",\"trade_type\":" << trade_type;
+                    }
+                    if (start_time != 0)
+                    {
+                        content << ",\"start_time\":" << start_time;
+                    }
+                    if (end_time != 0)
+                    {
+                        content << ",\"end_time\":" << end_time;
+                    }
+                    if (from_id != 0)
+                    {
+                        content << ",\"from_id\":" << from_id;
+                    }
+                    if (type != 0)
+                    {
+                        content << ",\"type\":" << type;
+                    }
+
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapCrossHisordersExactResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapMatchResultsResponse> SwapMatchResults(const string &contract, const string &pair,
+                                                                                         const string &direct,
+                                                                                         int trade_type, long start_time,
+                                                                                         long end_time, long from_id)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v3/swap_matchresults";
+
+                    // option
+                    stringstream content;
+                    if (contract != "")
+                    {
+                        content << ",\"contract\":\"" << contract << "\"";
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
+                    if (direct != "")
+                    {
+                        content << ",\"direct\":\"" << direct << "\"";
+                    }
+                    if (trade_type != 0)
+                    {
+                        content << ",\"trade_type\":" << trade_type;
+                    }
+                    if (start_time != 0)
+                    {
+                        content << ",\"start_time\":" << start_time;
+                    }
+                    if (end_time != 0)
+                    {
+                        content << ",\"end_time\":" << end_time;
+                    }
+                    if (from_id != 0)
+                    {
+                        content << ",\"from_id\":" << from_id;
+                    }
+
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapMatchResultsResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapMatchResultsResponse> SwapCrossMatchResults(const string &contract, const string &pair,
+                                                                           const string &direct,
+                                                                           int trade_type, long start_time,
+                                                                           long end_time, long from_id)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v3/swap_cross_matchresults";
+
+                    // option
+                    stringstream content;
+                    if (contract != "")
+                    {
+                        content << ",\"contract\":\"" << contract << "\"";
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
+                    if (direct != "")
+                    {
+                        content << ",\"direct\":\"" << direct << "\"";
+                    }
+                    if (trade_type != 0)
+                    {
+                        content << ",\"trade_type\":" << trade_type;
+                    }
+                    if (start_time != 0)
+                    {
+                        content << ",\"start_time\":" << start_time;
+                    }
+                    if (end_time != 0)
+                    {
+                        content << ",\"end_time\":" << end_time;
+                    }
+                    if (from_id != 0)
+                    {
+                        content << ",\"from_id\":" << from_id;
+                    }
+
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapMatchResultsResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapMatchResultsResponse> SwapMatchResultsExact(const string &contract,
+                                                                                const string &direct,
+                                                                                int trade_type, long start_time,
+                                                                                long end_time, long from_id)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v3/swap_matchresults_exact";
+
+                    // option
+                    stringstream content;
+                    if (contract != "")
+                    {
+                        content << ",\"contract\":\"" << contract << "\"";
+                    }
+                    if (direct != "")
+                    {
+                        content << ",\"direct\":\"" << direct << "\"";
+                    }
+                    if (trade_type != 0)
+                    {
+                        content << ",\"trade_type\":" << trade_type;
+                    }
+                    if (start_time != 0)
+                    {
+                        content << ",\"start_time\":" << start_time;
+                    }
+                    if (end_time != 0)
+                    {
+                        content << ",\"end_time\":" << end_time;
+                    }
+                    if (from_id != 0)
+                    {
+                        content << ",\"from_id\":" << from_id;
+                    }
+
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapMatchResultsResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapMatchResultsResponse> SwapCrossMatchResultsExact(const string &contract,const string &pair,
+                                                                                const string &direct,
+                                                                                int trade_type, long start_time,
+                                                                                long end_time, long from_id)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v3/swap_cross_matchresults_exact";
+
+                    // option
+                    stringstream content;
+                    if (contract != "")
+                    {
+                        content << ",\"contract\":\"" << contract << "\"";
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
+                    if (direct != "")
+                    {
+                        content << ",\"direct\":\"" << direct << "\"";
+                    }
+                    if (trade_type != 0)
+                    {
+                        content << ",\"trade_type\":" << trade_type;
+                    }
+                    if (start_time != 0)
+                    {
+                        content << ",\"start_time\":" << start_time;
+                    }
+                    if (end_time != 0)
+                    {
+                        content << ",\"end_time\":" << end_time;
+                    }
+                    if (from_id != 0)
+                    {
+                        content << ",\"from_id\":" << from_id;
+                    }
+
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapMatchResultsResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapMatchResultsResponse> SwapCrossMatchResultsExact(const string &contract,const string &pair,
+                                                                                     const string &direct,
+                                                                                     int trade_type, long start_time,
+                                                                                     long end_time, long from_id)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v3/swap_cross_matchresults_exact";
+
+                    // option
+                    stringstream content;
+                    if (contract != "")
+                    {
+                        content << ",\"contract\":\"" << contract << "\"";
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
+                    if (direct != "")
+                    {
+                        content << ",\"direct\":\"" << direct << "\"";
+                    }
+                    if (trade_type != 0)
+                    {
+                        content << ",\"trade_type\":" << trade_type;
+                    }
+                    if (start_time != 0)
+                    {
+                        content << ",\"start_time\":" << start_time;
+                    }
+                    if (end_time != 0)
+                    {
+                        content << ",\"end_time\":" << end_time;
+                    }
+                    if (from_id != 0)
+                    {
+                        content << ",\"from_id\":" << from_id;
+                    }
+
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapMatchResultsResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapPositionSideResponse> SwapPositionSide(const string &margin_account)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v1/swap_position_side";
+                    // option
+                    stringstream option;
+                    if (margin_account != "") {
+                        option << "&margin_account=" << margin_account;
+                    }
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str();
+                    }
+                    // url
+                    string url = pb->Build("GET", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Get<SwapPositionSideResponse>(url);
+                    return result;
+                }
+
+                std::shared_ptr<SwapPositionSideResponse> SwapCrossPositionSide(const string &margin_account)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v1/swap_cross_position_side";
+                    // option
+                    stringstream option;
+                    if (margin_account != "") {
+                        option << "&margin_account=" << margin_account;
+                    }
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str();
+                    }
+                    // url
+                    string url = pb->Build("GET", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Get<SwapPositionSideResponse>(url);
                     return result;
                 }
 

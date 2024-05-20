@@ -31,6 +31,10 @@ namespace huobi_futures
 
                         string contract_code;
 
+                        std::optional<string> pair;
+
+                        std::optional<string> business_type;
+
                         struct Tick
                         {
                             float insurance_fund;
@@ -48,7 +52,7 @@ namespace huobi_futures
 
                         int32_t total_size;
 
-                        JS_OBJ(symbol, contract_code, tick, total_page, current_page, total_size);
+                        JS_OBJ(symbol, contract_code, tick, pair, business_type, total_page, current_page, total_size);
                     };
 
                     std::optional<Data> data;

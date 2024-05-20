@@ -41,13 +41,14 @@ namespace huobi_futures
 
                         std::optional<float> margin_available;
 
-                        float profit_real;
+                        std::optional<float> profit_real;
 
                         float profit_unreal;
 
                         float withdraw_available;
 
                         JS::Nullable<float> risk_rate;
+                        std::optional<string> new_risk_rate;
 
                         JS::Nullable<float> liquidation_price;
 
@@ -58,6 +59,9 @@ namespace huobi_futures
                         string margin_mode;
 
                         string margin_account;
+                        std::optional<string> trade_partition;
+                        std::optional<string> position_mode;
+                        std::optional<string> adl_risk_percent;
 
                         struct Positions
                         {
@@ -94,16 +98,21 @@ namespace huobi_futures
                             string margin_mode;
 
                             string margin_account;
+                            std::optional<string> new_risk_rate;
+                            std::optional<string> trade_partition;
+                            std::optional<string> position_mode;
+                            std::optional<string> adl_risk_percent;
 
                             JS_OBJ(symbol, contract_code, volume, available, frozen, cost_open, cost_hold, profit_unreal, profit_rate, profit, \
-                                   margin_asset, position_margin, lever_rate, direction, last_price, margin_mode, margin_account);
+                                   margin_asset, position_margin, lever_rate, direction, last_price, margin_mode, margin_account,
+                                   new_risk_rate, trade_partition, position_mode, adl_risk_percent);
                         };
 
                         std::optional<std::vector<Positions>> positions;
 
                         JS_OBJ(symbol, contract_code, margin_asset, margin_balance, margin_static, margin_position, margin_frozen, margin_available, \
-                               profit_real, profit_unreal, withdraw_available, risk_rate, liquidation_price, lever_rate, adjust_factor, \
-                               margin_mode, margin_account, positions);
+                               profit_real, profit_unreal, withdraw_available, risk_rate, new_risk_rate, liquidation_price, lever_rate, adjust_factor, \
+                               margin_mode, margin_account, trade_partition, position_mode, positions, adl_risk_percent);
                     };
                     std::optional<std::vector<Data>> data;
 

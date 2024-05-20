@@ -29,6 +29,10 @@ namespace huobi_futures
 
                         string contract_code;
 
+                        std::optional<string> pair;
+
+                        std::optional<string> business_type;
+
                         struct List
                         {
                             float buy_ratio;
@@ -44,7 +48,7 @@ namespace huobi_futures
 
                         std::vector<List> list;
 
-                        JS_OBJ(symbol, contract_code, list);
+                        JS_OBJ(symbol, contract_code, pair, business_type, list);
                     };
                     std::optional<Data> data;
 

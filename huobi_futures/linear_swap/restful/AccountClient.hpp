@@ -70,6 +70,21 @@ typedef huobi_futures::linear_swap::restful::response_account::TransferInnerReco
 #include "huobi_futures/linear_swap/restful/response/account/GetApiTradingStatusResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_account::GetApiTradingStatusResponse GetApiTradingStatusResponse;
 
+#include "huobi_futures/linear_swap/restful/response/account/SwapCrossLeverPositionLimitResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_account::SwapCrossLeverPositionLimitResponse SwapCrossLeverPositionLimitResponse;
+
+#include "huobi_futures/linear_swap/restful/response/account/SwapCrossSubAccountInfoResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_account::SwapCrossSubAccountInfoResponse SwapCrossSubAccountInfoResponse;
+
+#include "huobi_futures/linear_swap/restful/response/account/SwapFinancialRecordResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_account::SwapFinancialRecordResponse SwapFinancialRecordResponse;
+
+#include "huobi_futures/linear_swap/restful/response/account/SwapLeverPositionLimitResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_account::SwapLeverPositionLimitResponse SwapLeverPositionLimitResponse;
+
+#include "huobi_futures/linear_swap/restful/response/account/SwapSubAuthListResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_account::SwapSubAuthListResponse SwapSubAuthListResponse;
+
 namespace huobi_futures
 {
     namespace linear_swap
@@ -230,7 +245,10 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetPositionInfoResponse> CrossGetPositionInfo(const string &contract_code = "", int sub_uid = 0)
+                std::shared_ptr<GetPositionInfoResponse> CrossGetPositionInfo(const string &contract_code = "",
+                                                                              const string &pair = "",
+                                                                              const string &contract_type = "",
+                                                                              int sub_uid = 0)
                 {
                     // path
                     stringstream path;
@@ -248,6 +266,14 @@ namespace huobi_futures
                     if (contract_code != "")
                     {
                         content << ",\"contract_code\":\"" << contract_code << "\"";
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
+                    if (contract_type != "")
+                    {
+                        content << ",\"contract_type\":\"" << contract_type << "\"";
                     }
                     if (sub_uid != 0)
                     {
@@ -351,7 +377,9 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetSubAccountListResponse> IsolatedGetSubAccountList(const string &contract_code = "")
+                std::shared_ptr<GetSubAccountListResponse> IsolatedGetSubAccountList(const string &contract_code = "",
+                                                                                     const string &direct = "",
+                                                                                     long from_id = 0)
                 {
                     // path
                     stringstream path;
@@ -362,6 +390,14 @@ namespace huobi_futures
                     if (contract_code != "")
                     {
                         content << ",\"contract_code\":\"" << contract_code << "\"";
+                    }
+                    if (direct != "")
+                    {
+                        content << ",\"direct\":\"" << direct << "\"";
+                    }
+                    if (from_id != 0)
+                    {
+                        content << ",\"from_id\":" << from_id;
                     }
 
                     // data
@@ -379,7 +415,9 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetSubAccountListResponse> CrossGetSubAccountList(const string &margin_account = "")
+                std::shared_ptr<GetSubAccountListResponse> CrossGetSubAccountList(const string &margin_account = "",
+                                                                                  const string &direct = "",
+                                                                                  long from_id = 0)
                 {
                     // path
                     stringstream path;
@@ -390,6 +428,14 @@ namespace huobi_futures
                     if (margin_account != "")
                     {
                         content << ",\"margin_account\":\"" << margin_account << "\"";
+                    }
+                    if (direct != "")
+                    {
+                        content << ",\"direct\":\"" << direct << "\"";
+                    }
+                    if (from_id != "")
+                    {
+                        content << ",\"from_id\":\"" << from_id << "\"";
                     }
 
                     // data
@@ -697,7 +743,10 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetAvailableLevelRateResponse> CrossGetAvailableLevelRate(const string &contract_code = "")
+                std::shared_ptr<GetAvailableLevelRateResponse> CrossGetAvailableLevelRate(const string &contract_code = "",
+                                                                                          const string &pair = "",
+                                                                                          const string &contract_type = "",
+                                                                                          const string &business_type = "")
                 {
                     // path
                     stringstream path;
@@ -708,6 +757,18 @@ namespace huobi_futures
                     if (contract_code != "")
                     {
                         content << ",\"contract_code\":\"" << contract_code << "\"";
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
+                    if (contract_type != "")
+                    {
+                        content << ",\"contract_type\":\"" << contract_type << "\"";
+                    }
+                    if (business_type != "")
+                    {
+                        content << ",\"business_type\":\"" << business_type << "\"";
                     }
 
                     // data
@@ -725,7 +786,9 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetOrderLimitResponse> GetOrderLimit(const string &order_price_type, const string &contract_code = "")
+                std::shared_ptr<GetOrderLimitResponse> GetOrderLimit(const string &order_price_type, const string &contract_code = "",
+                                                                     const string &pair, const string &contract_type,
+                                                                     const string &business_type)
                 {
                     // path
                     stringstream path;
@@ -737,6 +800,18 @@ namespace huobi_futures
                     if (contract_code != "")
                     {
                         content << ",\"contract_code\":\"" << contract_code << "\"";
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
+                    if (contract_type != "")
+                    {
+                        content << ",\"contract_type\":\"" << contract_type << "\"";
+                    }
+                    if (business_type != "")
+                    {
+                        content << ",\"business_type\":\"" << business_type << "\"";
                     }
 
                     // data
@@ -754,7 +829,8 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetFeeResponse> GetFee(const string &contract_code = "")
+                std::shared_ptr<GetFeeResponse> GetFee(const string &contract_code = "", const string &pair,
+                                                       const string &contract_type, const string &business_type)
                 {
                     // path
                     stringstream path;
@@ -765,6 +841,18 @@ namespace huobi_futures
                     if (contract_code != "")
                     {
                         content << ",\"contract_code\":\"" << contract_code << "\"";
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
+                    if (contract_type != "")
+                    {
+                        content << ",\"contract_type\":\"" << contract_type << "\"";
+                    }
+                    if (business_type != "")
+                    {
+                        content << ",\"business_type\":\"" << business_type << "\"";
                     }
 
                     // data
@@ -866,7 +954,8 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetPositionLimitResponse> CrossGetPositionLimit(const string &contract_code = "")
+                std::shared_ptr<GetPositionLimitResponse> CrossGetPositionLimit(const string &contract_code = "", const string &pair,
+                                                                                const string &contract_type, const string &business_type)
                 {
                     // path
                     stringstream path;
@@ -877,6 +966,18 @@ namespace huobi_futures
                     if (contract_code != "")
                     {
                         content << ",\"contract_code\":\"" << contract_code << "\"";
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
+                    if (contract_type != "")
+                    {
+                        content << ",\"contract_type\":\"" << contract_type << "\"";
+                    }
+                    if (business_type != "")
+                    {
+                        content << ",\"business_type\":\"" << business_type << "\"";
                     }
 
                     // data
@@ -896,7 +997,7 @@ namespace huobi_futures
 
                 std::shared_ptr<MasterSubTransferResponse> MasterSubTransfer(const string &sub_uid, const string &asset,
                                                                              const string &from_margin_account, const string &to_margin_account,
-                                                                             float amount, const string &type)
+                                                                             float amount, const string &type, long client_order_id)
                 {
                     // path
                     stringstream path;
@@ -909,7 +1010,10 @@ namespace huobi_futures
                     content << ",\"from_margin_account\":\"" << from_margin_account << "\""
                             << ",\"to_margin_account\":\"" << to_margin_account << "\"";
                     content << ",\"amount\":" << amount << ",\"type\":\"" << type << "\"";
-
+                    if (client_order_id != 0)
+                    {
+                        content << ",\"client_order_id\":" << client_order_id;
+                    }
                     // data
                     stringstream data;
                     if (!content.str().empty())
@@ -967,7 +1071,7 @@ namespace huobi_futures
 
                 std::shared_ptr<TransferInnerRecordResponse> TransferInner(const string &asset,
                                                                            const string &from_margin_account, const string &to_margin_account,
-                                                                           float amount)
+                                                                           float amount, long client_order_id)
                 {
                     // path
                     stringstream path;
@@ -979,7 +1083,10 @@ namespace huobi_futures
                     content << ",\"from_margin_account\":\"" << from_margin_account << "\""
                             << ",\"to_margin_account\":\"" << to_margin_account << "\"";
                     content << ",\"amount\":" << amount;
-
+                    if (client_order_id != 0)
+                    {
+                        content << ",\"client_order_id\":" << client_order_id;
+                    }
                     // data
                     stringstream data;
                     if (!content.str().empty())
@@ -1006,6 +1113,267 @@ namespace huobi_futures
 
                     // post
                     auto result = url_base::HttpRequest::Instance().Get<GetApiTradingStatusResponse>(url);
+                    return result;
+                }
+
+                std::shared_ptr<SwapCrossSubAccountInfoResponse> SwapCrossSubAccountInfo(const string &margin_account, long sub_uid)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v1/swap_cross_sub_account_info";
+
+                    // option
+                    stringstream content;
+                    content << ",\"sub_uid\":" << sub_uid;
+                    if (margin_account != "")
+                    {
+                        content << ",\"margin_account\":\"" << margin_account << "\"";
+                    }
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapCrossSubAccountInfoResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapFinancialRecordResponse> SwapFinancialRecord(const string &contract, const string &mar_acct,
+                                                                                 const string &type, long start_time,
+                                                                                 long end_time, const string &direct,
+                                                                                 long from_id)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v3/swap_financial_record";
+
+                    // option
+                    stringstream content;
+                    if (contract != "")
+                    {
+                        content << ",\"contract\":\"" << contract << "\"";
+                    }
+                    if (mar_acct != "")
+                    {
+                        content << ",\"mar_acct\":\"" << mar_acct << "\"";
+                    }
+                    if (type != "")
+                    {
+                        content << ",\"type\":\"" << type << "\"";
+                    }
+                    if (direct != "")
+                    {
+                        content << ",\"direct\":\"" << direct << "\"";
+                    }
+                    if (start_time != 0)
+                    {
+                        content << ",\"start_time\":" << start_time;
+                    }
+                    if (end_time != 0)
+                    {
+                        content << ",\"end_time\":" << end_time;
+                    }
+                    if (from_id != 0)
+                    {
+                        content << ",\"from_id\":" << from_id;
+                    }
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapFinancialRecordResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapFinancialRecordResponse> SwapFinancialRecord(const string &contract, const string &mar_acct,
+                                                                                 const string &type, long start_time,
+                                                                                 long end_time, const string &direct,
+                                                                                 long from_id)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v3/swap_financial_record";
+
+                    // option
+                    stringstream content;
+                    if (contract != "")
+                    {
+                        content << ",\"contract\":\"" << contract << "\"";
+                    }
+                    if (mar_acct != "")
+                    {
+                        content << ",\"mar_acct\":\"" << mar_acct << "\"";
+                    }
+                    if (type != "")
+                    {
+                        content << ",\"type\":\"" << type << "\"";
+                    }
+                    if (direct != "")
+                    {
+                        content << ",\"direct\":\"" << direct << "\"";
+                    }
+                    if (start_time != 0)
+                    {
+                        content << ",\"start_time\":" << start_time;
+                    }
+                    if (end_time != 0)
+                    {
+                        content << ",\"end_time\":" << end_time;
+                    }
+                    if (from_id != 0)
+                    {
+                        content << ",\"from_id\":" << from_id;
+                    }
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapFinancialRecordResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapLeverPositionLimitResponse> SwapLeverPositionLimit(const string &contract_code, int lever_rate)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v1/swap_lever_position_limit";
+
+                    // option
+                    stringstream content;
+                    if (contract_code != "")
+                    {
+                        content << ",\"contract_code\":\"" << contract_code << "\"";
+                    }
+                    if (lever_rate != 0)
+                    {
+                        content << ",\"lever_rate\":" << lever_rate;
+                    }
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapLeverPositionLimitResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapCrossLeverPositionLimitResponse> SwapCrossLeverPositionLimit(const string &business_type,
+                                                                                                 const string &contract_type,
+                                                                                                 const string &pair,
+                                                                                                 const string &contract_code,
+                                                                                                 int lever_rate)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v1/swap_cross_lever_position_limit";
+
+                    // option
+                    stringstream content;
+                    if (business_type != "")
+                    {
+                        content << ",\"business_type\":\"" << business_type << "\"";
+                    }
+                    if (contract_type != "")
+                    {
+                        content << ",\"contract_type\":\"" << contract_type << "\"";
+                    }
+                    if (pair != "")
+                    {
+                        content << ",\"pair\":\"" << pair << "\"";
+                    }
+
+                    if (contract_code != "")
+                    {
+                        content << ",\"contract_code\":\"" << contract_code << "\"";
+                    }
+                    if (lever_rate != 0)
+                    {
+                        content << ",\"lever_rate\":" << lever_rate;
+                    }
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapCrossLeverPositionLimitResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapSubAuthListResponse> SwapSubAuthList(const string &sub_uid,
+                                                                         const string &direct,
+                                                                         long start_time,
+                                                                         long end_time,
+                                                                         long from_id)
+                {
+                    // path
+                    stringstream path;
+                    path << "/linear-swap-api/v1/swap_sub_auth_list";
+                    // option
+                    stringstream option;
+                    if (sub_uid != "") {
+                        option << "&sub_uid=" << sub_uid;
+                    }
+                    if (direct != "") {
+                        option << "&direct=" << direct;
+                    }
+                    if (start_time != 0)
+                    {
+                        option << "&start_time=" << start_time;
+                    }
+                    if (end_time != 0)
+                    {
+                        option << "&end_time=" << end_time;
+                    }
+                    if (from_id != 0)
+                    {
+                        option << "&from_id=" << from_id;
+                    }
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str();
+                    }
+                    // url
+                    string url = pb->Build("GET", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Get<SwapSubAuthListResponse>(url);
                     return result;
                 }
 

@@ -43,7 +43,12 @@ namespace huobi_futures
 
                             int64_t ts;
 
-                            JS_OBJ(amount, direction, id, price, ts);
+                            std::optional<JS::Nullable<float>> quantity;
+
+                            std::optional<JS::Nullable<float>> trade_turnover;
+
+
+                            JS_OBJ(amount, direction, id, price, ts, quantity, trade_turnover);
                         };
                         std::vector<Data> data;
 

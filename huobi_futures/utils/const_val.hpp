@@ -7,7 +7,7 @@ namespace huobi_futures
 {
 	namespace utils
 	{
-        const string DEFAULT_HOST = "api.btcgateway.pro";
+        const string DEFAULT_HOST = "api.hbdm.com";
 
         const string DEFAULT_ID = "api";
 

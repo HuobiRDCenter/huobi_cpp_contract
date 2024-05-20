@@ -68,10 +68,17 @@ namespace huobi_futures
                             std::optional<string> source_order_id;
 
                             std::optional<string> relation_tpsl_order_id;
+                            std::optional<float> reduce_only;
+                            std::optional<string> contract_type;
+
+                            std::optional<string> pair;
+
+                            std::optional<string> business_type;
 
                             JS_OBJ(symbol, contract_code, trigger_type, volume, order_type, direction, offset, lever_rate,
                                    order_id, order_id_str, order_source, trigger_price, order_price, created_at, order_price_type,
-                                   status, margin_mode, margin_account, tpsl_order_type, source_order_id, relation_tpsl_order_id);
+                                   status, margin_mode, margin_account, tpsl_order_type, source_order_id, relation_tpsl_order_id,
+                                   reduce_only, contract_type, pair, business_type);
                         };
 
                         std::vector<Order> orders;

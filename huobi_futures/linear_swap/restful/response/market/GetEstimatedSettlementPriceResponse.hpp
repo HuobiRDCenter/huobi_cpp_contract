@@ -31,7 +31,13 @@ namespace huobi_futures
 
                         string settlement_type;
 
-                        JS_OBJ(contract_code, estimated_settlement_price, settlement_type);
+                        std::optional<string> contract_type;
+
+                        std::optional<string> pair;
+
+                        std::optional<string> business_type;
+
+                        JS_OBJ(contract_code, estimated_settlement_price, settlement_type, contract_type, pair, business_type);
                     };
 
                     std::optional<std::vector<Data>> data;

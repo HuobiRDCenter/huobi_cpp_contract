@@ -46,6 +46,11 @@ namespace huobi_futures
                         string margin_mode;
 
                         string margin_account;
+                        std::optional<string> money_in;
+                        std::optional<string> money_out;
+                        std::optional<string> new_risk_rate;
+                        std::optional<string> position_mode;
+                        std::optional<string> adl_risk_percent;
 
                         struct Positions
                         {
@@ -82,9 +87,16 @@ namespace huobi_futures
                             string margin_mode;
 
                             string margin_account;
+                            std::optional<string> new_risk_rate;
+                            std::optional<string> trade_partition;
+                            std::optional<string> contract_type;
+                            std::optional<string> pair;
+                            std::optional<string> business_type;
+                            std::optional<string> position_mode;
 
                             JS_OBJ(symbol, contract_code, volume, available, frozen, cost_open, cost_hold, profit_unreal, profit_rate, profit, \
-                                   margin_asset, position_margin, lever_rate, direction, last_price, margin_mode, margin_account);
+                                   margin_asset, position_margin, lever_rate, direction, last_price, margin_mode, margin_account,
+                                    new_risk_rate, trade_partition, contract_type, pair, business_type, position_mode);
                         };
 
                         std::optional<std::vector<Positions>> positions;
@@ -108,14 +120,42 @@ namespace huobi_futures
                             float lever_rate;
 
                             float adjust_factor;
+                            std::optional<string> contract_type;
+                            std::optional<string> cross_max_available;
+                            std::optional<string> trade_partition;
+                            std::optional<string> pair;
+                            std::optional<string> business_type;
 
                             JS_OBJ(symbol, contract_code, margin_position, margin_frozen, margin_available, liquidation_price, \
-                                   lever_rate, adjust_factor);
+                                   lever_rate, adjust_factor,contract_type, cross_max_available, trade_partition, pair, business_type);
                         };
                         std::optional<std::vector<ContractDetail>> contract_detail;
 
+                        struct FuturesContractDetail
+                        {
+                            string symbol;
+                            string contract_code;
+                            float margin_position;
+                            float margin_frozen;
+                            float margin_available;
+                            float profit_unreal;
+                            JS::Nullable<float> liquidation_price;
+                            int32_t lever_rate;
+                            float adjust_factor;
+                            std::optional<string> contract_type;
+                            std::optional<string> cross_max_available;
+                            std::optional<string> trade_partition;
+                            std::optional<string> pair;
+                            std::optional<string> business_type;
+
+                            JS_OBJ(symbol, contract_code, margin_position, margin_frozen, margin_available, profit_unreal,
+                                    liquidation_price, lever_rate, adjust_factor, contract_type, cross_max_available, trade_partition, pair, business_type);
+                        };
+                        std::optional<std::vector<FuturesContractDetail>> futures_contract_detail;
+
                         JS_OBJ(margin_asset, margin_balance, margin_static, margin_position, margin_frozen, profit_real, \
-                               profit_unreal, withdraw_available, risk_rate, margin_mode, margin_account, positions, contract_detail);
+                               profit_unreal, withdraw_available, risk_rate, margin_mode, margin_account, money_in, money_out,
+                                new_risk_rate, position_mode, adl_risk_percent, positions, contract_detail, futures_contract_detail);
                     };
                     std::optional<Data> data;
 

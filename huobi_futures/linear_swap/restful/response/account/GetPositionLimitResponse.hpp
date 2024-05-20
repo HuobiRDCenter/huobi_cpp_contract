@@ -35,7 +35,21 @@ namespace huobi_futures
 
                         float sell_limit;
 
-                        JS_OBJ(symbol, contract_code, margin_mode, buy_limit, sell_limit);
+                        std::optional<string> contract_type;
+                        std::optional<string> pair;
+                        std::optional<string> business_type;
+
+                        std::optional<JS::Nullable<int>> lever_rate;
+
+                        std::optional<JS::Nullable<int>> buy_limit_value;
+
+                        std::optional<JS::Nullable<int>> sell_limit_value;
+
+                        std::optional<JS::Nullable<float>> mark_price;
+
+
+                        JS_OBJ(symbol, contract_code, margin_mode, buy_limit, sell_limit, contract_type, pair, business_type,
+                                lever_rate, buy_limit_value, sell_limit_value, mark_price);
                     };
 
                     std::optional<std::vector<Data>> data;

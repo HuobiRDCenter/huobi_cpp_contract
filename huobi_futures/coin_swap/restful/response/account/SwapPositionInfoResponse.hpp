@@ -34,9 +34,10 @@ namespace huobi_futures
                         std::optional<std::string> direction;
                         std::optional<std::string> last_price;
                         std::optional<JS::Nullable<float>> adl_risk_percent;
+                        std::optional<std::string> liq_px;
                         std::optional<std::string> new_risk_rate;
                         std::optional<std::string> trade_partition;
-                        JS_OBJ(symbol, contract_code, contract_type, volume, available, frozen, cost_open, cost_hold, profit_unreal, profit_rate, profit, position_margin, lever_rate, direction, last_price, adl_risk_percent, new_risk_rate, trade_partition);
+                        JS_OBJ(symbol, contract_code, contract_type, volume, available, frozen, cost_open, cost_hold, profit_unreal, profit_rate, profit, position_margin, lever_rate, direction, last_price, adl_risk_percent, liq_px, new_risk_rate, trade_partition);
                     };
                     std::optional<std::string> status;
                     std::optional<PositionInfo> data;

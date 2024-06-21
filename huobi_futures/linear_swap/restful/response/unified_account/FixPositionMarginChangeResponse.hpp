@@ -21,9 +21,14 @@ namespace huobi_futures
                     std::optional<std::string> msg;
                     std::optional<JS::Nullable<int64_t>> ts;
                     struct Data {
+                        double amount;
+                        std::string asset;
+                        std::string contract_code;
+                        int type;
+                        int direction;
                         std::optional<std::string> order_id;
                         std::optional<JS::Nullable<int64_t>> client_order_id;
-                        JS_OBJ(order_id, client_order_id);
+                        JS_OBJ(amount, asset, contract_code, type, direction, order_id, client_order_id);
                     };
                     std::optional<Data> data;
 

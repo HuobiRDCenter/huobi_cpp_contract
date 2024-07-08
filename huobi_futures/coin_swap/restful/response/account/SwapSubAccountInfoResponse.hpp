@@ -23,7 +23,6 @@ namespace huobi_futures
                         std::optional<JS::Nullable<int64_t>> margin_position;
                         std::optional<JS::Nullable<int64_t>> margin_frozen;
                         std::optional<JS::Nullable<int64_t>> margin_available;
-                        std::optional<JS::Nullable<int64_t>> profit_real;
                         std::optional<JS::Nullable<int64_t>> profit_unreal;
                         std::optional<JS::Nullable<float>> risk_rate;
                         std::optional<JS::Nullable<float>> liquidation_price;
@@ -33,7 +32,7 @@ namespace huobi_futures
                         std::optional<JS::Nullable<float>> margin_static;
                         std::optional<JS::Nullable<float>> new_risk_rate;
                         std::optional<std::string> trade_partition;
-                        JS_OBJ(symbol, margin_balance, margin_position, margin_frozen, margin_available, profit_real, profit_unreal, risk_rate, liquidation_price, withdraw_available, lever_rate, adjust_factor, margin_static, new_risk_rate, trade_partition);
+                        JS_OBJ(symbol, margin_balance, margin_position, margin_frozen, margin_available, profit_unreal, risk_rate, liquidation_price, withdraw_available, lever_rate, adjust_factor, margin_static, new_risk_rate, trade_partition);
                     };
                     std::string status;
                     JS::Nullable<int64_t> ts;

@@ -1735,7 +1735,8 @@ namespace huobi_futures
                                                                        int reduce_only, string time_in_force, string tp_trigger_price,
                                                                        string tp_order_price, string tp_type,
                                                                        string tp_trigger_price_type, string sl_trigger_price,
-                                                                       string sl_order_price, string sl_type, string sl_trigger_price_type)
+                                                                       string sl_order_price, string sl_type, string sl_trigger_price_type,
+                                                                       bool price_protect, bool trigger_protect)
                 {
                     // path
                     stringstream path;
@@ -1811,6 +1812,14 @@ namespace huobi_futures
                     {
                         content << ",\"sl_trigger_price_type\":\"" << sl_trigger_price_type << "\"";
                     }
+                    if (price_protect != "")
+                    {
+                        content << ",\"price_protect\":\"" << price_protect << "\"";
+                    }
+                    if (trigger_protect != "")
+                    {
+                        content << ",\"trigger_protect\":\"" << trigger_protect << "\"";
+                    }
                     if (reduce_only != 0)
                     {
                         content << ",\"reduce_only\":" << reduce_only;
@@ -1838,11 +1847,12 @@ namespace huobi_futures
                                                                        int reduce_only, string time_in_force, string tp_trigger_price,
                                                                        string tp_order_price, string tp_type,
                                                                        string tp_trigger_price_type, string sl_trigger_price,
-                                                                       string sl_order_price, string sl_type, string sl_trigger_price_type)
+                                                                       string sl_order_price, string sl_type, string sl_trigger_price_type,
+                                                                       bool price_protect, bool trigger_protect)
                 {
                     // path
                     stringstream path;
-                    path << "/v5/trade/batchorder";
+                    path << "/v5/trade/batch_orders";
 
                     // option
                     stringstream content;
@@ -1918,6 +1928,14 @@ namespace huobi_futures
                     {
                         content << ",\"sl_trigger_price_type\":\"" << sl_trigger_price_type << "\"";
                     }
+                    if (price_protect != "")
+                    {
+                        content << ",\"price_protect\":\"" << price_protect << "\"";
+                    }
+                    if (trigger_protect != "")
+                    {
+                        content << ",\"trigger_protect\":\"" << trigger_protect << "\"";
+                    }
                     if (reduce_only != 0)
                     {
                         content << ",\"reduce_only\":" << reduce_only;
@@ -1944,7 +1962,7 @@ namespace huobi_futures
                 {
                     // path
                     stringstream path;
-                    path << "/v5/trade/order";
+                    path << "/v5/trade/cancel_order";
 
                     // option
                     stringstream content;
@@ -1981,7 +1999,7 @@ namespace huobi_futures
                 {
                     // path
                     stringstream path;
-                    path << "/v5/trade/batchOrders";
+                    path << "/v5/trade/cancel_batch_orders";
 
                     // option
                     stringstream content;
@@ -2018,7 +2036,7 @@ namespace huobi_futures
                 {
                     // path
                     stringstream path;
-                    path << "/v5/trade/allOrders";
+                    path << "/v5/trade/cancel_all_orders";
 
                     // option
                     stringstream content;
@@ -2095,7 +2113,7 @@ namespace huobi_futures
                 {
                     // path
                     stringstream path;
-                    path << "/v5/trade/positionAll";
+                    path << "/v5/trade/position_all";
 
                     // option
                     stringstream content;
@@ -2115,7 +2133,7 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<SwapTradeOrderOpensResponse> SwapTradeOrderOpens(string contract_code, string side, string margin_mode,
+                std::shared_ptr<SwapTradeOrderOpensResponse> SwapTradeOrderOpens(string contract_code, string margin_mode,
                                                                               string order_id, string client_order_id, long from,
                                                                               int limit, string direct)
                 {
@@ -2126,9 +2144,6 @@ namespace huobi_futures
                     stringstream option;
                     if (contract_code != "") {
                         option << "&contract_code=" << contract_code;
-                    }
-                    if (side != "") {
-                        option << "&side=" << side;
                     }
                     if (margin_mode != "") {
                         option << "&margin_mode=" << margin_mode;
@@ -2206,11 +2221,10 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<SwapTradeOrderHistoryResponse> SwapTradeOrderHistory(string contract_code, string side,
-                                                                                     string order_id, string client_order_id,
+                std::shared_ptr<SwapTradeOrderHistoryResponse> SwapTradeOrderHistory(string contract_code,
                                                                                      string state, string type, string price_match,
                                                                                      string start_time, string end_time,
-                                                                                     long from, int limit, string direct)
+                                                                                     long from, int limit, string direct, string business_type)
                 {
                     // path
                     stringstream path;
@@ -2219,9 +2233,6 @@ namespace huobi_futures
                     stringstream option;
                     if (contract_code != "") {
                         option << "&contract_code=" << contract_code;
-                    }
-                    if (side != "") {
-                        option << "&side=" << side;
                     }
                     if (order_id != "") {
                         option << "&order_id=" << order_id;
@@ -2237,6 +2248,9 @@ namespace huobi_futures
                     }
                     if (start_time != "") {
                         option << "&start_time=" << start_time;
+                    }
+                    if (business_type != "") {
+                        option << "&business_type=" << business_type;
                     }
                     if (end_time != "") {
                         option << "&end_time=" << end_time;

@@ -23,7 +23,6 @@ namespace huobi_futures
                     {
                         std::string state;
                         std::string equity;
-                        std::string isolated_equity;
                         std::string initial_margin;
                         std::string maintenance_margin;
                         std::string maintenance_margin_rate;
@@ -35,24 +34,20 @@ namespace huobi_futures
                         {
                             std::string currency;
                             std::string equity;
-                            std::string isolated_equity;
                             std::string available;
                             std::string profit_unreal;
-                            std::string isolated_available;
-                            std::string isolated_hold;
-                            std::string isolated_profit_unreal;
                             std::string initial_margin;
                             std::string maintenance_margin;
                             std::string maintenance_margin_rate;
                             std::string initial_margin_rate;
                             std::string created_time;
                             std::string updated_time;
-                            JS_OBJ(currency, equity, isolated_equity, available, profit_unreal, isolated_available,
-                                   isolated_hold, isolated_profit_unreal, initial_margin, maintenance_margin,
+                            JS_OBJ(currency, equity, available, profit_unreal,
+                                   initial_margin, maintenance_margin,
                                    maintenance_margin_rate, initial_margin_rate, created_time, updated_time);
                         };
                         std::optional<Details> details;
-                        JS_OBJ(state, equity, isolated_equity, initial_margin, maintenance_margin, maintenance_margin_rate,
+                        JS_OBJ(state, equity, initial_margin, maintenance_margin, maintenance_margin_rate,
                                profit_unreal, available_margin, created_time, updated_time, details);
                     };
 

@@ -1043,7 +1043,7 @@ namespace huobi_futures
                 {
                     // location
                     stringstream location;
-                    location << "/v5/market/multi_assets_margin/list";
+                    location << "/v5/market/multi_assets_margin";
 
                     // option
                     stringstream option;

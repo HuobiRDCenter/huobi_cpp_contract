@@ -32,7 +32,6 @@ namespace huobi_futures
                         std::string liquidation_price;
                         std::string initial_margin;
                         std::string maintenance_margin;
-                        std::string margin;
                         std::string profit_unreal;
                         std::string profit_rate;
                         std::string margin_rate;
@@ -44,7 +43,7 @@ namespace huobi_futures
                         std::string updated_time;
 
                         JS_OBJ(contract_code, position_side, margin_mode, cost_open, volume, available, lever_rate,
-                               adl_risk_percent, liquidation_price, initial_margin, maintenance_margin, margin,
+                               adl_risk_percent, liquidation_price, initial_margin, maintenance_margin,
                                profit_unreal, profit_rate, margin_rate, margin_currency, position_mode, last,
                                contract_type, created_time, updated_time);
                     };

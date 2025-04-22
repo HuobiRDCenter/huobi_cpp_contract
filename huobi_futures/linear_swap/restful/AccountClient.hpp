@@ -85,6 +85,12 @@ typedef huobi_futures::linear_swap::restful::response_account::SwapLeverPosition
 #include "huobi_futures/linear_swap/restful/response/account/SwapSubAuthListResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_account::SwapSubAuthListResponse SwapSubAuthListResponse;
 
+#include "huobi_futures/linear_swap/restful/response/account/SwapAccountBalanceResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_account::SwapAccountBalanceResponse SwapAccountBalanceResponse;
+
+#include "huobi_futures/linear_swap/restful/response/account/SwapMultiAssetsMarginResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_account::SwapMultiAssetsMarginResponse SwapMultiAssetsMarginResponse;
+
 namespace huobi_futures
 {
     namespace linear_swap
@@ -1374,6 +1380,55 @@ namespace huobi_futures
 
                     // post
                     auto result = url_base::HttpRequest::Instance().Get<SwapSubAuthListResponse>(url);
+                    return result;
+                }
+
+                std::shared_ptr<SwapAccountBalanceResponse> SwapAccountBalance()
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/account/balance";
+                    // option
+                    stringstream option;
+
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str();
+                    }
+                    // url
+                    string url = pb->Build("GET", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Get<SwapAccountBalanceResponse>(url);
+                    return result;
+                }
+
+                std::shared_ptr<SwapMultiAssetsMarginResponse> SwapMultiAssetsMargin(int assets_mode)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/account/multi_assets_margin";
+
+                    // option
+                    stringstream content;
+                    if (assets_mode != "")
+                    {
+                        content << ",\"assets_mode\":\"" << assets_mode << "\"";
+                    }
+
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapMultiAssetsMarginResponse>(url, data.str());
                     return result;
                 }
 

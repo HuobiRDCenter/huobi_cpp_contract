@@ -982,6 +982,83 @@ namespace huobi_futures
                     return result;
                 }
 
+                std::shared_ptr<GetMarketRiskLimitResponse> GetMarketRiskLimit(string contract_code, string contract_type,
+                                                                               string margin_mode, string tier)
+                {
+                    // location
+                    stringstream location;
+                    location << "/v5/market/risk_limit";
+                    
+
+                    // option
+                    stringstream option;
+                    if (contract_code != "")
+                    {
+                        option << "contract_code=" << contract_code;
+                    }
+                    if (contract_type != "")
+                    {
+                        option << "&contract_type=" << contract_type;
+                    }
+                    if (margin_mode != "")
+                    {
+                        option << "&margin_mode=" << margin_mode;
+                    }
+                    if (tier != "")
+                    {
+                        option << "&tier=" << tier;
+                    }
+                    if (!option.str().empty())
+                    {
+                        location << "?" << option.str();
+                    }
+
+                    string url = pb->Build(location.str());
+
+                    auto result = url_base::HttpRequest::Instance().Get<GetMarketRiskLimitResponse>(url);
+                    return result;
+                }
+
+                std::shared_ptr<GetAssetsDeductionCurrencyResponse> GetAssetsDeductionCurrency()
+                {
+                    // location
+                    stringstream location;
+                    location << "/v5/assets_deduction_currency";
+
+                    // option
+                    stringstream option;
+
+                    if (!option.str().empty())
+                    {
+                        location << "?" << option.str();
+                    }
+
+                    string url = pb->Build(location.str());
+
+                    auto result = url_base::HttpRequest::Instance().Get<GetAssetsDeductionCurrencyResponse>(url);
+                    return result;
+                }
+
+                std::shared_ptr<GetMultiAssetsMarginListResponse> GetMultiAssetsMarginList()
+                {
+                    // location
+                    stringstream location;
+                    location << "/v5/market/multi_assets_margin";
+
+                    // option
+                    stringstream option;
+
+                    if (!option.str().empty())
+                    {
+                        location << "?" << option.str();
+                    }
+
+                    string url = pb->Build(location.str());
+
+                    auto result = url_base::HttpRequest::Instance().Get<GetMultiAssetsMarginListResponse>(url);
+                    return result;
+                }
+
             private:
                 std::shared_ptr<url_base::PublicUrlBuilder> pb;
             };

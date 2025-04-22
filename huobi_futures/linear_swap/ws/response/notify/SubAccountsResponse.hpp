@@ -35,6 +35,10 @@ namespace huobi_futures
 
                         string margin_asset;
 
+                        string voucher;
+
+                        string voucher_value;
+
                         float margin_balance;
 
                         float margin_static;

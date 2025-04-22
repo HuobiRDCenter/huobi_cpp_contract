@@ -35,6 +35,7 @@ namespace huobi_futures
                             std::string currency;
                             std::string equity;
                             std::string available;
+                            std::string withdraw_available;
                             std::string profit_unreal;
                             std::string initial_margin;
                             std::string maintenance_margin;
@@ -42,7 +43,7 @@ namespace huobi_futures
                             std::string initial_margin_rate;
                             std::string created_time;
                             std::string updated_time;
-                            JS_OBJ(currency, equity, available, profit_unreal,
+                            JS_OBJ(currency, equity, available, withdraw_available,profit_unreal,
                                    initial_margin, maintenance_margin,
                                    maintenance_margin_rate, initial_margin_rate, created_time, updated_time);
                         };

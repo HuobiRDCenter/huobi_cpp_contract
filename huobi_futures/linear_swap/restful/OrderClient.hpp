@@ -2224,7 +2224,7 @@ namespace huobi_futures
                 std::shared_ptr<SwapTradeOrderHistoryResponse> SwapTradeOrderHistory(string contract_code,
                                                                                      string state, string type, string price_match,
                                                                                      string start_time, string end_time,
-                                                                                     long from, int limit, string direct, string business_type)
+                                                                                     long from, int limit, string direct, string business_type, string margin_mode)
                 {
                     // path
                     stringstream path;
@@ -2254,6 +2254,9 @@ namespace huobi_futures
                     }
                     if (end_time != "") {
                         option << "&end_time=" << end_time;
+                    }
+                    if (margin_mode != "") {
+                        option << "&margin_mode=" << margin_mode;
                     }
                     if (from != 0) {
                         option << "&from=" << from;
@@ -2483,6 +2486,38 @@ namespace huobi_futures
 
                     // post
                     auto result = url_base::HttpRequest::Instance().Get<SwapPositionRiskLimitResponse>(url);
+                    return result;
+                }
+
+                std::shared_ptr<GetTradeOrderResponse> GetTradeOrder(string contract_code,
+                                                                     string margin_mode, string order_id, string client_order_id)
+                {
+                    // path
+                    stringstream path;
+                    path << "/api/v5/trade/order";
+                    // option
+                    stringstream option;
+                    if (contract_code != "") {
+                        option << "&contract_code=" << contract_code;
+                    }
+                    if (order_id != "") {
+                        option << "&order_id=" << order_id;
+                    }
+                    if (client_order_id != "") {
+                        option << "&client_order_id=" << client_order_id;
+                    }
+                    if (margin_mode != "") {
+                        option << "&margin_mode=" << margin_mode;
+                    }
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str();
+                    }
+                    // url
+                    string url = pb->Build("GET", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Get<GetTradeOrderResponse>(url);
                     return result;
                 }
 

@@ -22,9 +22,10 @@ namespace huobi_futures
                     struct Data
                     {
                         std::string order_id;
+                        std::string cancel_reason;
                         std::optional<std::string> client_order_id;
 
-                        JS_OBJ(order_id, client_order_id);
+                        JS_OBJ(order_id, cancel_reason, client_order_id);
                     };
 
                     std::optional<Data> data;

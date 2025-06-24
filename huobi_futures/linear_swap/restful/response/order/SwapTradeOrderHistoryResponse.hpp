@@ -31,6 +31,7 @@ namespace huobi_futures
                         std::string client_order_id;
                         std::string margin_mode;
                         std::string price;
+                        std::string cancel_reason;
                         std::string volume;
                         std::string lever_rate;
                         std::string state;
@@ -58,7 +59,7 @@ namespace huobi_futures
                         std::string created_time;
                         std::string updated_time;
 
-                        JS_OBJ(id, contract_code, side, position_side, type, price_match, order_id, client_order_id, margin_mode, price, volume, lever_rate, state, canceled_source, order_source, reduce_only, time_in_force, tp_trigger_price, tp_order_price, tp_type, tp_trigger_price_type, sl_trigger_price, sl_order_price, sl_type, sl_trigger_price_type, trade_avg_price, trade_volume, trade_turnover, fee_currency, fee, deduction_currency, deduction_amount, profit, contract_type, created_time, updated_time);
+                        JS_OBJ(id, contract_code, side, position_side, type, price_match, order_id, client_order_id, margin_mode, price, cancel_reason, volume, lever_rate, state, canceled_source, order_source, reduce_only, time_in_force, tp_trigger_price, tp_order_price, tp_type, tp_trigger_price_type, sl_trigger_price, sl_order_price, sl_type, sl_trigger_price_type, trade_avg_price, trade_volume, trade_turnover, fee_currency, fee, deduction_currency, deduction_amount, profit, contract_type, created_time, updated_time);
                     };
 
                     std::optional<Data> data;

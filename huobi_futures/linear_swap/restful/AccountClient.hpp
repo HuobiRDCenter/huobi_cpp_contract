@@ -1432,6 +1432,59 @@ namespace huobi_futures
                     return result;
                 }
 
+                std::shared_ptr<InviteeRebateAllRebateDetailResponse> InviteeRebateAllRebateDetail(const string &direct,
+                                                                                         const string &fromId,
+                                                                                         long limit)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v2/invitee/rebate/all_rebate/detail";
+                    // option
+                    stringstream option;
+                    if (direct != "") {
+                        option << "&direct=" << direct;
+                    }
+                    if (fromId != "") {
+                        option << "&fromId=" << fromId;
+                    }
+                    if (limit != 0)
+                    {
+                        option << "&limit=" << limit;
+                    }
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str();
+                    }
+                    // url
+                    string url = pb->Build("GET", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Get<InviteeRebateAllRebateDetailResponse>(url);
+                    return result;
+                }
+
+                std::shared_ptr<InviteeRebateBatcherRebateDetailResponse> InviteeRebateBatcherRebateDetail(const string &inviteeUidList)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v2/invitee/rebate/batcher_rebate/detail";
+                    // option
+                    stringstream option;
+                    if (inviteeUidList != "") {
+                        option << "&inviteeUidList=" << inviteeUidList;
+                    }
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str();
+                    }
+                    // url
+                    string url = pb->Build("GET", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Get<InviteeRebateBatcherRebateDetailResponse>(url);
+                    return result;
+                }
+
             private:
                 std::shared_ptr<url_base::PrivateUrlBuilder> pb;
             };

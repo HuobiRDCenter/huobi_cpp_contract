@@ -2249,8 +2249,8 @@ namespace huobi_futures
                     if (start_time != "") {
                         option << "&start_time=" << start_time;
                     }
-                    if (business_type != "") {
-                        option << "&business_type=" << business_type;
+                    if (time_in_force != "") {
+                        option << "&time_in_force=" << time_in_force;
                     }
                     if (end_time != "") {
                         option << "&end_time=" << end_time;

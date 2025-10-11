@@ -1485,6 +1485,126 @@ namespace huobi_futures
                     return result;
                 }
 
+                std::shared_ptr<FeeDeductionCurrencyResponse> FeeDeductionCurrency(const string &deduction_currency, int fee_option)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/account/fee_deduction_currency";
+                    // option
+                    stringstream option;
+                    if (deduction_currency != "") {
+                        option << "&deduction_currency=" << deduction_currency;
+                    }
+                    option << "&fee_option=" << fee_option;
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str();
+                    }
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Get<FeeDeductionCurrencyResponse>(url);
+                    return result;
+                }
+
+                std::shared_ptr<QueryEarnProjectListResponse> QueryEarnProjectList(const string &currency, int pageNum, int pageSize)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v1/earn/project/queryEarnProjectList";
+                    // option
+                    stringstream option;
+                    if (currency != "") {
+                        option << "&currency=" << currency;
+                    }
+                    option << "&pageNum=" << pageNum;
+                    option << "&pageSize=" << pageSize;
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str();
+                    }
+                    // url
+                    string url = pb->Build("GET", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Get<QueryEarnProjectListResponse>(url);
+                    return result;
+                }
+
+                std::shared_ptr<EarnOrderDemandAddResponse> EarnOrderDemandAdd(int id, int amount, string requestId)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v1/earn/order/demand/add";
+                    // option
+                    stringstream option;
+                    if (requestId != "") {
+                        option << "&requestId=" << requestId;
+                    }
+                    option << "&id=" << id;
+                    option << "&amount=" << amount;
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str();
+                    }
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Get<EarnOrderDemandAddResponse>(url);
+                    return result;
+                }
+
+                std::shared_ptr<EarnOrderDemandRedeemOrderResponse> EarnOrderDemandRedeemOrder(int orderId, int amount, string requestId)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v1/earn/order/demand/redeem-order";
+                    // option
+                    stringstream option;
+                    if (requestId != "") {
+                        option << "&requestId=" << requestId;
+                    }
+                    option << "&orderId=" << orderId;
+                    option << "&amount=" << amount;
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str();
+                    }
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Get<EarnOrderDemandRedeemOrderResponse>(url);
+                    return result;
+                }
+
+                std::shared_ptr<EarnOrderUserAssetsListResponse> EarnOrderUserAssetsList(const string &currency, int pageNum, int pageSize, int projectType)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v1/earn/order/user/assets/list";
+                    // option
+                    stringstream option;
+                    if (currency != "") {
+                        option << "&currency=" << currency;
+                    }
+                    option << "&pageNum=" << pageNum;
+                    option << "&pageSize=" << pageSize;
+                    option << "&projectType=" << projectType;
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str();
+                    }
+                    // url
+                    string url = pb->Build("GET", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Get<EarnOrderUserAssetsListResponse>(url);
+                    return result;
+                }
+
             private:
                 std::shared_ptr<url_base::PrivateUrlBuilder> pb;
             };

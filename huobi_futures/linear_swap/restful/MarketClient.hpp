@@ -92,6 +92,33 @@ typedef huobi_futures::linear_swap::restful::response_market::GetBasisResponse G
 #include "huobi_futures/linear_swap/restful/response/market/GetBatchMergedResponseV2.hpp"
 typedef huobi_futures::linear_swap::restful::response_market::GetBatchMergedResponseV2 GetBatchMergedResponseV2;
 
+#include "huobi_futures/linear_swap/restful/response/market/GetMarketFundingRateResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_market::GetMarketFundingRateResponse GetMarketFundingRateResponse;
+
+#include "huobi_futures/linear_swap/restful/response/market/GetMarketFundingRateHistoryResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_market::GetMarketFundingRateHistoryResponse GetMarketFundingRateHistoryResponse;
+
+#include "huobi_futures/linear_swap/restful/response/market/GetMarketOpenInterestResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_market::GetMarketOpenInterestResponse GetMarketOpenInterestResponse;
+
+#include "huobi_futures/linear_swap/restful/response/market/GetMarketPriceLimitResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_market::GetMarketPriceLimitResponse GetMarketPriceLimitResponse;
+
+#include "huobi_futures/linear_swap/restful/response/market/GetMarketLiquidationOrdersResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_market::GetMarketLiquidationOrdersResponse GetMarketLiquidationOrdersResponse;
+
+#include "huobi_futures/linear_swap/restful/response/market/GetMarketSettlementHistoryResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_market::GetMarketSettlementHistoryResponse GetMarketSettlementHistoryResponse;
+
+#include "huobi_futures/linear_swap/restful/response/market/GetMarketEliteAccountRatioResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_market::GetMarketEliteAccountRatioResponse GetMarketEliteAccountRatioResponse;
+
+#include "huobi_futures/linear_swap/restful/response/market/GetMarketElitePositionRatioResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_market::GetMarketElitePositionRatioResponse GetMarketElitePositionRatioResponse;
+
+#include "huobi_futures/linear_swap/restful/response/market/GetMarketEstimatedSettlementPriceResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_market::GetMarketEstimatedSettlementPriceResponse GetMarketEstimatedSettlementPriceResponse;
+
 namespace huobi_futures
 {
     namespace linear_swap
@@ -987,7 +1014,7 @@ namespace huobi_futures
                 {
                     // location
                     stringstream location;
-                    location << "/v5/market/risk_limit";
+                    location << "/v5/market/risk/limit";
                     
 
                     // option
@@ -1056,6 +1083,344 @@ namespace huobi_futures
                     string url = pb->Build(location.str());
 
                     auto result = url_base::HttpRequest::Instance().Get<GetMultiAssetsMarginListResponse>(url);
+                    return result;
+                }
+
+                // GET请求 - 查询当前资金费率
+                std::shared_ptr<GetMarketFundingRateResponse> GetFundingRate(const string &contract_code)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/market/funding_rate";
+
+                    // option
+                    stringstream option;
+                    if (contract_code != "")
+                    {
+                        option << "&contract_code=" << contract_code;
+                    }
+
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str().substr(1);
+                    }
+
+                    // 市场数据接口不需要鉴权，直接使用base url
+                    string url = utils::DEFAULT_HOST + path.str();
+
+                    // get
+                    auto result = url_base::HttpRequest::Instance().Get<GetMarketFundingRateResponse>(url);
+                    return result;
+                }
+
+                // GET请求 - 查询历史资金费率
+                std::shared_ptr<GetMarketFundingRateHistoryResponse> GetFundingRateHistory(
+                    const string &contract_code,
+                    const string &start_time = "",
+                    const string &end_time = "",
+                    int64_t from = 0,
+                    int32_t limit = 0,
+                    const string &direct = "")
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/market/funding_rate_history";
+
+                    // option
+                    stringstream option;
+                    if (contract_code != "")
+                    {
+                        option << "&contract_code=" << contract_code;
+                    }
+                    if (start_time != "")
+                    {
+                        option << "&start_time=" << start_time;
+                    }
+                    if (end_time != "")
+                    {
+                        option << "&end_time=" << end_time;
+                    }
+                    if (from != 0)
+                    {
+                        option << "&from=" << from;
+                    }
+                    if (limit != 0)
+                    {
+                        option << "&limit=" << limit;
+                    }
+                    if (direct != "")
+                    {
+                        option << "&direct=" << direct;
+                    }
+
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str().substr(1);
+                    }
+
+                    // 市场数据接口不需要鉴权，直接使用base url
+                    string url = utils::DEFAULT_HOST + path.str();
+
+                    // get
+                    auto result = url_base::HttpRequest::Instance().Get<GetMarketFundingRateHistoryResponse>(url);
+                    return result;
+                }
+
+                // GET请求 - 查询持仓总量
+                std::shared_ptr<GetMarketOpenInterestResponse> GetOpenInterest(const string &contract_code)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/market/open_interest";
+
+                    // option
+                    stringstream option;
+                    if (contract_code != "")
+                    {
+                        option << "&contract_code=" << contract_code;
+                    }
+
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str().substr(1);
+                    }
+
+                    // 市场数据接口不需要鉴权，直接使用base url
+                    string url = utils::DEFAULT_HOST + path.str();
+
+                    // get
+                    auto result = url_base::HttpRequest::Instance().Get<GetMarketOpenInterestResponse>(url);
+                    return result;
+                }
+
+                // GET请求 - 查询价格限制
+                std::shared_ptr<GetMarketPriceLimitResponse> GetPriceLimit(const string &contract_code)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/market/price_limit";
+
+                    // option
+                    stringstream option;
+                    if (contract_code != "")
+                    {
+                        option << "&contract_code=" << contract_code;
+                    }
+
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str().substr(1);
+                    }
+
+                    // 市场数据接口不需要鉴权，直接使用base url
+                    string url = utils::DEFAULT_HOST + path.str();
+
+                    // get
+                    auto result = url_base::HttpRequest::Instance().Get<GetMarketPriceLimitResponse>(url);
+                    return result;
+                }
+
+                // GET请求 - 查询强平订单
+                std::shared_ptr<GetMarketLiquidationOrdersResponse> GetLiquidationOrders(
+                    const string &contract_code = "",
+                    const string &pair = "",
+                    const string &start_time = "",
+                    const string &end_time = "",
+                    const string &direct = "",
+                    int64_t from = 0,
+                    int32_t limit = 0)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/market/liquidation_orders";
+
+                    // option
+                    stringstream option;
+                    if (contract_code != "")
+                    {
+                        option << "&contract_code=" << contract_code;
+                    }
+                    if (pair != "")
+                    {
+                        option << "&pair=" << pair;
+                    }
+                    if (start_time != "")
+                    {
+                        option << "&start_time=" << start_time;
+                    }
+                    if (end_time != "")
+                    {
+                        option << "&end_time=" << end_time;
+                    }
+                    if (direct != "")
+                    {
+                        option << "&direct=" << direct;
+                    }
+                    if (from != 0)
+                    {
+                        option << "&from=" << from;
+                    }
+                    if (limit != 0)
+                    {
+                        option << "&limit=" << limit;
+                    }
+
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str().substr(1);
+                    }
+
+                    // 市场数据接口不需要鉴权，直接使用base url
+                    string url = utils::DEFAULT_HOST + path.str();
+
+                    // get
+                    auto result = url_base::HttpRequest::Instance().Get<GetMarketLiquidationOrdersResponse>(url);
+                    return result;
+                }
+
+                // GET请求 - 查询结算历史
+                std::shared_ptr<GetMarketSettlementHistoryResponse> GetSettlementHistory(
+                    const string &contract_code = "",
+                    const string &start_time = "",
+                    const string &end_time = "",
+                    const string &direct = "",
+                    const string &from = "",
+                    int32_t limit = 0)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/market/settlement_history";
+
+                    // option
+                    stringstream option;
+                    if (contract_code != "")
+                    {
+                        option << "&contract_code=" << contract_code;
+                    }
+                    if (start_time != "")
+                    {
+                        option << "&start_time=" << start_time;
+                    }
+                    if (end_time != "")
+                    {
+                        option << "&end_time=" << end_time;
+                    }
+                    if (direct != "")
+                    {
+                        option << "&direct=" << direct;
+                    }
+                    if (from != "")
+                    {
+                        option << "&from=" << from;
+                    }
+                    if (limit != 0)
+                    {
+                        option << "&limit=" << limit;
+                    }
+
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str().substr(1);
+                    }
+
+                    // 市场数据接口不需要鉴权，直接使用base url
+                    string url = utils::DEFAULT_HOST + path.str();
+
+                    // get
+                    auto result = url_base::HttpRequest::Instance().Get<GetMarketSettlementHistoryResponse>(url);
+                    return result;
+                }
+
+                // GET请求 - 查询精英账户多空持仓对比(账户数)
+                std::shared_ptr<GetMarketEliteAccountRatioResponse> GetEliteAccountRatio(
+                    const string &contract_code,
+                    const string &period)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/market/elite_account_ratio";
+
+                    // option
+                    stringstream option;
+                    if (contract_code != "")
+                    {
+                        option << "&contract_code=" << contract_code;
+                    }
+                    if (period != "")
+                    {
+                        option << "&period=" << period;
+                    }
+
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str().substr(1);
+                    }
+
+                    // 市场数据接口不需要鉴权，直接使用base url
+                    string url = utils::DEFAULT_HOST + path.str();
+
+                    // get
+                    auto result = url_base::HttpRequest::Instance().Get<GetMarketEliteAccountRatioResponse>(url);
+                    return result;
+                }
+
+                // GET请求 - 查询精英账户多空持仓对比(持仓数)
+                std::shared_ptr<GetMarketElitePositionRatioResponse> GetElitePositionRatio(
+                    const string &contract_code,
+                    const string &period)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/market/elite_position_ratio";
+
+                    // option
+                    stringstream option;
+                    if (contract_code != "")
+                    {
+                        option << "&contract_code=" << contract_code;
+                    }
+                    if (period != "")
+                    {
+                        option << "&period=" << period;
+                    }
+
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str().substr(1);
+                    }
+
+                    // 市场数据接口不需要鉴权，直接使用base url
+                    string url = utils::DEFAULT_HOST + path.str();
+
+                    // get
+                    auto result = url_base::HttpRequest::Instance().Get<GetMarketElitePositionRatioResponse>(url);
+                    return result;
+                }
+
+                // GET请求 - 查询预估结算价
+                std::shared_ptr<GetMarketEstimatedSettlementPriceResponse> GetEstimatedSettlementPrice(const string &contract_code)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/market/estimated_settlement_price";
+
+                    // option
+                    stringstream option;
+                    if (contract_code != "")
+                    {
+                        option << "&contract_code=" << contract_code;
+                    }
+
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str().substr(1);
+                    }
+
+                    // 市场数据接口不需要鉴权，直接使用base url
+                    string url = utils::DEFAULT_HOST + path.str();
+
+                    // get
+                    auto result = url_base::HttpRequest::Instance().Get<GetMarketEstimatedSettlementPriceResponse>(url);
                     return result;
                 }
 

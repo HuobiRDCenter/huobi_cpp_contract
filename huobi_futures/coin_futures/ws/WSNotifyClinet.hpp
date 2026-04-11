@@ -24,6 +24,12 @@ typedef huobi_futures::coin_futures::ws::response_notify::SubContractInfoRespons
 #include "huobi_futures/coin_futures/ws/response/notify/SubTriggerOrderResponse.hpp"
 typedef huobi_futures::coin_futures::ws::response_notify::SubTriggerOrderResponse SubTriggerOrderResponse;
 
+#include "huobi_futures/coin_futures/ws/response/notify/SubAlgoOrdersResponse.hpp"
+typedef huobi_futures::coin_futures::ws::response_notify::SubAlgoOrdersResponse SubAlgoOrdersResponse;
+
+#include "huobi_futures/coin_futures/ws/response/notify/SubAccountResponse.hpp"
+typedef huobi_futures::coin_futures::ws::response_notify::SubAccountResponse SubAccountResponse;
+
 #include "huobi_futures/wsbase/WSOpData.hpp"
 typedef huobi_futures::wsbase::WSOpData WSOpData;
 
@@ -565,6 +571,94 @@ namespace huobi_futures
                 {
                     stringstream ch;
                     ch << "trigger_order_cross." << contract_code;
+                    WSOpData op_data;
+                    op_data.op = "unsub";
+                    op_data.topic = ch.str();
+                    op_data.cid = cid;
+
+                    Unsub(op_data.ToJson(), ch.str());
+                }
+
+                // 订阅策略订单
+                typedef std::function<void(const SubAlgoOrdersResponse&)> _OnSubAlgoOrdersResponse;
+                void SubAlgoOrders(const string &contract_code, _OnSubAlgoOrdersResponse callbackFun, const string &cid = utils::DEFAULT_ID)
+                {
+                    // 构建频道：algo_orders.$contract_code
+                    stringstream ch;
+                    ch << "algo_orders." << contract_code;
+                    
+                    WSOpData op_data;
+                    op_data.op = "sub";
+                    op_data.topic = ch.str();
+                    op_data.cid = cid;
+
+                    Sub(op_data.ToJson(), ch.str(), [&](const string &data) {
+                        SubAlgoOrdersResponse obj;
+                        JS::ParseContext parseContext(data);
+                        parseContext.allow_unnasigned_required_members = false;
+
+                        if (parseContext.parseTo(obj) != JS::Error::NoError)
+                        {
+                            std::string errorStr = parseContext.makeErrorString();
+                            LOG(ERROR) << "Error parsing struct SubAlgoOrdersResponse error";
+                            LOG(ERROR) << data;
+                            return;
+                        }
+                        callbackFun(obj);
+                    });
+                }
+
+                // 取消订阅策略订单
+                void UnsubAlgoOrders(const string &contract_code, const string &cid = utils::DEFAULT_ID)
+                {
+                    // 构建频道：algo_orders.$contract_code
+                    stringstream ch;
+                    ch << "algo_orders." << contract_code;
+                    
+                    WSOpData op_data;
+                    op_data.op = "unsub";
+                    op_data.topic = ch.str();
+                    op_data.cid = cid;
+
+                    Unsub(op_data.ToJson(), ch.str());
+                }
+
+                // 订阅账户变动数据
+                typedef std::function<void(const SubAccountResponse&)> _OnSubAccountResponse;
+                void SubAccount(_OnSubAccountResponse callbackFun, const string &cid = utils::DEFAULT_ID)
+                {
+                    // 构建频道：account
+                    stringstream ch;
+                    ch << "account";
+                    
+                    WSOpData op_data;
+                    op_data.op = "sub";
+                    op_data.topic = ch.str();
+                    op_data.cid = cid;
+
+                    Sub(op_data.ToJson(), ch.str(), [callbackFun](const string &data) {
+                        SubAccountResponse obj;
+                        JS::ParseContext parseContext(data);
+                        parseContext.allow_unnasigned_required_members = false;
+
+                        if (parseContext.parseTo(obj) != JS::Error::NoError)
+                        {
+                            std::string errorStr = parseContext.makeErrorString();
+                            LOG(ERROR) << "Error parsing struct SubAccountResponse error";
+                            LOG(ERROR) << data;
+                            return;
+                        }
+                        callbackFun(obj);
+                    });
+                }
+
+                // 取消订阅账户变动数据
+                void UnsubAccount(const string &cid = utils::DEFAULT_ID)
+                {
+                    // 构建频道：account
+                    stringstream ch;
+                    ch << "account";
+                    
                     WSOpData op_data;
                     op_data.op = "unsub";
                     op_data.topic = ch.str();

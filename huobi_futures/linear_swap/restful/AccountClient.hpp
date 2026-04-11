@@ -91,6 +91,9 @@ typedef huobi_futures::linear_swap::restful::response_account::SwapAccountBalanc
 #include "huobi_futures/linear_swap/restful/response/account/SwapMultiAssetsMarginResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_account::SwapMultiAssetsMarginResponse SwapMultiAssetsMarginResponse;
 
+#include "huobi_futures/linear_swap/restful/response/account/SwapAccountBillsResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_account::SwapAccountBillsResponse SwapAccountBillsResponse;
+
 namespace huobi_futures
 {
     namespace linear_swap
@@ -1501,10 +1504,72 @@ namespace huobi_futures
                         path << "?" << option.str();
                     }
                     // url
-                    string url = pb->Build("POST", path.str());
+                    string url = pb->Build("GET", path.str());
 
                     // post
                     auto result = url_base::HttpRequest::Instance().Get<FeeDeductionCurrencyResponse>(url);
+                    return result;
+                }
+
+                std::shared_ptr<SwapAccountBillsResponse> SwapGetAccountBills(
+                    const string &contract_code,
+                    const string &margin_mode,
+                    const string &type,
+                    const string &start_time,
+                    const string &end_time,
+                    int64_t from,
+                    int32_t limit,
+                    const string &direct)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/account/bills";
+
+                    // option - GET请求，参数在URL中
+                    stringstream option;
+                    if (contract_code != "")
+                    {
+                        option << "&contract_code=" << contract_code;
+                    }
+                    if (margin_mode != "")
+                    {
+                        option << "&margin_mode=" << margin_mode;
+                    }
+                    if (type != "")
+                    {
+                        option << "&type=" << type;
+                    }
+                    if (start_time != "")
+                    {
+                        option << "&start_time=" << start_time;
+                    }
+                    if (end_time != "")
+                    {
+                        option << "&end_time=" << end_time;
+                    }
+                    if (from != 0)
+                    {
+                        option << "&from=" << from;
+                    }
+                    if (limit != 0)
+                    {
+                        option << "&limit=" << limit;
+                    }
+                    if (direct != "")
+                    {
+                        option << "&direct=" << direct;
+                    }
+
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str().substr(1);
+                    }
+
+                    // url
+                    string url = pb->Build("GET", path.str());
+
+                    // get
+                    auto result = url_base::HttpRequest::Instance().Get<SwapAccountBillsResponse>(url);
                     return result;
                 }
 

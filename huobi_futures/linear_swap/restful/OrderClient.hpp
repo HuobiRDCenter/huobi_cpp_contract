@@ -83,6 +83,12 @@ typedef huobi_futures::linear_swap::restful::response_order::SwapPositionModeRes
 #include "huobi_futures/linear_swap/restful/response/order/SwapPositionRiskLimitResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_order::SwapPositionRiskLimitResponse SwapPositionRiskLimitResponse;
 
+#include "huobi_futures/linear_swap/restful/response/order/SwapPositionRiskLimitTierResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::SwapPositionRiskLimitTierResponse SwapPositionRiskLimitTierResponse;
+
+#include "huobi_futures/linear_swap/restful/response/order/SwapPositionMarginResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::SwapPositionMarginResponse SwapPositionMarginResponse;
+
 #include "huobi_futures/linear_swap/restful/response/order/SwapTradeOrderHistoryResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_order::SwapTradeOrderHistoryResponse SwapTradeOrderHistoryResponse;
 
@@ -91,6 +97,9 @@ typedef huobi_futures::linear_swap::restful::response_order::SwapTradeOrderOpens
 
 #include "huobi_futures/linear_swap/restful/response/order/SwapTradeOrderResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_order::SwapTradeOrderResponse SwapTradeOrderResponse;
+
+#include "huobi_futures/linear_swap/restful/response/order/SwapTradeCancelAfterResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::SwapTradeCancelAfterResponse SwapTradeCancelAfterResponse;
 
 #include "huobi_futures/linear_swap/restful/response/order/SwapTradeOrderTradesResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_order::SwapTradeOrderTradesResponse SwapTradeOrderTradesResponse;
@@ -1841,6 +1850,36 @@ namespace huobi_futures
                     return result;
                 }
 
+                std::shared_ptr<SwapTradeCancelAfterResponse> SwapTradeCancelAfter(const string &on_off, const string &time_out)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/trade/cancel-after";
+
+                    // option - 这里是GET请求，参数在URL中
+                    stringstream option;
+                    if (on_off != "")
+                    {
+                        option << "&on_off=" << on_off;
+                    }
+                    if (time_out != "")
+                    {
+                        option << "&time_out=" << time_out;
+                    }
+
+                    if (!option.str().empty())
+                    {
+                        path << "?" << option.str().substr(1);
+                    }
+
+                    // url
+                    string url = pb->Build("GET", path.str());
+
+                    // get - 发送GET请求
+                    auto result = url_base::HttpRequest::Instance().Get<SwapTradeCancelAfterResponse>(url);
+                    return result;
+                }
+
                 std::shared_ptr<SwapTradeOrderResponse> SwapTradeBatchorder(string contract_code, string margin_mode,
                                                                        string position_side, string side, string type, string price_match,
                                                                        string client_order_id, string price, string volume,
@@ -2464,7 +2503,7 @@ namespace huobi_futures
                 {
                     // path
                     stringstream path;
-                    path << "/v5/position/riskLimit";
+                    path << "/v5/position/risk/limit";
                     // option
                     stringstream option;
                     if (contract_code != "") {
@@ -2486,6 +2525,82 @@ namespace huobi_futures
 
                     // post
                     auto result = url_base::HttpRequest::Instance().Get<SwapPositionRiskLimitResponse>(url);
+                    return result;
+                }
+
+                std::shared_ptr<SwapPositionRiskLimitTierResponse> SwapPositionRiskLimitTier(const string &contract_code, const string &margin_mode)
+                {
+                    // path - 对应Java中的 POSITION_RISK_LIMIT_TIER = "/v5/position/risk/limit_tier"
+                    stringstream path;
+                    path << "/v5/position/risk/limit_tier";
+                    
+                    // 构建请求体
+                    stringstream content;
+                    if (contract_code != "")
+                    {
+                        content << ",\"contract_code\":\"" << contract_code << "\"";
+                    }
+                    if (margin_mode != "")
+                    {
+                        content << ",\"margin_mode\":\"" << margin_mode << "\"";
+                    }
+                    
+                    // 组装JSON数据
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}"; // substr(1)去掉第一个逗号
+                    }
+                    
+                    // url - 构建完整URL（不需要参数，参数在body中）
+                    string url = pb->Build("POST", path.str());
+                    
+                    // post - 发送POST请求，对应Java中的doPost
+                    auto result = url_base::HttpRequest::Instance().Post<SwapPositionRiskLimitTierResponse>(url, data.str());
+                    return result;
+                }
+
+                std::shared_ptr<SwapPositionMarginResponse> SwapPositionMargin(
+                    const string &contract_code,
+                    const string &position_side,
+                    const string &amount,
+                    const string &type)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/position/margin";
+
+                    // option - POST请求，参数在body中
+                    stringstream content;
+                    if (contract_code != "")
+                    {
+                        content << ",\"contract_code\":\"" << contract_code << "\"";
+                    }
+                    if (position_side != "")
+                    {
+                        content << ",\"position_side\":\"" << position_side << "\"";
+                    }
+                    if (amount != "")
+                    {
+                        content << ",\"amount\":\"" << amount << "\"";
+                    }
+                    if (type != "")
+                    {
+                        content << ",\"type\":\"" << type << "\"";
+                    }
+
+                    // data
+                    stringstream data;
+                    if (!content.str().empty())
+                    {
+                        data << "{" << content.str().substr(1) << "}";
+                    }
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<SwapPositionMarginResponse>(url, data.str());
                     return result;
                 }
 

@@ -1050,7 +1050,7 @@ namespace huobi_futures
                 {
                     // location
                     stringstream location;
-                    location << "/v5/assets_deduction_currency";
+                    location << "/v5/market/assets_deduction_currency";
 
                     // option
                     stringstream option;

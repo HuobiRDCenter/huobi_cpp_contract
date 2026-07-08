@@ -17,10 +17,23 @@ namespace huobi_futures
             {
                 struct FeeDeductionCurrencyResponse
                 {
-                    int fee_option;
-                    std::string deduction_currency;
+                    std::optional<int32_t> code;
 
-                    JS_OBJ(fee_option, deduction_currency);
+                    struct Data
+                    {
+                        int fee_option;
+                        std::string deduction_currency;
+
+                        JS_OBJ(fee_option, deduction_currency);
+                    };
+
+                    std::optional<Data> data;
+
+                    std::optional<string> message;
+
+                    int64_t ts;
+
+                    JS_OBJ(code, data, message, ts);
                 };
             } // namespace response_account
         }     // namespace restful

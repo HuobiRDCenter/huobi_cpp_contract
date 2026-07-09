@@ -97,6 +97,15 @@ typedef huobi_futures::linear_swap::restful::response_account::AssetModeResponse
 #include "huobi_futures/linear_swap/restful/response/account/SwapAccountBillsResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_account::SwapAccountBillsResponse SwapAccountBillsResponse;
 
+#include "huobi_futures/linear_swap/restful/response/account/UniversalTransferRecordsResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_account::UniversalTransferRecordsResponse UniversalTransferRecordsResponse;
+
+#include "huobi_futures/linear_swap/restful/response/account/UniversalTransferResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_account::UniversalTransferResponse UniversalTransferResponse;
+
+#include "huobi_futures/linear_swap/restful/response/account/InviteeRebateReferralsResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_account::InviteeRebateReferralsResponse InviteeRebateReferralsResponse;
+
 namespace huobi_futures
 {
     namespace linear_swap
@@ -1530,20 +1539,31 @@ namespace huobi_futures
                     // path
                     stringstream path;
                     path << "/v5/account/fee_deduction_currency";
-                    // option
-                    stringstream option;
-                    if (deduction_currency != "") {
-                        option << "&deduction_currency=" << deduction_currency;
-                    }
-                    option << "&fee_option=" << fee_option;
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str();
-                    }
+
+                    // data
+                    stringstream data;
+                    data << "{\"fee_option\":" << fee_option
+                         << ",\"deduction_currency\":\"" << deduction_currency << "\"}";
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<FeeDeductionCurrencyResponse>(url, data.str());
+                    return result;
+                }
+
+                // 查看手续费抵扣币种
+                std::shared_ptr<FeeDeductionCurrencyResponse> GetFeeDeductionCurrency()
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/account/fee_deduction_currency";
+
                     // url
                     string url = pb->Build("GET", path.str());
 
-                    // post
+                    // get
                     auto result = url_base::HttpRequest::Instance().Get<FeeDeductionCurrencyResponse>(url);
                     return result;
                 }

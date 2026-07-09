@@ -91,6 +91,9 @@ typedef huobi_futures::linear_swap::restful::response_account::SwapAccountBalanc
 #include "huobi_futures/linear_swap/restful/response/account/SwapMultiAssetsMarginResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_account::SwapMultiAssetsMarginResponse SwapMultiAssetsMarginResponse;
 
+#include "huobi_futures/linear_swap/restful/response/account/AssetModeResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_account::AssetModeResponse AssetModeResponse;
+
 #include "huobi_futures/linear_swap/restful/response/account/SwapAccountBillsResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_account::SwapAccountBillsResponse SwapAccountBillsResponse;
 
@@ -1432,6 +1435,40 @@ namespace huobi_futures
 
                     // post
                     auto result = url_base::HttpRequest::Instance().Post<SwapMultiAssetsMarginResponse>(url, data.str());
+                    return result;
+                }
+
+                // 设置资产模式
+                std::shared_ptr<AssetModeResponse> SetAssetMode(int asset_mode)
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/account/asset_mode";
+
+                    // data
+                    stringstream data;
+                    data << "{\"asset_mode\":" << asset_mode << "}";
+
+                    // url
+                    string url = pb->Build("POST", path.str());
+
+                    // post
+                    auto result = url_base::HttpRequest::Instance().Post<AssetModeResponse>(url, data.str());
+                    return result;
+                }
+
+                // 查询资产模式
+                std::shared_ptr<AssetModeResponse> GetAssetMode()
+                {
+                    // path
+                    stringstream path;
+                    path << "/v5/account/asset_mode";
+
+                    // url
+                    string url = pb->Build("GET", path.str());
+
+                    // get
+                    auto result = url_base::HttpRequest::Instance().Get<AssetModeResponse>(url);
                     return result;
                 }
 

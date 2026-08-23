@@ -1,3 +1,6 @@
+#ifndef TEST_CONFIG_HPP
+#define TEST_CONFIG_HPP
+
 #include <string>
 using std::string;
 
@@ -8,13 +11,14 @@ using std::getenv;
 using std::map;
 using std::pair;
 
-map<string, string> config;
+inline map<string, string> config;
 
 // V5 key 从环境变量读取（HTX_ACCESS_KEY / HTX_SECRET_KEY），
 // key 只放 /tmp/htx_keys.env（仓库外），代码零明文。
 // 缺失时回退占位值，让无 key 也能编译跑只读/公开测试。
-void init_config()
+inline void init_config()
 {
+    if (!config.empty()) return;
     config.insert(pair<string, string>("Host", "api.hbdm.com"));
 
     const char *ak = getenv("HTX_ACCESS_KEY");
@@ -28,3 +32,5 @@ void init_config()
     const char *sub = getenv("HTX_SUB_UID");
     config.insert(pair<string, string>("SubUid", sub ? sub : "xxxxxxxx"));
 }
+
+#endif

@@ -26,6 +26,9 @@ typedef huobi_futures::linear_swap::restful::response_order::GetOrderInfoRespons
 #include "huobi_futures/linear_swap/restful/response/order/GetOrderDetailResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_order::GetOrderDetailResponse GetOrderDetailResponse;
 
+#include "huobi_futures/linear_swap/restful/response/order/GetTradeOrderResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::GetTradeOrderResponse GetTradeOrderResponse;
+
 #include "huobi_futures/linear_swap/restful/response/order/SwitchLeverRateResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_order::SwitchLeverRateResponse SwitchLeverRateResponse;
 
@@ -1586,62 +1589,6 @@ namespace huobi_futures
                                                                                 const string &direct,
                                                                                 int trade_type, long start_time,
                                                                                 long end_time, long from_id)
-                {
-                    // path
-                    stringstream path;
-                    path << "/linear-swap-api/v3/swap_cross_matchresults_exact";
-
-                    // option
-                    stringstream content;
-                    if (contract != "")
-                    {
-                        content << ",\"contract\":\"" << contract << "\"";
-                    }
-                    if (pair != "")
-                    {
-                        content << ",\"pair\":\"" << pair << "\"";
-                    }
-                    if (direct != "")
-                    {
-                        content << ",\"direct\":\"" << direct << "\"";
-                    }
-                    if (trade_type != 0)
-                    {
-                        content << ",\"trade_type\":" << trade_type;
-                    }
-                    if (start_time != 0)
-                    {
-                        content << ",\"start_time\":" << start_time;
-                    }
-                    if (end_time != 0)
-                    {
-                        content << ",\"end_time\":" << end_time;
-                    }
-                    if (from_id != 0)
-                    {
-                        content << ",\"from_id\":" << from_id;
-                    }
-
-
-                    // data
-                    stringstream data;
-                    if (!content.str().empty())
-                    {
-                        data << "{" << content.str().substr(1) << "}";
-                    }
-
-                    // url
-                    string url = pb->Build("POST", path.str());
-
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Post<SwapMatchResultsResponse>(url, data.str());
-                    return result;
-                }
-
-                std::shared_ptr<SwapMatchResultsResponse> SwapCrossMatchResultsExact(const string &contract,const string &pair,
-                                                                                     const string &direct,
-                                                                                     int trade_type, long start_time,
-                                                                                     long end_time, long from_id)
                 {
                     // path
                     stringstream path;

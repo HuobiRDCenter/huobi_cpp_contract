@@ -111,6 +111,15 @@ typedef huobi_futures::linear_swap::restful::response_account::UniversalTransfer
 #include "huobi_futures/linear_swap/restful/response/account/InviteeRebateReferralsResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_account::InviteeRebateReferralsResponse InviteeRebateReferralsResponse;
 
+#include "huobi_futures/linear_swap/restful/response/account/InviteeRebateAllRebateDetailResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_account::InviteeRebateAllRebateDetailResponse InviteeRebateAllRebateDetailResponse;
+
+#include "huobi_futures/linear_swap/restful/response/account/InviteeRebateBatcherRebateDetailResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_account::InviteeRebateBatcherRebateDetailResponse InviteeRebateBatcherRebateDetailResponse;
+
+#include "huobi_futures/linear_swap/restful/response/account/FeeDeductionCurrencyResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_account::FeeDeductionCurrencyResponse FeeDeductionCurrencyResponse;
+
 namespace huobi_futures
 {
     namespace linear_swap
@@ -459,7 +468,7 @@ namespace huobi_futures
                     {
                         content << ",\"direct\":\"" << direct << "\"";
                     }
-                    if (from_id != "")
+                    if (from_id != 0)
                     {
                         content << ",\"from_id\":\"" << from_id << "\"";
                     }
@@ -813,8 +822,8 @@ namespace huobi_futures
                 }
 
                 std::shared_ptr<GetOrderLimitResponse> GetOrderLimit(const string &order_price_type, const string &contract_code = "",
-                                                                     const string &pair, const string &contract_type,
-                                                                     const string &business_type)
+                                                                     const string &pair = "", const string &contract_type = "",
+                                                                     const string &business_type = "")
                 {
                     // path
                     stringstream path;
@@ -855,8 +864,8 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetFeeResponse> GetFee(const string &contract_code = "", const string &pair,
-                                                       const string &contract_type, const string &business_type)
+                std::shared_ptr<GetFeeResponse> GetFee(const string &contract_code = "", const string &pair = "",
+                                                       const string &contract_type = "", const string &business_type = "")
                 {
                     // path
                     stringstream path;
@@ -980,8 +989,8 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetPositionLimitResponse> CrossGetPositionLimit(const string &contract_code = "", const string &pair,
-                                                                                const string &contract_type, const string &business_type)
+                std::shared_ptr<GetPositionLimitResponse> CrossGetPositionLimit(const string &contract_code = "", const string &pair = "",
+                                                                                const string &contract_type = "", const string &business_type = "")
                 {
                     // path
                     stringstream path;
@@ -1168,61 +1177,6 @@ namespace huobi_futures
 
                     // post
                     auto result = url_base::HttpRequest::Instance().Post<SwapCrossSubAccountInfoResponse>(url, data.str());
-                    return result;
-                }
-
-                std::shared_ptr<SwapFinancialRecordResponse> SwapFinancialRecord(const string &contract, const string &mar_acct,
-                                                                                 const string &type, long start_time,
-                                                                                 long end_time, const string &direct,
-                                                                                 long from_id)
-                {
-                    // path
-                    stringstream path;
-                    path << "/linear-swap-api/v3/swap_financial_record";
-
-                    // option
-                    stringstream content;
-                    if (contract != "")
-                    {
-                        content << ",\"contract\":\"" << contract << "\"";
-                    }
-                    if (mar_acct != "")
-                    {
-                        content << ",\"mar_acct\":\"" << mar_acct << "\"";
-                    }
-                    if (type != "")
-                    {
-                        content << ",\"type\":\"" << type << "\"";
-                    }
-                    if (direct != "")
-                    {
-                        content << ",\"direct\":\"" << direct << "\"";
-                    }
-                    if (start_time != 0)
-                    {
-                        content << ",\"start_time\":" << start_time;
-                    }
-                    if (end_time != 0)
-                    {
-                        content << ",\"end_time\":" << end_time;
-                    }
-                    if (from_id != 0)
-                    {
-                        content << ",\"from_id\":" << from_id;
-                    }
-
-                    // data
-                    stringstream data;
-                    if (!content.str().empty())
-                    {
-                        data << "{" << content.str().substr(1) << "}";
-                    }
-
-                    // url
-                    string url = pb->Build("POST", path.str());
-
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Post<SwapFinancialRecordResponse>(url, data.str());
                     return result;
                 }
 

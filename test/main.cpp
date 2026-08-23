@@ -8,6 +8,8 @@
 #include "ws_index_test.hpp"
 #include "ws_notify_test.hpp"
 #include "ws_system_test.hpp"
+#include "v5_restful_account_market_test.hpp"
+#include "v5_restful_trade_position_test.hpp"
 
 int my_argc;
 char** my_argv;

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <string>
-using std::optional<string>;
 
 #include "huobi_futures/json_struct/json_struct.h"
 #include <vector>

@@ -119,6 +119,15 @@ typedef huobi_futures::linear_swap::restful::response_market::GetMarketElitePosi
 #include "huobi_futures/linear_swap/restful/response/market/GetMarketEstimatedSettlementPriceResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_market::GetMarketEstimatedSettlementPriceResponse GetMarketEstimatedSettlementPriceResponse;
 
+#include "huobi_futures/linear_swap/restful/response/market/GetMarketRiskLimitResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_market::GetMarketRiskLimitResponse GetMarketRiskLimitResponse;
+
+#include "huobi_futures/linear_swap/restful/response/market/GetAssetsDeductionCurrencyResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_market::GetAssetsDeductionCurrencyResponse GetAssetsDeductionCurrencyResponse;
+
+#include "huobi_futures/linear_swap/restful/response/market/GetMultiAssetsMarginListResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_market::GetMultiAssetsMarginListResponse GetMultiAssetsMarginListResponse;
+
 namespace huobi_futures
 {
     namespace linear_swap
@@ -1073,7 +1082,7 @@ namespace huobi_futures
                 }
 
                 // GET请求 - 查询当前资金费率（#30 公开无需鉴权）
-                std::shared_ptr<GetMarketFundingRateResponse> GetFundingRate(const string &contract_code)
+                std::shared_ptr<GetMarketFundingRateResponse> GetMarketFundingRate(const string &contract_code)
                 {
                     // path
                     stringstream path;
@@ -1312,7 +1321,7 @@ namespace huobi_futures
                 }
 
                 // GET请求 - 查询精英账户多空持仓对比(账户数)（#36 公开无需鉴权）
-                std::shared_ptr<GetMarketEliteAccountRatioResponse> GetEliteAccountRatio(
+                std::shared_ptr<GetMarketEliteAccountRatioResponse> GetMarketEliteAccountRatio(
                     const string &contract_code,
                     const string &period)
                 {
@@ -1344,7 +1353,7 @@ namespace huobi_futures
                 }
 
                 // GET请求 - 查询精英账户多空持仓对比(持仓数)（#37 公开无需鉴权）
-                std::shared_ptr<GetMarketElitePositionRatioResponse> GetElitePositionRatio(
+                std::shared_ptr<GetMarketElitePositionRatioResponse> GetMarketElitePositionRatio(
                     const string &contract_code,
                     const string &period)
                 {

@@ -2,6 +2,11 @@
 
 #include <future>
 #include <sstream>
+#include <map>
+#include <string>
+using std::stringstream;
+using std::map;
+using std::string;
 
 #include "huobi_futures/url_base/PrivateUrlBuilder.hpp"
 #include "huobi_futures/url_base/HttpRequest.hpp"
@@ -1400,47 +1405,25 @@ namespace huobi_futures
 
                 std::shared_ptr<SwapAccountBalanceResponse> SwapAccountBalance()
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/account/balance";
-                    // option
-                    stringstream option;
+                    // url (no params for GET)
+                    string url = pb->Build("GET", utils::V5_ACCOUNT_BALANCE);
 
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str();
-                    }
-                    // url
-                    string url = pb->Build("GET", path.str());
-
-                    // post
+                    // get
                     auto result = url_base::HttpRequest::Instance().Get<SwapAccountBalanceResponse>(url);
                     return result;
                 }
 
+                // Note: SwapMultiAssetsMargin is public market data, moved to MarketClient
+                // This method is kept for backward compatibility but delegates to market data
+                // Java impl shows it as setMultiAssetsMargin(assets_mode) POST to /v5/account/multi_assets_margin
                 std::shared_ptr<SwapMultiAssetsMarginResponse> SwapMultiAssetsMargin(int assets_mode)
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/account/multi_assets_margin";
-
-                    // option
-                    stringstream content;
-                    if (assets_mode != "")
-                    {
-                        content << ",\"assets_mode\":\"" << assets_mode << "\"";
-                    }
-
-
                     // data
                     stringstream data;
-                    if (!content.str().empty())
-                    {
-                        data << "{" << content.str().substr(1) << "}";
-                    }
+                    data << "{\"assets_mode\":" << assets_mode << "}";
 
                     // url
-                    string url = pb->Build("POST", path.str());
+                    string url = pb->Build("POST", utils::V5_ACCOUNT_MULTI_ASSETS_MARGIN);
 
                     // post
                     auto result = url_base::HttpRequest::Instance().Post<SwapMultiAssetsMarginResponse>(url, data.str());
@@ -1450,16 +1433,12 @@ namespace huobi_futures
                 // 设置资产模式
                 std::shared_ptr<AssetModeResponse> SetAssetMode(int asset_mode)
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/account/asset_mode";
-
                     // data
                     stringstream data;
                     data << "{\"asset_mode\":" << asset_mode << "}";
 
                     // url
-                    string url = pb->Build("POST", path.str());
+                    string url = pb->Build("POST", utils::V5_ACCOUNT_ASSET_MODE);
 
                     // post
                     auto result = url_base::HttpRequest::Instance().Post<AssetModeResponse>(url, data.str());
@@ -1469,12 +1448,8 @@ namespace huobi_futures
                 // 查询资产模式
                 std::shared_ptr<AssetModeResponse> GetAssetMode()
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/account/asset_mode";
-
                     // url
-                    string url = pb->Build("GET", path.str());
+                    string url = pb->Build("GET", utils::V5_ACCOUNT_ASSET_MODE);
 
                     // get
                     auto result = url_base::HttpRequest::Instance().Get<AssetModeResponse>(url);
@@ -1534,19 +1509,15 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<FeeDeductionCurrencyResponse> FeeDeductionCurrency(const string &deduction_currency, int fee_option)
+                std::shared_ptr<FeeDeductionCurrencyResponse> FeeDeductionCurrency(int fee_option, const string &deduction_currency)
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/account/fee_deduction_currency";
-
                     // data
                     stringstream data;
                     data << "{\"fee_option\":" << fee_option
                          << ",\"deduction_currency\":\"" << deduction_currency << "\"}";
 
                     // url
-                    string url = pb->Build("POST", path.str());
+                    string url = pb->Build("POST", utils::V5_ACCOUNT_FEE_DEDUCTION_CURRENCY);
 
                     // post
                     auto result = url_base::HttpRequest::Instance().Post<FeeDeductionCurrencyResponse>(url, data.str());
@@ -1556,12 +1527,8 @@ namespace huobi_futures
                 // 查看手续费抵扣币种
                 std::shared_ptr<FeeDeductionCurrencyResponse> GetFeeDeductionCurrency()
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/account/fee_deduction_currency";
-
                     // url
-                    string url = pb->Build("GET", path.str());
+                    string url = pb->Build("GET", utils::V5_ACCOUNT_FEE_DEDUCTION_CURRENCY);
 
                     // get
                     auto result = url_base::HttpRequest::Instance().Get<FeeDeductionCurrencyResponse>(url);
@@ -1569,61 +1536,52 @@ namespace huobi_futures
                 }
 
                 std::shared_ptr<SwapAccountBillsResponse> SwapGetAccountBills(
-                    const string &contract_code,
-                    const string &margin_mode,
-                    const string &type,
-                    const string &start_time,
-                    const string &end_time,
-                    int64_t from,
-                    int32_t limit,
-                    const string &direct)
+                    const string &contract_code = "",
+                    const string &margin_mode = "",
+                    const string &type = "",
+                    const string &start_time = "",
+                    const string &end_time = "",
+                    int64_t from = 0,
+                    int32_t limit = 0,
+                    const string &direct = "")
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/account/bills";
-
-                    // option - GET请求，参数在URL中
-                    stringstream option;
+                    // build params map for signature
+                    map<string, string> params;
                     if (contract_code != "")
                     {
-                        option << "&contract_code=" << contract_code;
+                        params["contract_code"] = contract_code;
                     }
                     if (margin_mode != "")
                     {
-                        option << "&margin_mode=" << margin_mode;
+                        params["margin_mode"] = margin_mode;
                     }
                     if (type != "")
                     {
-                        option << "&type=" << type;
+                        params["type"] = type;
                     }
                     if (start_time != "")
                     {
-                        option << "&start_time=" << start_time;
+                        params["start_time"] = start_time;
                     }
                     if (end_time != "")
                     {
-                        option << "&end_time=" << end_time;
+                        params["end_time"] = end_time;
                     }
                     if (from != 0)
                     {
-                        option << "&from=" << from;
+                        params["from"] = std::to_string(from);
                     }
                     if (limit != 0)
                     {
-                        option << "&limit=" << limit;
+                        params["limit"] = std::to_string(limit);
                     }
                     if (direct != "")
                     {
-                        option << "&direct=" << direct;
+                        params["direct"] = direct;
                     }
 
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str().substr(1);
-                    }
-
-                    // url
-                    string url = pb->Build("GET", path.str());
+                    // url with params in signature
+                    string url = pb->Build("GET", utils::V5_ACCOUNT_BILLS, params);
 
                     // get
                     auto result = url_base::HttpRequest::Instance().Get<SwapAccountBillsResponse>(url);

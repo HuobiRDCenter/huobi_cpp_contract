@@ -1009,19 +1009,21 @@ namespace huobi_futures
                     return result;
                 }
 
-                std::shared_ptr<GetMarketRiskLimitResponse> GetMarketRiskLimit(string contract_code, string contract_type,
-                                                                               string margin_mode, string tier)
+                std::shared_ptr<GetMarketRiskLimitResponse> GetMarketRiskLimit(
+                    const string &contract_code = "",
+                    const string &contract_type = "",
+                    const string &margin_mode = "",
+                    const string &tier = "")
                 {
-                    // location
-                    stringstream location;
-                    location << "/v5/market/risk/limit";
-                    
+                    // path
+                    stringstream path;
+                    path << utils::V5_MARKET_RISK_LIMIT;
 
                     // option
                     stringstream option;
                     if (contract_code != "")
                     {
-                        option << "contract_code=" << contract_code;
+                        option << "&contract_code=" << contract_code;
                     }
                     if (contract_type != "")
                     {
@@ -1037,10 +1039,10 @@ namespace huobi_futures
                     }
                     if (!option.str().empty())
                     {
-                        location << "?" << option.str();
+                        path << "?" << option.str().substr(1);
                     }
 
-                    string url = pb->Build(location.str());
+                    string url = pb->Build(path.str());
 
                     auto result = url_base::HttpRequest::Instance().Get<GetMarketRiskLimitResponse>(url);
                     return result;
@@ -1048,19 +1050,11 @@ namespace huobi_futures
 
                 std::shared_ptr<GetAssetsDeductionCurrencyResponse> GetAssetsDeductionCurrency()
                 {
-                    // location
-                    stringstream location;
-                    location << "/v5/market/assets_deduction_currency";
+                    // path - no params needed
+                    stringstream path;
+                    path << utils::V5_MARKET_ASSETS_DEDUCTION_CURRENCY;
 
-                    // option
-                    stringstream option;
-
-                    if (!option.str().empty())
-                    {
-                        location << "?" << option.str();
-                    }
-
-                    string url = pb->Build(location.str());
+                    string url = pb->Build(path.str());
 
                     auto result = url_base::HttpRequest::Instance().Get<GetAssetsDeductionCurrencyResponse>(url);
                     return result;
@@ -1068,30 +1062,22 @@ namespace huobi_futures
 
                 std::shared_ptr<GetMultiAssetsMarginListResponse> GetMultiAssetsMarginList()
                 {
-                    // location
-                    stringstream location;
-                    location << "/v5/market/multi_assets_margin";
+                    // path - no params needed
+                    stringstream path;
+                    path << utils::V5_MARKET_MULTI_ASSETS_MARGIN;
 
-                    // option
-                    stringstream option;
-
-                    if (!option.str().empty())
-                    {
-                        location << "?" << option.str();
-                    }
-
-                    string url = pb->Build(location.str());
+                    string url = pb->Build(path.str());
 
                     auto result = url_base::HttpRequest::Instance().Get<GetMultiAssetsMarginListResponse>(url);
                     return result;
                 }
 
-                // GET请求 - 查询当前资金费率
+                // GET请求 - 查询当前资金费率（#30 公开无需鉴权）
                 std::shared_ptr<GetMarketFundingRateResponse> GetFundingRate(const string &contract_code)
                 {
                     // path
                     stringstream path;
-                    path << "/v5/market/funding_rate";
+                    path << utils::V5_MARKET_FUNDING_RATE;
 
                     // option
                     stringstream option;
@@ -1105,15 +1091,14 @@ namespace huobi_futures
                         path << "?" << option.str().substr(1);
                     }
 
-                    // 市场数据接口不需要鉴权，直接使用base url
-                    string url = utils::DEFAULT_HOST + path.str();
+                    string url = pb->Build(path.str());
 
                     // get
                     auto result = url_base::HttpRequest::Instance().Get<GetMarketFundingRateResponse>(url);
                     return result;
                 }
 
-                // GET请求 - 查询历史资金费率
+                // GET请求 - 查询历史资金费率（#31 公开无需鉴权）
                 std::shared_ptr<GetMarketFundingRateHistoryResponse> GetFundingRateHistory(
                     const string &contract_code,
                     const string &start_time = "",
@@ -1124,7 +1109,7 @@ namespace huobi_futures
                 {
                     // path
                     stringstream path;
-                    path << "/v5/market/funding_rate_history";
+                    path << utils::V5_MARKET_FUNDING_RATE_HISTORY;
 
                     // option
                     stringstream option;
@@ -1158,20 +1143,19 @@ namespace huobi_futures
                         path << "?" << option.str().substr(1);
                     }
 
-                    // 市场数据接口不需要鉴权，直接使用base url
-                    string url = utils::DEFAULT_HOST + path.str();
+                    string url = pb->Build(path.str());
 
                     // get
                     auto result = url_base::HttpRequest::Instance().Get<GetMarketFundingRateHistoryResponse>(url);
                     return result;
                 }
 
-                // GET请求 - 查询持仓总量
+                // GET请求 - 查询持仓总量（#32 公开无需鉴权）
                 std::shared_ptr<GetMarketOpenInterestResponse> GetOpenInterest(const string &contract_code)
                 {
                     // path
                     stringstream path;
-                    path << "/v5/market/open_interest";
+                    path << utils::V5_MARKET_OPEN_INTEREST;
 
                     // option
                     stringstream option;
@@ -1185,20 +1169,19 @@ namespace huobi_futures
                         path << "?" << option.str().substr(1);
                     }
 
-                    // 市场数据接口不需要鉴权，直接使用base url
-                    string url = utils::DEFAULT_HOST + path.str();
+                    string url = pb->Build(path.str());
 
                     // get
                     auto result = url_base::HttpRequest::Instance().Get<GetMarketOpenInterestResponse>(url);
                     return result;
                 }
 
-                // GET请求 - 查询价格限制
+                // GET请求 - 查询价格限制（#33 公开无需鉴权）
                 std::shared_ptr<GetMarketPriceLimitResponse> GetPriceLimit(const string &contract_code)
                 {
                     // path
                     stringstream path;
-                    path << "/v5/market/price_limit";
+                    path << utils::V5_MARKET_PRICE_LIMIT;
 
                     // option
                     stringstream option;
@@ -1212,15 +1195,14 @@ namespace huobi_futures
                         path << "?" << option.str().substr(1);
                     }
 
-                    // 市场数据接口不需要鉴权，直接使用base url
-                    string url = utils::DEFAULT_HOST + path.str();
+                    string url = pb->Build(path.str());
 
                     // get
                     auto result = url_base::HttpRequest::Instance().Get<GetMarketPriceLimitResponse>(url);
                     return result;
                 }
 
-                // GET请求 - 查询强平订单
+                // GET请求 - 查询强平订单（#34 公开无需鉴权）
                 std::shared_ptr<GetMarketLiquidationOrdersResponse> GetLiquidationOrders(
                     const string &contract_code = "",
                     const string &pair = "",
@@ -1232,7 +1214,7 @@ namespace huobi_futures
                 {
                     // path
                     stringstream path;
-                    path << "/v5/market/liquidation_orders";
+                    path << utils::V5_MARKET_LIQUIDATION_ORDERS;
 
                     // option
                     stringstream option;
@@ -1270,15 +1252,14 @@ namespace huobi_futures
                         path << "?" << option.str().substr(1);
                     }
 
-                    // 市场数据接口不需要鉴权，直接使用base url
-                    string url = utils::DEFAULT_HOST + path.str();
+                    string url = pb->Build(path.str());
 
                     // get
                     auto result = url_base::HttpRequest::Instance().Get<GetMarketLiquidationOrdersResponse>(url);
                     return result;
                 }
 
-                // GET请求 - 查询结算历史
+                // GET请求 - 查询结算历史（#35 公开无需鉴权）
                 std::shared_ptr<GetMarketSettlementHistoryResponse> GetSettlementHistory(
                     const string &contract_code = "",
                     const string &start_time = "",
@@ -1289,7 +1270,7 @@ namespace huobi_futures
                 {
                     // path
                     stringstream path;
-                    path << "/v5/market/settlement_history";
+                    path << utils::V5_MARKET_SETTLEMENT_HISTORY;
 
                     // option
                     stringstream option;
@@ -1323,22 +1304,21 @@ namespace huobi_futures
                         path << "?" << option.str().substr(1);
                     }
 
-                    // 市场数据接口不需要鉴权，直接使用base url
-                    string url = utils::DEFAULT_HOST + path.str();
+                    string url = pb->Build(path.str());
 
                     // get
                     auto result = url_base::HttpRequest::Instance().Get<GetMarketSettlementHistoryResponse>(url);
                     return result;
                 }
 
-                // GET请求 - 查询精英账户多空持仓对比(账户数)
+                // GET请求 - 查询精英账户多空持仓对比(账户数)（#36 公开无需鉴权）
                 std::shared_ptr<GetMarketEliteAccountRatioResponse> GetEliteAccountRatio(
                     const string &contract_code,
                     const string &period)
                 {
                     // path
                     stringstream path;
-                    path << "/v5/market/elite_account_ratio";
+                    path << utils::V5_MARKET_ELITE_ACCOUNT_RATIO;
 
                     // option
                     stringstream option;
@@ -1356,22 +1336,21 @@ namespace huobi_futures
                         path << "?" << option.str().substr(1);
                     }
 
-                    // 市场数据接口不需要鉴权，直接使用base url
-                    string url = utils::DEFAULT_HOST + path.str();
+                    string url = pb->Build(path.str());
 
                     // get
                     auto result = url_base::HttpRequest::Instance().Get<GetMarketEliteAccountRatioResponse>(url);
                     return result;
                 }
 
-                // GET请求 - 查询精英账户多空持仓对比(持仓数)
+                // GET请求 - 查询精英账户多空持仓对比(持仓数)（#37 公开无需鉴权）
                 std::shared_ptr<GetMarketElitePositionRatioResponse> GetElitePositionRatio(
                     const string &contract_code,
                     const string &period)
                 {
                     // path
                     stringstream path;
-                    path << "/v5/market/elite_position_ratio";
+                    path << utils::V5_MARKET_ELITE_POSITION_RATIO;
 
                     // option
                     stringstream option;
@@ -1389,20 +1368,19 @@ namespace huobi_futures
                         path << "?" << option.str().substr(1);
                     }
 
-                    // 市场数据接口不需要鉴权，直接使用base url
-                    string url = utils::DEFAULT_HOST + path.str();
+                    string url = pb->Build(path.str());
 
                     // get
                     auto result = url_base::HttpRequest::Instance().Get<GetMarketElitePositionRatioResponse>(url);
                     return result;
                 }
 
-                // GET请求 - 查询预估结算价
+                // GET请求 - 查询预估结算价（#38 公开无需鉴权）
                 std::shared_ptr<GetMarketEstimatedSettlementPriceResponse> GetEstimatedSettlementPrice(const string &contract_code)
                 {
                     // path
                     stringstream path;
-                    path << "/v5/market/estimated_settlement_price";
+                    path << utils::V5_MARKET_ESTIMATED_SETTLEMENT_PRICE;
 
                     // option
                     stringstream option;
@@ -1416,8 +1394,7 @@ namespace huobi_futures
                         path << "?" << option.str().substr(1);
                     }
 
-                    // 市场数据接口不需要鉴权，直接使用base url
-                    string url = utils::DEFAULT_HOST + path.str();
+                    string url = pb->Build(path.str());
 
                     // get
                     auto result = url_base::HttpRequest::Instance().Get<GetMarketEstimatedSettlementPriceResponse>(url);

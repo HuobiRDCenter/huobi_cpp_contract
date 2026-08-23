@@ -44,7 +44,6 @@ namespace huobi_futures
 
                         JS_OBJ(id, contract_code, position_side, margin_mode, cost_open, close_avg_price, volume, available, lever_rate, profit, profit_ratio, state, fee, funding_fee, margin_currency, last, business_type, contract_type, created_time, updated_time);
                     };
-                    };
 
                     std::optional<Data> data;
 

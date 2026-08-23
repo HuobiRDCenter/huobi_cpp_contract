@@ -17,58 +17,58 @@ namespace huobi_futures
             {
                 struct GetTradeOrderResponse
                 {
-                    int64_t code;
-                    std::string message;
+                    std::optional<int32_t> code;
+                    std::optional<std::string> msg;
 
                     struct Data
                     {
                         // 基础信息
-                        std::string id;
-                        std::string contractCode;
-                        std::string side;
-                        std::string positionSide;
-                        std::string type;
+                        std::optional<std::string> id;
+                        std::optional<std::string> contract_code;
+                        std::optional<std::string> side;
+                        std::optional<std::string> position_side;
+                        std::optional<std::string> type;
 
                         // 订单参数
-                        std::string priceMatch;
-                        std::string orderId;
-                        std::string clientOrderId;
-                        std::string marginMode;
-                        std::string price;
-                        std::string volume;
-                        int64_t leverRate;
+                        std::optional<std::string> price_match;
+                        std::optional<std::string> order_id;
+                        std::optional<std::string> client_order_id;
+                        std::optional<std::string> margin_mode;
+                        std::optional<std::string> price;
+                        std::optional<std::string> volume;
+                        std::optional<int64_t> lever_rate;
 
                         // 状态信息
-                        std::string state;
-                        std::string orderSource;
-                        bool reduceOnly;
-                        std::string timeInForce;
+                        std::optional<std::string> state;
+                        std::optional<std::string> order_source;
+                        std::optional<bool> reduce_only;
+                        std::optional<std::string> time_in_force;
 
                         // 止盈止损
-                        std::string tpTriggerPrice;
-                        std::string tpOrderPrice;
-                        std::string tpType;
-                        std::string tpTriggerPriceType;
-                        std::string slTriggerPrice;
-                        std::string slOrderPrice;
-                        std::string slType;
-                        std::string slTriggerPriceType;
+                        std::optional<std::string> tp_trigger_price;
+                        std::optional<std::string> tp_order_price;
+                        std::optional<std::string> tp_type;
+                        std::optional<std::string> tp_trigger_price_type;
+                        std::optional<std::string> sl_trigger_price;
+                        std::optional<std::string> sl_order_price;
+                        std::optional<std::string> sl_type;
+                        std::optional<std::string> sl_trigger_price_type;
 
                         // 成交信息
-                        std::string tradeAvgPrice;
-                        std::string tradeVolume;
-                        std::string tradeTurnover;
+                        std::optional<std::string> trade_avg_price;
+                        std::optional<std::string> trade_volume;
+                        std::optional<std::string> trade_turnover;
 
                         // 费用相关
-                        std::string feeCurrency;
-                        std::string fee;
+                        std::optional<std::string> fee_currency;
+                        std::optional<std::string> fee;
 
                         // 其他参数
-                        bool priceProtect;
-                        std::string profit;
-                        std::string contractType;
-                        int64_t createdTime;
-                        int64_t updatedTime;
+                        std::optional<bool> price_protect;
+                        std::optional<std::string> profit;
+                        std::optional<std::string> contract_type;
+                        std::optional<int64_t> created_time;
+                        std::optional<int64_t> updated_time;
 
                         JS_OBJ(
                             id,
@@ -109,9 +109,9 @@ namespace huobi_futures
                     };
                     std::optional<Data> data;
 
-                    int64_t ts;
+                    std::optional<int64_t> ts;
 
-                    JS_OBJ(code, message, data, ts);
+                    JS_OBJ(code, msg, data, ts);
                 };
             } // namespace response_order
         }     // namespace restful

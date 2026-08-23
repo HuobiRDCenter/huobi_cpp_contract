@@ -16,8 +16,9 @@ namespace huobi_futures
                 {
                     struct Data
                     {
-                        // DataBean 为空结构
-                        JS_OBJ();
+                        // DataBean 为空结构，添加占位字段以编译
+                        std::optional<int32_t> _placeholder;
+                        JS_OBJ(_placeholder);
                     };
 
                     std::optional<int32_t> code;

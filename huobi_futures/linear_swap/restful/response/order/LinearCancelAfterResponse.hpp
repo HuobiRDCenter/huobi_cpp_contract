@@ -22,9 +22,9 @@ namespace huobi_futures
                         std::optional<int64_t> trigger_time;
                         JS_OBJ(current_time, trigger_time);
                     };
-                    std::optional<JS::Nullable<int64_t>> code;
+                    std::optional<int32_t> code;
                     std::optional<std::string> msg;
-                    std::optional<JS::Nullable<int64_t>> ts;
+                    std::optional<int64_t> ts;
                     std::optional<Data> data;
                     JS_OBJ(code, msg, ts, data);
                 };

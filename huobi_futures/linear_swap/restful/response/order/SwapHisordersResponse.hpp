@@ -55,7 +55,7 @@ namespace huobi_futures
                     std::optional<std::string> msg;
                     std::optional<std::vector<Data>> data;
                     std::optional<JS::Nullable<int64_t>> ts;
-                    JS_OBJ(code, msg, data, ts)
+                    JS_OBJ(code, msg, data, ts);
                 };
             } // namespace response_order
         }     // namespace restful

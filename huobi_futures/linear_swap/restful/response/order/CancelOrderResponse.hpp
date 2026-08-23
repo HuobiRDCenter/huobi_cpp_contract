@@ -17,36 +17,34 @@ namespace huobi_futures
             {
                 struct CancelOrderResponse
                 {
-                    string status;
+                    std::optional<int32_t> code;
 
-                    std::optional<int32_t> err_code;
-
-                    std::optional<string> err_msg;
+                    std::optional<string> msg;
 
                     struct Data
                     {
                         struct Error
                         {
-                            string order_id;
+                            std::optional<string> order_id;
 
-                            int64_t err_code;
+                            std::optional<int32_t> err_code;
 
-                            string err_msg;
+                            std::optional<string> err_msg;
 
                             JS_OBJ(order_id, err_code, err_msg);
                         };
 
-                        std::vector<Error> errors;
+                        std::optional<std::vector<Error>> errors;
 
-                        string successes;
+                        std::optional<std::vector<std::string>> successes;
 
                         JS_OBJ(errors, successes);
                     };
                     std::optional<Data> data;
 
-                    int64_t ts;
+                    std::optional<int64_t> ts;
 
-                    JS_OBJ(status, err_code, err_msg, data, ts);
+                    JS_OBJ(code, msg, data, ts);
                 };
             } // namespace response_order
         }     // namespace restful

@@ -17,8 +17,8 @@ static const string V5_FAR_PRICE = "7300"; // 远低于市价的限价买单，�
 static string PlaceFarOrder(OrderClient &client, const string &position_side = "long")
 {
     auto r = client.TradeOrder(V5_CONTRACT, "isolated", position_side, "buy", "limit", "",
-                               "", V5_FAR_PRICE, "1", 0, "", "", "", "", "", "", "", "",
-                               "", "", "", "", "", "", false, false);
+                               "", V5_FAR_PRICE, "1", "", "", "", "", "", "", "", "",
+                               "", "", "", "");
     EXPECT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
     // order_id 在 data 里
@@ -35,8 +35,8 @@ TEST(V5Trade, TradeOrderFarPrice)
     init_config();
     OrderClient client(config["AccessKey"], config["SecretKey"]);
     auto r = client.TradeOrder(V5_CONTRACT, "isolated", "long", "buy", "limit", "",
-                               "", V5_FAR_PRICE, "1", 0, "", "", "", "", "", "", "", "",
-                               "", "", "", "", "", "", false, false);
+                               "", V5_FAR_PRICE, "1", "", "", "", "", "", "", "", "",
+                               "", "", "", "");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
     // 挂单成功后立即撤单

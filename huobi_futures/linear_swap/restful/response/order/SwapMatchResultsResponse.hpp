@@ -32,7 +32,7 @@ namespace huobi_futures
                         std::optional<JS::Nullable<float>> trade_volume;
                         std::optional<JS::Nullable<float>> trade_price;
                         std::optional<JS::Nullable<float>> trade_turnover;
-                        std::optional<JS::Nullable<int64_t>>> create_date;
+                        std::optional<JS::Nullable<int64_t>> create_date;
                         std::optional<JS::Nullable<float>> offset_profitloss;
                         std::optional<JS::Nullable<float>> real_profit;
                         std::optional<JS::Nullable<float>> trade_fee;

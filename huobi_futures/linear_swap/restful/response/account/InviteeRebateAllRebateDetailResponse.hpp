@@ -42,7 +42,7 @@ namespace huobi_futures
                                partner_total_commission_usdt, partner_total_commission_trx,
                                partner_total_commission_htx);
                     } data;
-                    long ts;
+                    int64_t ts;
                     std::string nextId;
 
                     JS_OBJ(status, invitee_uid, data, ts, nextId);

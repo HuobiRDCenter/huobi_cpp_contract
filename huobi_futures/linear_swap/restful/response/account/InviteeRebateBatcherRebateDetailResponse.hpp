@@ -41,7 +41,7 @@ namespace huobi_futures
                             partner_total_commission_usdt, partner_total_commission_trx, partner_total_commission_htx
                         );
                     } data;
-                    long ts;
+                    int64_t ts;
                     JS_OBJ(status, data, ts);
                 };
             } // namespace response_account

@@ -125,7 +125,7 @@ namespace huobi_futures
 
             HttpRequest()
             {
-                CURLcode res = curl_global_init(CURL_GLOBAL_ALL);
+                CURLcode res = curl_global_init(CURL_GLOBAL_DEFAULT);
                 if (res != CURLE_OK)
                 {
                     LOG(ERROR) << "curl_global_init error:" << curl_easy_strerror(res);
@@ -137,7 +137,7 @@ namespace huobi_futures
                     LOG(ERROR) << "curl_easy_init error.";
                 }
                 curl_easy_setopt(curl, CURLOPT_TIMEOUT, 20);
-
+                curl_easy_setopt(curl, CURLOPT_NOSIGNAL, 1L);
                 curl_easy_setopt(curl, CURLOPT_WRITEFUNCTION, callback_func);
             }
 

@@ -63,9 +63,11 @@ TEST(V5Market, GetMarketRiskLimit)
 {
     init_config();
     MarketClient client;
-    auto result = client.GetMarketRiskLimit("SPX500-USDT", "", "", 0);
+    auto result = client.GetMarketRiskLimit("SPX500-USDT", "", "", "");
     ASSERT_NE(result, nullptr);
     EXPECT_EQ(result->code.value_or(0), 200);
+    ASSERT_TRUE(result->data.has_value());
+    EXPECT_FALSE(result->data->empty());
 }
 
 TEST(V5Market, GetAssetsDeductionCurrency)

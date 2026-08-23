@@ -3,6 +3,7 @@
 #include <future>
 #include <sstream>
 #include <vector>
+#include <map>
 
 #include "huobi_futures/url_base/PrivateUrlBuilder.hpp"
 #include "huobi_futures/url_base/HttpRequest.hpp"
@@ -38,7 +39,7 @@ namespace huobi_futures
                     pb = std::make_shared<url_base::PrivateUrlBuilder>(access_key, secret_key, host);
                 }
 
-                // POST请求 - 策略委托下单
+                // POST请求 - 策略委托下单 #39
                 std::shared_ptr<AlgoOrderResponse> AlgoOrder(
                     const string &contract_code,
                     const string &type,
@@ -66,7 +67,7 @@ namespace huobi_futures
                 {
                     // path
                     stringstream path;
-                    path << "/v5/algo/order";
+                    path << utils::V5_ALGO_ORDER;
 
                     // option
                     stringstream content;
@@ -178,7 +179,7 @@ namespace huobi_futures
                     return result;
                 }
 
-                // POST请求 - 撤销策略委托
+                // POST请求 - 撤销策略委托 #40，body 为顶层数组 [{...}]
                 std::shared_ptr<AlgoCancelOrdersResponse> AlgoCancelOrders(
                     const string &algo_id = "",
                     const string &algo_client_order_id = "",
@@ -186,7 +187,7 @@ namespace huobi_futures
                 {
                     // path
                     stringstream path;
-                    path << "/v5/algo/cancel-orders";
+                    path << utils::V5_ALGO_CANCEL_ORDERS;
 
                     // option
                     stringstream content;
@@ -203,11 +204,11 @@ namespace huobi_futures
                         content << ",\"contract_code\":\"" << contract_code << "\"";
                     }
 
-                    // data
+                    // data —— 单对象包装进顶层数组
                     stringstream data;
                     if (!content.str().empty())
                     {
-                        data << "{" << content.str().substr(1) << "}";
+                        data << "[{" << content.str().substr(1) << "}]";
                     }
 
                     // url
@@ -218,50 +219,40 @@ namespace huobi_futures
                     return result;
                 }
 
-                // GET请求 - 查询策略委托
+                // GET请求 - 查询策略委托 #41，业务参数进签名
                 std::shared_ptr<AlgoQueryOrdersResponse> AlgoQueryOrders(
                     const string &type,
                     const string &algo_id = "",
                     const string &algo_client_order_id = "",
                     const string &contract_code = "")
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/algo/order";
-
-                    // option
-                    stringstream option;
+                    map<string, string> params;
                     if (type != "")
                     {
-                        option << "&type=" << type;
+                        params["type"] = type;
                     }
                     if (algo_id != "")
                     {
-                        option << "&algo_id=" << algo_id;
+                        params["algo_id"] = algo_id;
                     }
                     if (algo_client_order_id != "")
                     {
-                        option << "&algo_client_order_id=" << algo_client_order_id;
+                        params["algo_client_order_id"] = algo_client_order_id;
                     }
                     if (contract_code != "")
                     {
-                        option << "&contract_code=" << contract_code;
-                    }
-
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str().substr(1);
+                        params["contract_code"] = contract_code;
                     }
 
                     // url
-                    string url = pb->Build("GET", path.str());
+                    string url = pb->Build("GET", utils::V5_ALGO_ORDER, params);
 
                     // get
                     auto result = url_base::HttpRequest::Instance().Get<AlgoQueryOrdersResponse>(url);
                     return result;
                 }
 
-                // GET请求 - 查询当前未触发策略委托
+                // GET请求 - 查询当前未触发策略委托 #42，业务参数进签名
                 std::shared_ptr<AlgoQueryOpenOrdersResponse> AlgoQueryOpenOrders(
                     const string &type,
                     const string &contract_code = "",
@@ -271,55 +262,45 @@ namespace huobi_futures
                     int32_t limit = 0,
                     const string &direct = "")
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/algo/order/opens";
-
-                    // option
-                    stringstream option;
+                    map<string, string> params;
                     if (type != "")
                     {
-                        option << "&type=" << type;
+                        params["type"] = type;
                     }
                     if (contract_code != "")
                     {
-                        option << "&contract_code=" << contract_code;
+                        params["contract_code"] = contract_code;
                     }
                     if (algo_id != "")
                     {
-                        option << "&algo_id=" << algo_id;
+                        params["algo_id"] = algo_id;
                     }
                     if (algo_client_order_id != "")
                     {
-                        option << "&algo_client_order_id=" << algo_client_order_id;
+                        params["algo_client_order_id"] = algo_client_order_id;
                     }
                     if (from != 0)
                     {
-                        option << "&from=" << from;
+                        params["from"] = std::to_string(from);
                     }
                     if (limit != 0)
                     {
-                        option << "&limit=" << limit;
+                        params["limit"] = std::to_string(limit);
                     }
                     if (direct != "")
                     {
-                        option << "&direct=" << direct;
-                    }
-
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str().substr(1);
+                        params["direct"] = direct;
                     }
 
                     // url
-                    string url = pb->Build("GET", path.str());
+                    string url = pb->Build("GET", utils::V5_ALGO_ORDER_OPENS, params);
 
                     // get
                     auto result = url_base::HttpRequest::Instance().Get<AlgoQueryOpenOrdersResponse>(url);
                     return result;
                 }
 
-                // GET请求 - 查询历史策略委托
+                // GET请求 - 查询历史策略委托 #43，业务参数进签名
                 std::shared_ptr<AlgoQueryOrderHistoryResponse> AlgoQueryOrderHistory(
                     const string &type,
                     const string &contract_code = "",
@@ -331,56 +312,46 @@ namespace huobi_futures
                     int32_t limit = 0,
                     const string &direct = "")
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/algo/order/history";
-
-                    // option
-                    stringstream option;
+                    map<string, string> params;
                     if (type != "")
                     {
-                        option << "&type=" << type;
+                        params["type"] = type;
                     }
                     if (contract_code != "")
                     {
-                        option << "&contract_code=" << contract_code;
+                        params["contract_code"] = contract_code;
                     }
                     if (margin_mode != "")
                     {
-                        option << "&margin_mode=" << margin_mode;
+                        params["margin_mode"] = margin_mode;
                     }
                     if (states != "")
                     {
-                        option << "&states=" << states;
+                        params["states"] = states;
                     }
                     if (start_time != "")
                     {
-                        option << "&start_time=" << start_time;
+                        params["start_time"] = start_time;
                     }
                     if (end_time != "")
                     {
-                        option << "&end_time=" << end_time;
+                        params["end_time"] = end_time;
                     }
                     if (from != 0)
                     {
-                        option << "&from=" << from;
+                        params["from"] = std::to_string(from);
                     }
                     if (limit != 0)
                     {
-                        option << "&limit=" << limit;
+                        params["limit"] = std::to_string(limit);
                     }
                     if (direct != "")
                     {
-                        option << "&direct=" << direct;
-                    }
-
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str().substr(1);
+                        params["direct"] = direct;
                     }
 
                     // url
-                    string url = pb->Build("GET", path.str());
+                    string url = pb->Build("GET", utils::V5_ALGO_ORDER_HISTORY, params);
 
                     // get
                     auto result = url_base::HttpRequest::Instance().Get<AlgoQueryOrderHistoryResponse>(url);

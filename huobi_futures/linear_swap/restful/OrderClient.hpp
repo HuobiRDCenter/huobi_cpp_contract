@@ -1737,905 +1737,401 @@ namespace huobi_futures
                     auto result = url_base::HttpRequest::Instance().Get<SwapPositionSideResponse>(url);
                     return result;
                 }
-
-                std::shared_ptr<SwapTradeOrderResponse> SwapTradeOrder(string contract_code, string position_side,
-                                                                       string side, string type, string price_match,
-                                                                       string client_order_id, string price, string volume,
-                                                                       int reduce_only, string time_in_force, string tp_trigger_price,
-                                                                       string tp_order_price, string tp_type,
-                                                                       string tp_trigger_price_type, string sl_trigger_price,
-                                                                       string sl_order_price, string sl_type, string sl_trigger_price_type,
-                                                                       bool price_protect, bool trigger_protect)
+                // #7 POST /v5/trade/order - trade single order (V5)
+                std::shared_ptr<SwapTradeOrderResponse> TradeOrder(
+                    const string& contract_code = "", const string& margin_mode = "",
+                    const string& position_side = "", const string& side = "",
+                    const string& type = "", const string& price_match = "",
+                    const string& client_order_id = "", const string& price = "",
+                    const string& volume = "", const string& reduce_only = "",
+                    const string& time_in_force = "", const string& tp_trigger_price = "",
+                    const string& tp_order_price = "", const string& tp_type = "",
+                    const string& tp_trigger_price_type = "", const string& sl_trigger_price = "",
+                    const string& sl_order_price = "", const string& sl_type = "",
+                    const string& sl_trigger_price_type = "", const string& price_protect = "",
+                    const string& self_match_prevent = "")
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/trade/order";
-
-                    // option
                     stringstream content;
-                    if (contract_code != "")
-                    {
-                        content << ",\"contract_code\":\"" << contract_code << "\"";
-                    }
-                    if (position_side != "")
-                    {
-                        content << ",\"position_side\":\"" << position_side << "\"";
-                    }
-                    if (side != "")
-                    {
-                        content << ",\"side\":\"" << side << "\"";
-                    }
-                    if (type != "")
-                    {
-                        content << ",\"type\":\"" << type << "\"";
-                    }
-                    if (price_match != "")
-                    {
-                        content << ",\"price_match\":\"" << price_match << "\"";
-                    }
-                    if (client_order_id != "")
-                    {
-                        content << ",\"client_order_id\":\"" << client_order_id << "\"";
-                    }
-                    if (price != "")
-                    {
-                        content << ",\"price\":\"" << price << "\"";
-                    }
-                    if (volume != "")
-                    {
-                        content << ",\"volume\":\"" << volume << "\"";
-                    }
-                    if (time_in_force != "")
-                    {
-                        content << ",\"time_in_force\":\"" << time_in_force << "\"";
-                    }
-                    if (tp_trigger_price != "")
-                    {
-                        content << ",\"tp_trigger_price\":\"" << tp_trigger_price << "\"";
-                    }
-                    if (tp_order_price != "")
-                    {
-                        content << ",\"tp_order_price\":\"" << tp_order_price << "\"";
-                    }
-                    if (tp_type != "")
-                    {
-                        content << ",\"tp_type\":\"" << tp_type << "\"";
-                    }
-                    if (tp_trigger_price_type != "")
-                    {
-                        content << ",\"tp_trigger_price_type\":\"" << tp_trigger_price_type << "\"";
-                    }
-                    if (sl_trigger_price != "")
-                    {
-                        content << ",\"sl_trigger_price\":\"" << sl_trigger_price << "\"";
-                    }
-                    if (sl_order_price != "")
-                    {
-                        content << ",\"sl_order_price\":\"" << sl_order_price << "\"";
-                    }
-                    if (sl_type != "")
-                    {
-                        content << ",\"sl_type\":\"" << sl_type << "\"";
-                    }
-                    if (sl_trigger_price_type != "")
-                    {
-                        content << ",\"sl_trigger_price_type\":\"" << sl_trigger_price_type << "\"";
-                    }
-                    if (price_protect != "")
-                    {
-                        content << ",\"price_protect\":\"" << price_protect << "\"";
-                    }
-                    if (trigger_protect != "")
-                    {
-                        content << ",\"trigger_protect\":\"" << trigger_protect << "\"";
-                    }
-                    if (reduce_only != 0)
-                    {
-                        content << ",\"reduce_only\":" << reduce_only;
-                    }
+                    if (contract_code != "") content << ",\"contract_code\":\"" << contract_code << "\"";
+                    if (margin_mode != "") content << ",\"margin_mode\":\"" << margin_mode << "\"";
+                    if (position_side != "") content << ",\"position_side\":\"" << position_side << "\"";
+                    if (side != "") content << ",\"side\":\"" << side << "\"";
+                    if (type != "") content << ",\"type\":\"" << type << "\"";
+                    if (price_match != "") content << ",\"price_match\":\"" << price_match << "\"";
+                    if (client_order_id != "") content << ",\"client_order_id\":\"" << client_order_id << "\"";
+                    if (price != "") content << ",\"price\":\"" << price << "\"";
+                    if (volume != "") content << ",\"volume\":\"" << volume << "\"";
+                    if (reduce_only != "") content << ",\"reduce_only\":" << reduce_only;
+                    if (time_in_force != "") content << ",\"time_in_force\":\"" << time_in_force << "\"";
+                    if (tp_trigger_price != "") content << ",\"tp_trigger_price\":\"" << tp_trigger_price << "\"";
+                    if (tp_order_price != "") content << ",\"tp_order_price\":\"" << tp_order_price << "\"";
+                    if (tp_type != "") content << ",\"tp_type\":\"" << tp_type << "\"";
+                    if (tp_trigger_price_type != "") content << ",\"tp_trigger_price_type\":\"" << tp_trigger_price_type << "\"";
+                    if (sl_trigger_price != "") content << ",\"sl_trigger_price\":\"" << sl_trigger_price << "\"";
+                    if (sl_order_price != "") content << ",\"sl_order_price\":\"" << sl_order_price << "\"";
+                    if (sl_type != "") content << ",\"sl_type\":\"" << sl_type << "\"";
+                    if (sl_trigger_price_type != "") content << ",\"sl_trigger_price_type\":\"" << sl_trigger_price_type << "\"";
+                    if (price_protect != "") content << ",\"price_protect\":" << price_protect;
+                    if (self_match_prevent != "") content << ",\"self_match_prevent\":" << self_match_prevent;
 
-
-                    // data
                     stringstream data;
-                    if (!content.str().empty())
-                    {
-                        data << "{" << content.str().substr(1) << "}";
-                    }
+                    if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
 
-                    // url
-                    string url = pb->Build("POST", path.str());
-
-                    // post
+                    string url = pb->Build("POST", utils::V5_TRADE_ORDER);
                     auto result = url_base::HttpRequest::Instance().Post<SwapTradeOrderResponse>(url, data.str());
                     return result;
                 }
 
-                std::shared_ptr<SwapTradeCancelAfterResponse> SwapTradeCancelAfter(const string &on_off, const string &time_out)
+                // #8 POST /v5/trade/batch_orders - trade batch orders (V5)
+                std::shared_ptr<BatchOrderResponse> TradeBatchOrders(
+                    const string& contract_code = "", const string& margin_mode = "",
+                    const string& position_side = "", const string& side = "",
+                    const string& type = "", const string& price_match = "",
+                    const string& client_order_id = "", const string& price = "",
+                    const string& volume = "", const string& reduce_only = "",
+                    const string& time_in_force = "", const string& tp_trigger_price = "",
+                    const string& tp_order_price = "", const string& tp_type = "",
+                    const string& tp_trigger_price_type = "", const string& sl_trigger_price = "",
+                    const string& sl_order_price = "", const string& sl_type = "",
+                    const string& sl_trigger_price_type = "", const string& price_protect = "")
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/trade/cancel-after";
+                    stringstream content;
+                    if (contract_code != "") content << ",\"contract_code\":\"" << contract_code << "\"";
+                    if (margin_mode != "") content << ",\"margin_mode\":\"" << margin_mode << "\"";
+                    if (position_side != "") content << ",\"position_side\":\"" << position_side << "\"";
+                    if (side != "") content << ",\"side\":\"" << side << "\"";
+                    if (type != "") content << ",\"type\":\"" << type << "\"";
+                    if (price_match != "") content << ",\"price_match\":\"" << price_match << "\"";
+                    if (client_order_id != "") content << ",\"client_order_id\":\"" << client_order_id << "\"";
+                    if (price != "") content << ",\"price\":\"" << price << "\"";
+                    if (volume != "") content << ",\"volume\":\"" << volume << "\"";
+                    if (reduce_only != "") content << ",\"reduce_only\":" << reduce_only;
+                    if (time_in_force != "") content << ",\"time_in_force\":\"" << time_in_force << "\"";
+                    if (tp_trigger_price != "") content << ",\"tp_trigger_price\":\"" << tp_trigger_price << "\"";
+                    if (tp_order_price != "") content << ",\"tp_order_price\":\"" << tp_order_price << "\"";
+                    if (tp_type != "") content << ",\"tp_type\":\"" << tp_type << "\"";
+                    if (tp_trigger_price_type != "") content << ",\"tp_trigger_price_type\":\"" << tp_trigger_price_type << "\"";
+                    if (sl_trigger_price != "") content << ",\"sl_trigger_price\":\"" << sl_trigger_price << "\"";
+                    if (sl_order_price != "") content << ",\"sl_order_price\":\"" << sl_order_price << "\"";
+                    if (sl_type != "") content << ",\"sl_type\":\"" << sl_type << "\"";
+                    if (sl_trigger_price_type != "") content << ",\"sl_trigger_price_type\":\"" << sl_trigger_price_type << "\"";
+                    if (price_protect != "") content << ",\"price_protect\":" << price_protect;
 
-                    // option - 这里是GET请求，参数在URL中
-                    stringstream option;
-                    if (on_off != "")
-                    {
-                        option << "&on_off=" << on_off;
-                    }
-                    if (time_out != "")
-                    {
-                        option << "&time_out=" << time_out;
-                    }
+                    // Java: body is top-level array [{...}]
+                    stringstream data;
+                    data << "[{" << (content.str().empty() ? "" : content.str().substr(1)) << "}]";
 
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str().substr(1);
-                    }
-
-                    // url
-                    string url = pb->Build("GET", path.str());
-
-                    // get - 发送GET请求
-                    auto result = url_base::HttpRequest::Instance().Get<SwapTradeCancelAfterResponse>(url);
+                    string url = pb->Build("POST", utils::V5_TRADE_BATCH_ORDERS);
+                    auto result = url_base::HttpRequest::Instance().Post<BatchOrderResponse>(url, data.str());
                     return result;
                 }
 
-                std::shared_ptr<SwapTradeOrderResponse> SwapTradeBatchorder(string contract_code, string margin_mode,
-                                                                       string position_side, string side, string type, string price_match,
-                                                                       string client_order_id, string price, string volume,
-                                                                       int reduce_only, string time_in_force, string tp_trigger_price,
-                                                                       string tp_order_price, string tp_type,
-                                                                       string tp_trigger_price_type, string sl_trigger_price,
-                                                                       string sl_order_price, string sl_type, string sl_trigger_price_type,
-                                                                       bool price_protect, bool trigger_protect)
+                // #9 POST /v5/trade/cancel_order - cancel single order (V5)
+                std::shared_ptr<CancelOrderResponse> CancelTradeOrder(
+                    const string& contract_code = "", const string& order_id = "",
+                    const string& client_order_id = "")
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/trade/batch_orders";
-
-                    // option
                     stringstream content;
-                    if (contract_code != "")
-                    {
-                        content << ",\"contract_code\":\"" << contract_code << "\"";
-                    }
-                    if (margin_mode != "")
-                    {
-                        content << ",\"margin_mode\":\"" << margin_mode << "\"";
-                    }
-                    if (position_side != "")
-                    {
-                        content << ",\"position_side\":\"" << position_side << "\"";
-                    }
-                    if (side != "")
-                    {
-                        content << ",\"side\":\"" << side << "\"";
-                    }
-                    if (type != "")
-                    {
-                        content << ",\"type\":\"" << type << "\"";
-                    }
-                    if (price_match != "")
-                    {
-                        content << ",\"price_match\":\"" << price_match << "\"";
-                    }
-                    if (client_order_id != "")
-                    {
-                        content << ",\"client_order_id\":\"" << client_order_id << "\"";
-                    }
-                    if (price != "")
-                    {
-                        content << ",\"price\":\"" << price << "\"";
-                    }
-                    if (volume != "")
-                    {
-                        content << ",\"volume\":\"" << volume << "\"";
-                    }
-                    if (time_in_force != "")
-                    {
-                        content << ",\"time_in_force\":\"" << time_in_force << "\"";
-                    }
-                    if (tp_trigger_price != "")
-                    {
-                        content << ",\"tp_trigger_price\":\"" << tp_trigger_price << "\"";
-                    }
-                    if (tp_order_price != "")
-                    {
-                        content << ",\"tp_order_price\":\"" << tp_order_price << "\"";
-                    }
-                    if (tp_type != "")
-                    {
-                        content << ",\"tp_type\":\"" << tp_type << "\"";
-                    }
-                    if (tp_trigger_price_type != "")
-                    {
-                        content << ",\"tp_trigger_price_type\":\"" << tp_trigger_price_type << "\"";
-                    }
-                    if (sl_trigger_price != "")
-                    {
-                        content << ",\"sl_trigger_price\":\"" << sl_trigger_price << "\"";
-                    }
-                    if (sl_order_price != "")
-                    {
-                        content << ",\"sl_order_price\":\"" << sl_order_price << "\"";
-                    }
-                    if (sl_type != "")
-                    {
-                        content << ",\"sl_type\":\"" << sl_type << "\"";
-                    }
-                    if (sl_trigger_price_type != "")
-                    {
-                        content << ",\"sl_trigger_price_type\":\"" << sl_trigger_price_type << "\"";
-                    }
-                    if (price_protect != "")
-                    {
-                        content << ",\"price_protect\":\"" << price_protect << "\"";
-                    }
-                    if (trigger_protect != "")
-                    {
-                        content << ",\"trigger_protect\":\"" << trigger_protect << "\"";
-                    }
-                    if (reduce_only != 0)
-                    {
-                        content << ",\"reduce_only\":" << reduce_only;
-                    }
+                    if (contract_code != "") content << ",\"contract_code\":\"" << contract_code << "\"";
+                    if (order_id != "") content << ",\"order_id\":\"" << order_id << "\"";
+                    if (client_order_id != "") content << ",\"client_order_id\":\"" << client_order_id << "\"";
 
-
-                    // data
                     stringstream data;
-                    if (!content.str().empty())
-                    {
-                        data << "{" << content.str().substr(1) << "}";
-                    }
+                    if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
 
-                    // url
-                    string url = pb->Build("POST", path.str());
+                    string url = pb->Build("POST", utils::V5_TRADE_CANCEL_ORDER);
+                    auto result = url_base::HttpRequest::Instance().Post<CancelOrderResponse>(url, data.str());
+                    return result;
+                }
 
-                    // post
+                // #10 POST /v5/trade/cancel_batch_orders - cancel batch orders (V5, body format: {"contract_code":"...", "order_id":[...]})
+                std::shared_ptr<CancelOrderResponse> CancelTradeBatchOrders(
+                    const string& contract_code = "", const string& order_id = "",
+                    const string& client_order_id = "")
+                {
+                    stringstream content;
+                    if (contract_code != "") content << ",\"contract_code\":\"" << contract_code << "\"";
+                    // Java: order_id / client_order_id as array ["..."]
+                    if (order_id != "") content << ",\"order_id\":[\"" << order_id << "\"]";
+                    if (client_order_id != "") content << ",\"client_order_id\":[\"" << client_order_id << "\"]";
+
+                    stringstream data;
+                    if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
+
+                    string url = pb->Build("POST", utils::V5_TRADE_CANCEL_BATCH_ORDERS);
+                    auto result = url_base::HttpRequest::Instance().Post<CancelOrderResponse>(url, data.str());
+                    return result;
+                }
+
+                // #11 POST /v5/trade/cancel_all_orders - cancel all orders (V5)
+                std::shared_ptr<CancelOrderResponse> CancelAllOrders(
+                    const string& contract_code = "", const string& side = "",
+                    const string& position_side = "")
+                {
+                    stringstream content;
+                    if (contract_code != "") content << ",\"contract_code\":\"" << contract_code << "\"";
+                    if (side != "") content << ",\"side\":\"" << side << "\"";
+                    if (position_side != "") content << ",\"position_side\":\"" << position_side << "\"";
+
+                    stringstream data;
+                    if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
+
+                    string url = pb->Build("POST", utils::V5_TRADE_CANCEL_ALL_ORDERS);
+                    auto result = url_base::HttpRequest::Instance().Post<CancelOrderResponse>(url, data.str());
+                    return result;
+                }
+
+                // #12 POST /v5/trade/position - query position (V5)
+                std::shared_ptr<SwapTradeOrderResponse> TradePosition(
+                    const string& contract_code = "", const string& margin_mode = "",
+                    const string& position_side = "", const string& client_order_id = "")
+                {
+                    stringstream content;
+                    if (contract_code != "") content << ",\"contract_code\":\"" << contract_code << "\"";
+                    if (margin_mode != "") content << ",\"margin_mode\":\"" << margin_mode << "\"";
+                    if (position_side != "") content << ",\"position_side\":\"" << position_side << "\"";
+                    if (client_order_id != "") content << ",\"client_order_id\":\"" << client_order_id << "\"";
+
+                    stringstream data;
+                    if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
+
+                    string url = pb->Build("POST", utils::V5_TRADE_POSITION);
                     auto result = url_base::HttpRequest::Instance().Post<SwapTradeOrderResponse>(url, data.str());
                     return result;
                 }
 
-                std::shared_ptr<SwapTradeOrderResponse> SwapCannelTradeOrder(string contract_code, string order_id,
-                                                                             string client_order_id)
+                // #13 POST /v5/trade/position_all - query all positions (V5)
+                std::shared_ptr<SwapTradeOrderResponse> TradePositionAll()
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/trade/cancel_order";
-
-                    // option
-                    stringstream content;
-                    if (contract_code != "")
-                    {
-                        content << ",\"contract_code\":\"" << contract_code << "\"";
-                    }
-                    if (order_id != "")
-                    {
-                        content << ",\"order_id\":\"" << order_id << "\"";
-                    }
-                    if (client_order_id != "")
-                    {
-                        content << ",\"client_order_id\":\"" << client_order_id << "\"";
-                    }
-
-                    // data
-                    stringstream data;
-                    if (!content.str().empty())
-                    {
-                        data << "{" << content.str().substr(1) << "}";
-                    }
-
-                    // url
-                    string url = pb->Build("POST", path.str());
-
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Post<SwapTradeOrderResponse>(url, data.str());
+                    string url = pb->Build("POST", utils::V5_TRADE_POSITION_ALL);
+                    auto result = url_base::HttpRequest::Instance().Post<SwapTradeOrderResponse>(url, "");
                     return result;
                 }
 
-                std::shared_ptr<SwapTradeOrderResponse> SwapCannelBatchTradeOrder(string contract_code, string order_id,
-                                                                             string client_order_id)
+                // #14 GET /v5/trade/order/opens - get open orders (V5)
+                std::shared_ptr<SwapTradeOrderOpensResponse> TradeOrderOpens(
+                    const string& contract_code = "", const string& margin_mode = "",
+                    const string& order_id = "", const string& client_order_id = "",
+                    const string& from = "", const string& limit = "",
+                    const string& direct = "")
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/trade/cancel_batch_orders";
+                    map<string, string> params;
+                    if (contract_code != "") params["contract_code"] = contract_code;
+                    if (margin_mode != "") params["margin_mode"] = margin_mode;
+                    if (order_id != "") params["order_id"] = order_id;
+                    if (client_order_id != "") params["client_order_id"] = client_order_id;
+                    if (from != "") params["from"] = from;
+                    if (limit != "") params["limit"] = limit;
+                    if (direct != "") params["direct"] = direct;
 
-                    // option
-                    stringstream content;
-                    if (contract_code != "")
-                    {
-                        content << ",\"contract_code\":\"" << contract_code << "\"";
-                    }
-                    if (order_id != "")
-                    {
-                        content << ",\"order_id\":\"" << order_id << "\"";
-                    }
-                    if (client_order_id != "")
-                    {
-                        content << ",\"client_order_id\":\"" << client_order_id << "\"";
-                    }
-
-                    // data
-                    stringstream data;
-                    if (!content.str().empty())
-                    {
-                        data << "{" << content.str().substr(1) << "}";
-                    }
-
-                    // url
-                    string url = pb->Build("POST", path.str());
-
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Post<SwapTradeOrderResponse>(url, data.str());
-                    return result;
-                }
-
-                std::shared_ptr<SwapTradeOrderResponse> SwapCannelAllOrders(string contract_code, string side,
-                                                                             string position_side)
-                {
-                    // path
-                    stringstream path;
-                    path << "/v5/trade/cancel_all_orders";
-
-                    // option
-                    stringstream content;
-                    if (contract_code != "")
-                    {
-                        content << ",\"contract_code\":\"" << contract_code << "\"";
-                    }
-                    if (side != "")
-                    {
-                        content << ",\"side\":\"" << side << "\"";
-                    }
-                    if (position_side != "")
-                    {
-                        content << ",\"position_side\":\"" << position_side << "\"";
-                    }
-
-                    // data
-                    stringstream data;
-                    if (!content.str().empty())
-                    {
-                        data << "{" << content.str().substr(1) << "}";
-                    }
-
-                    // url
-                    string url = pb->Build("POST", path.str());
-
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Post<SwapTradeOrderResponse>(url, data.str());
-                    return result;
-                }
-
-                std::shared_ptr<SwapTradeOrderResponse> SwapTradePosition(string contract_code, string margin_mode,
-                                                                             string position_side, string client_order_id)
-                {
-                    // path
-                    stringstream path;
-                    path << "/v5/trade/position";
-
-                    // option
-                    stringstream content;
-                    if (contract_code != "")
-                    {
-                        content << ",\"contract_code\":\"" << contract_code << "\"";
-                    }
-                    if (margin_mode != "")
-                    {
-                        content << ",\"margin_mode\":\"" << margin_mode << "\"";
-                    }
-                    if (position_side != "")
-                    {
-                        content << ",\"position_side\":\"" << position_side << "\"";
-                    }
-                    if (client_order_id != "")
-                    {
-                        content << ",\"client_order_id\":\"" << client_order_id << "\"";
-                    }
-
-                    // data
-                    stringstream data;
-                    if (!content.str().empty())
-                    {
-                        data << "{" << content.str().substr(1) << "}";
-                    }
-
-                    // url
-                    string url = pb->Build("POST", path.str());
-
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Post<SwapTradeOrderResponse>(url, data.str());
-                    return result;
-                }
-
-                std::shared_ptr<SwapTradeOrderResponse> SwapTradePositionAll()
-                {
-                    // path
-                    stringstream path;
-                    path << "/v5/trade/position_all";
-
-                    // option
-                    stringstream content;
-
-                    // data
-                    stringstream data;
-                    if (!content.str().empty())
-                    {
-                        data << "{" << content.str().substr(1) << "}";
-                    }
-
-                    // url
-                    string url = pb->Build("POST", path.str());
-
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Post<SwapTradeOrderResponse>(url, data.str());
-                    return result;
-                }
-
-                std::shared_ptr<SwapTradeOrderOpensResponse> SwapTradeOrderOpens(string contract_code, string margin_mode,
-                                                                              string order_id, string client_order_id, long from,
-                                                                              int limit, string direct)
-                {
-                    // path
-                    stringstream path;
-                    path << "/v5/trade/order/opens";
-                    // option
-                    stringstream option;
-                    if (contract_code != "") {
-                        option << "&contract_code=" << contract_code;
-                    }
-                    if (margin_mode != "") {
-                        option << "&margin_mode=" << margin_mode;
-                    }
-                    if (order_id != "") {
-                        option << "&order_id=" << order_id;
-                    }
-                    if (client_order_id != "") {
-                        option << "&client_order_id=" << client_order_id;
-                    }
-                    if (from != 0) {
-                        option << "&from=" << from;
-                    }
-                    if (limit != 0) {
-                        option << "&limit=" << limit;
-                    }
-                    if (direct != "") {
-                        option << "&direct=" << direct;
-                    }
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str();
-                    }
-                    // url
-                    string url = pb->Build("GET", path.str());
-
-                    // post
+                    string url = pb->Build("GET", utils::V5_TRADE_ORDER_OPENS, params);
                     auto result = url_base::HttpRequest::Instance().Get<SwapTradeOrderOpensResponse>(url);
                     return result;
                 }
 
-                std::shared_ptr<SwapTradeOrderTradesResponse> SwapTradeOrderTrades(string contract_code, string order_id,
-                                                                                   string client_order_id, string start_time,
-                                                                                   string end_time, long from, int limit,
-                                                                                   string direct)
+                // #15 GET /v5/trade/order/details - get order details (V5)
+                std::shared_ptr<GetOrderDetailResponse> TradeOrderDetails(
+                    const string& contract_code = "", const string& order_id = "",
+                    const string& client_order_id = "", const string& start_time = "",
+                    const string& end_time = "", const string& from = "",
+                    const string& limit = "", const string& direct = "")
                 {
-                    // path
-                    stringstream path;
-                    path << "/api/v5 /trade/order/trades";
-                    // option
-                    stringstream option;
-                    if (contract_code != "") {
-                        option << "&contract_code=" << contract_code;
-                    }
-                    if (order_id != "") {
-                        option << "&order_id=" << order_id;
-                    }
-                    if (client_order_id != "") {
-                        option << "&client_order_id=" << client_order_id;
-                    }
-                    if (start_time != "") {
-                        option << "&start_time=" << start_time;
-                    }
-                    if (end_time != "") {
-                        option << "&end_time=" << end_time;
-                    }
-                    if (from != 0) {
-                        option << "&from=" << from;
-                    }
-                    if (limit != 0) {
-                        option << "&limit=" << limit;
-                    }
-                    if (direct != "") {
-                        option << "&direct=" << direct;
-                    }
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str();
-                    }
-                    // url
-                    string url = pb->Build("GET", path.str());
+                    map<string, string> params;
+                    if (contract_code != "") params["contract_code"] = contract_code;
+                    if (order_id != "") params["order_id"] = order_id;
+                    if (client_order_id != "") params["client_order_id"] = client_order_id;
+                    if (start_time != "") params["start_time"] = start_time;
+                    if (end_time != "") params["end_time"] = end_time;
+                    if (from != "") params["from"] = from;
+                    if (limit != "") params["limit"] = limit;
+                    if (direct != "") params["direct"] = direct;
 
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Get<SwapTradeOrderTradesResponse>(url);
+                    string url = pb->Build("GET", utils::V5_TRADE_ORDER_DETAILS, params);
+                    auto result = url_base::HttpRequest::Instance().Get<GetOrderDetailResponse>(url);
                     return result;
                 }
 
-                std::shared_ptr<SwapTradeOrderHistoryResponse> SwapTradeOrderHistory(string contract_code,
-                                                                                     string state, string type, string price_match,
-                                                                                     string start_time, string end_time,
-                                                                                     long from, int limit, string direct, string business_type, string margin_mode)
+                // #16 GET /v5/trade/order/history - get order history (V5)
+                std::shared_ptr<SwapTradeOrderHistoryResponse> TradeOrderHistory(
+                    const string& contract_code = "", const string& margin_mode = "",
+                    const string& states = "", const string& type = "",
+                    const string& price_match = "", const string& time_in_force = "",
+                    const string& start_time = "", const string& end_time = "",
+                    const string& from = "", const string& limit = "",
+                    const string& direct = "")
                 {
-                    // path
-                    stringstream path;
-                    path << "/api/v5/trade/order/history";
-                    // option
-                    stringstream option;
-                    if (contract_code != "") {
-                        option << "&contract_code=" << contract_code;
-                    }
-                    if (order_id != "") {
-                        option << "&order_id=" << order_id;
-                    }
-                    if (state != "") {
-                        option << "&state=" << state;
-                    }
-                    if (type != "") {
-                        option << "&type=" << type;
-                    }
-                    if (price_match != "") {
-                        option << "&price_match=" << price_match;
-                    }
-                    if (start_time != "") {
-                        option << "&start_time=" << start_time;
-                    }
-                    if (time_in_force != "") {
-                        option << "&time_in_force=" << time_in_force;
-                    }
-                    if (end_time != "") {
-                        option << "&end_time=" << end_time;
-                    }
-                    if (margin_mode != "") {
-                        option << "&margin_mode=" << margin_mode;
-                    }
-                    if (from != 0) {
-                        option << "&from=" << from;
-                    }
-                    if (limit != 0) {
-                        option << "&limit=" << limit;
-                    }
-                    if (direct != "") {
-                        option << "&direct=" << direct;
-                    }
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str();
-                    }
-                    // url
-                    string url = pb->Build("GET", path.str());
+                    map<string, string> params;
+                    if (contract_code != "") params["contract_code"] = contract_code;
+                    if (margin_mode != "") params["margin_mode"] = margin_mode;
+                    if (states != "") params["states"] = states;
+                    if (type != "") params["type"] = type;
+                    if (price_match != "") params["price_match"] = price_match;
+                    if (time_in_force != "") params["time_in_force"] = time_in_force;
+                    if (start_time != "") params["start_time"] = start_time;
+                    if (end_time != "") params["end_time"] = end_time;
+                    if (from != "") params["from"] = from;
+                    if (limit != "") params["limit"] = limit;
+                    if (direct != "") params["direct"] = direct;
 
-                    // post
+                    string url = pb->Build("GET", utils::V5_TRADE_ORDER_HISTORY, params);
                     auto result = url_base::HttpRequest::Instance().Get<SwapTradeOrderHistoryResponse>(url);
                     return result;
                 }
 
-                std::shared_ptr<SwapTradePositionOpensResponse> SwapTradePositionOpens(string contract_code)
+                // #17 GET /v5/trade/order - get single order (V5)
+                std::shared_ptr<GetTradeOrderResponse> GetTradeOrder(
+                    const string& contract_code = "", const string& margin_mode = "",
+                    const string& order_id = "", const string& client_order_id = "")
                 {
-                    // path
-                    stringstream path;
-                    path << "/v5/trade/position/opens";
-                    // option
-                    stringstream option;
-                    if (contract_code != "") {
-                        option << "&contract_code=" << contract_code;
-                    }
+                    map<string, string> params;
+                    if (contract_code != "") params["contract_code"] = contract_code;
+                    if (margin_mode != "") params["margin_mode"] = margin_mode;
+                    if (order_id != "") params["order_id"] = order_id;
+                    if (client_order_id != "") params["client_order_id"] = client_order_id;
 
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str();
-                    }
-                    // url
-                    string url = pb->Build("GET", path.str());
-
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Get<SwapTradePositionOpensResponse>(url);
-                    return result;
-                }
-
-                std::shared_ptr<SwapTradePositionHistoryResponse> SwapTradePositionHistory(string contract_code, string contract_type,
-                                                                                           string margin_mode, string start_time,
-                                                                                           string end_time, long from, int limit,
-                                                                                           string direct)
-                {
-                    // path
-                    stringstream path;
-                    path << "/v5/trade/position/history";
-                    // option
-                    stringstream option;
-                    if (contract_code != "") {
-                        option << "&contract_code=" << contract_code;
-                    }
-                    if (contract_type != "") {
-                        option << "&contract_type=" << contract_type;
-                    }
-                    if (margin_mode != "") {
-                        option << "&margin_mode=" << margin_mode;
-                    }
-                    if (start_time != "") {
-                        option << "&start_time=" << start_time;
-                    }
-                    if (end_time != "") {
-                        option << "&end_time=" << end_time;
-                    }
-                    if (from != 0) {
-                        option << "&from=" << from;
-                    }
-                    if (limit != 0) {
-                        option << "&limit=" << limit;
-                    }
-                    if (direct != "") {
-                        option << "&direct=" << direct;
-                    }
-
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str();
-                    }
-                    // url
-                    string url = pb->Build("GET", path.str());
-
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Get<SwapTradePositionHistoryResponse>(url);
-                    return result;
-                }
-
-                std::shared_ptr<SwapPositionLeverResponse> SwapPositionLever(string contract_code, string margin_mode)
-                {
-                    // path
-                    stringstream path;
-                    path << "/v5/position/lever";
-                    // option
-                    stringstream option;
-                    if (contract_code != "") {
-                        option << "&contract_code=" << contract_code;
-                    }
-                    if (margin_mode != "") {
-                        option << "&margin_mode=" << margin_mode;
-                    }
-
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str();
-                    }
-                    // url
-                    string url = pb->Build("GET", path.str());
-
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Get<SwapPositionLeverResponse>(url);
-                    return result;
-                }
-
-                std::shared_ptr<PositionLeverResponse> CrossCancelOrder(string contract_code, string margin_mode, string lever_rate)
-                {
-                    // path
-                    stringstream path;
-                    path << "/v5/position/lever";
-
-                    // option
-                    stringstream content;
-                    if (contract_code != "")
-                    {
-                        content << ",\"contract_code\":\"" << contract_code << "\"";
-                    }
-                    if (margin_mode != "")
-                    {
-                        content << ",\"margin_mode\":\"" << margin_mode << "\"";
-                    }
-                    if (lever_rate != "")
-                    {
-                        content << ",\"lever_rate\":\"" << lever_rate << "\"";
-                    }
-
-                    // data
-                    stringstream data;
-                    if (!content.str().empty())
-                    {
-                        data << "{" << content.str().substr(1) << "}";
-                    }
-
-                    // url
-                    string url = pb->Build("POST", path.str());
-
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Post<PositionLeverResponse>(url, data.str());
-                    return result;
-                }
-
-                std::shared_ptr<SwapPositionModeResponse> SwapPositionMode()
-                {
-                    // path
-                    stringstream path;
-                    path << "/api/v5/position/mode";
-                    // option
-                    stringstream option;
-
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str();
-                    }
-                    // url
-                    string url = pb->Build("GET", path.str());
-
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Get<SwapPositionModeResponse>(url);
-                    return result;
-                }
-
-                std::shared_ptr<SwapPositionModeResponse> SwapSetPositionMode(string position_mode)
-                {
-                    // path
-                    stringstream path;
-                    path << "/api/v5/position/mode";
-
-                    // option
-                    stringstream content;
-                    if (position_mode != "")
-                    {
-                        content << ",\"position_mode\":\"" << position_mode << "\"";
-                    }
-
-                    // data
-                    stringstream data;
-                    if (!content.str().empty())
-                    {
-                        data << "{" << content.str().substr(1) << "}";
-                    }
-
-                    // url
-                    string url = pb->Build("POST", path.str());
-
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Post<SwapPositionModeResponse>(url, data.str());
-                    return result;
-                }
-
-                std::shared_ptr<SwapPositionRiskLimitResponse> SwapPositionRiskLimit(string contract_code, string margin_mode,
-                                                                                     string position_side)
-                {
-                    // path
-                    stringstream path;
-                    path << "/v5/position/risk/limit";
-                    // option
-                    stringstream option;
-                    if (contract_code != "") {
-                        option << "&contract_code=" << contract_code;
-                    }
-                    if (margin_mode != "") {
-                        option << "&margin_mode=" << margin_mode;
-                    }
-                    if (position_side != "") {
-                        option << "&position_side=" << position_side;
-                    }
-
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str();
-                    }
-                    // url
-                    string url = pb->Build("GET", path.str());
-
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Get<SwapPositionRiskLimitResponse>(url);
-                    return result;
-                }
-
-                std::shared_ptr<SwapPositionRiskLimitTierResponse> SwapPositionRiskLimitTier(const string &contract_code, const string &margin_mode)
-                {
-                    // path - 对应Java中的 POSITION_RISK_LIMIT_TIER = "/v5/position/risk/limit_tier"
-                    stringstream path;
-                    path << "/v5/position/risk/limit_tier";
-                    
-                    // 构建请求体
-                    stringstream content;
-                    if (contract_code != "")
-                    {
-                        content << ",\"contract_code\":\"" << contract_code << "\"";
-                    }
-                    if (margin_mode != "")
-                    {
-                        content << ",\"margin_mode\":\"" << margin_mode << "\"";
-                    }
-                    
-                    // 组装JSON数据
-                    stringstream data;
-                    if (!content.str().empty())
-                    {
-                        data << "{" << content.str().substr(1) << "}"; // substr(1)去掉第一个逗号
-                    }
-                    
-                    // url - 构建完整URL（不需要参数，参数在body中）
-                    string url = pb->Build("POST", path.str());
-                    
-                    // post - 发送POST请求，对应Java中的doPost
-                    auto result = url_base::HttpRequest::Instance().Post<SwapPositionRiskLimitTierResponse>(url, data.str());
-                    return result;
-                }
-
-                std::shared_ptr<SwapPositionMarginResponse> SwapPositionMargin(
-                    const string &contract_code,
-                    const string &position_side,
-                    const string &amount,
-                    const string &type)
-                {
-                    // path
-                    stringstream path;
-                    path << "/v5/position/margin";
-
-                    // option - POST请求，参数在body中
-                    stringstream content;
-                    if (contract_code != "")
-                    {
-                        content << ",\"contract_code\":\"" << contract_code << "\"";
-                    }
-                    if (position_side != "")
-                    {
-                        content << ",\"position_side\":\"" << position_side << "\"";
-                    }
-                    if (amount != "")
-                    {
-                        content << ",\"amount\":\"" << amount << "\"";
-                    }
-                    if (type != "")
-                    {
-                        content << ",\"type\":\"" << type << "\"";
-                    }
-
-                    // data
-                    stringstream data;
-                    if (!content.str().empty())
-                    {
-                        data << "{" << content.str().substr(1) << "}";
-                    }
-
-                    // url
-                    string url = pb->Build("POST", path.str());
-
-                    // post
-                    auto result = url_base::HttpRequest::Instance().Post<SwapPositionMarginResponse>(url, data.str());
-                    return result;
-                }
-
-                std::shared_ptr<GetTradeOrderResponse> GetTradeOrder(string contract_code,
-                                                                     string margin_mode, string order_id, string client_order_id)
-                {
-                    // path
-                    stringstream path;
-                    path << "/api/v5/trade/order";
-                    // option
-                    stringstream option;
-                    if (contract_code != "") {
-                        option << "&contract_code=" << contract_code;
-                    }
-                    if (order_id != "") {
-                        option << "&order_id=" << order_id;
-                    }
-                    if (client_order_id != "") {
-                        option << "&client_order_id=" << client_order_id;
-                    }
-                    if (margin_mode != "") {
-                        option << "&margin_mode=" << margin_mode;
-                    }
-                    if (!option.str().empty())
-                    {
-                        path << "?" << option.str();
-                    }
-                    // url
-                    string url = pb->Build("GET", path.str());
-
-                    // post
+                    string url = pb->Build("GET", utils::V5_TRADE_ORDER, params);
                     auto result = url_base::HttpRequest::Instance().Get<GetTradeOrderResponse>(url);
                     return result;
                 }
 
+                // #18 GET /v5/trade/cancel-after - cancel-after (V5, Java method: tradeCancelAfterResponse, GET with params!)
+                std::shared_ptr<LinearCancelAfterResponse> TradeCancelAfter(
+                    const string& on_off = "", const string& time_out = "")
+                {
+                    map<string, string> params;
+                    if (on_off != "") params["on_off"] = on_off;
+                    if (time_out != "") params["time_out"] = time_out;
+
+                    string url = pb->Build("GET", utils::V5_TRADE_CANCEL_AFTER, params);
+                    auto result = url_base::HttpRequest::Instance().Get<LinearCancelAfterResponse>(url);
+                    return result;
+                }
+
+                // #19 GET /v5/trade/position/opens - get open positions (V5)
+                std::shared_ptr<SwapTradePositionOpensResponse> TradePositionOpens(
+                    const string& contract_code = "")
+                {
+                    map<string, string> params;
+                    if (contract_code != "") params["contract_code"] = contract_code;
+
+                    string url = pb->Build("GET", utils::V5_TRADE_POSITION_OPENS, params);
+                    auto result = url_base::HttpRequest::Instance().Get<SwapTradePositionOpensResponse>(url);
+                    return result;
+                }
+
+                // #20 GET /v5/position/lever - get position lever (V5)
+                std::shared_ptr<PositionLeverResponse> PositionLever(
+                    const string& contract_code = "", const string& margin_mode = "",
+                    const string& position_side = "")
+                {
+                    map<string, string> params;
+                    if (contract_code != "") params["contract_code"] = contract_code;
+                    if (margin_mode != "") params["margin_mode"] = margin_mode;
+                    if (position_side != "") params["position_side"] = position_side;
+
+                    string url = pb->Build("GET", utils::V5_POSITION_LEVER, params);
+                    auto result = url_base::HttpRequest::Instance().Get<PositionLeverResponse>(url);
+                    return result;
+                }
+
+                // #21 POST /v5/position/lever - set position lever (V5)
+                std::shared_ptr<PositionLeverResponse> SetPositionLever(
+                    const string& contract_code = "", const string& margin_mode = "",
+                    const string& lever_rate = "", const string& position_side = "")
+                {
+                    stringstream content;
+                    if (contract_code != "") content << ",\"contract_code\":\"" << contract_code << "\"";
+                    if (margin_mode != "") content << ",\"margin_mode\":\"" << margin_mode << "\"";
+                    if (lever_rate != "") content << ",\"lever_rate\":\"" << lever_rate << "\"";
+                    if (position_side != "") content << ",\"position_side\":\"" << position_side << "\"";
+
+                    stringstream data;
+                    if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
+
+                    string url = pb->Build("POST", utils::V5_POSITION_LEVER);
+                    auto result = url_base::HttpRequest::Instance().Post<PositionLeverResponse>(url, data.str());
+                    return result;
+                }
+
+                // #22 GET /v5/position/mode - get position mode (V5)
+                std::shared_ptr<SwapPositionModeResponse> PositionMode()
+                {
+                    map<string, string> params;
+                    string url = pb->Build("GET", utils::V5_POSITION_MODE, params);
+                    auto result = url_base::HttpRequest::Instance().Get<SwapPositionModeResponse>(url);
+                    return result;
+                }
+
+                // #23 POST /v5/position/mode - set position mode (V5)
+                std::shared_ptr<SwapPositionModeResponse> SetPositionMode(
+                    const string& position_mode = "")
+                {
+                    stringstream content;
+                    if (position_mode != "") content << ",\"position_mode\":\"" << position_mode << "\"";
+
+                    stringstream data;
+                    if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
+
+                    string url = pb->Build("POST", utils::V5_POSITION_MODE);
+                    auto result = url_base::HttpRequest::Instance().Post<SwapPositionModeResponse>(url, data.str());
+                    return result;
+                }
+
+                // #24 POST /v5/position/risk/limit - get risk limit (V5, Java method: positionRiskLimitResponse, POST with params!)
+                std::shared_ptr<SwapPositionRiskLimitResponse> PositionRiskLimit(
+                    const string& contract_code = "", const string& margin_mode = "",
+                    const string& position_side = "")
+                {
+                    stringstream content;
+                    if (contract_code != "") content << ",\"contract_code\":\"" << contract_code << "\"";
+                    if (margin_mode != "") content << ",\"margin_mode\":\"" << margin_mode << "\"";
+                    if (position_side != "") content << ",\"position_side\":\"" << position_side << "\"";
+
+                    stringstream data;
+                    if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
+
+                    string url = pb->Build("POST", utils::V5_POSITION_RISK_LIMIT);
+                    auto result = url_base::HttpRequest::Instance().Post<SwapPositionRiskLimitResponse>(url, data.str());
+                    return result;
+                }
+
+                // #25 POST /v5/position/risk/limit_tier - query risk limit tier (V5, Java: doPost=POST, body params)
+                std::shared_ptr<SwapPositionRiskLimitTierResponse> PositionRiskLimitTier(
+                    const string& contract_code = "", const string& margin_mode = "")
+                {
+                    stringstream path;
+                    path << utils::V5_POSITION_RISK_LIMIT_TIER;
+
+                    stringstream content;
+                    if (contract_code != "") content << ",\"contract_code\":\"" << contract_code << "\"";
+                    if (margin_mode != "") content << ",\"margin_mode\":\"" << margin_mode << "\"";
+
+                    stringstream data;
+                    if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
+
+                    string url = pb->Build("POST", path.str());
+                    auto result = url_base::HttpRequest::Instance().Post<SwapPositionRiskLimitTierResponse>(url, data.str());
+                    return result;
+                }
+
+                // #26 POST /v5/position/margin - set position margin (V5)
+                std::shared_ptr<SwapPositionMarginResponse> PositionMargin(
+                    const string& contract_code = "", const string& position_side = "",
+                    const string& amount = "", const string& type = "")
+                {
+                    stringstream content;
+                    if (contract_code != "") content << ",\"contract_code\":\"" << contract_code << "\"";
+                    if (position_side != "") content << ",\"position_side\":\"" << position_side << "\"";
+                    if (amount != "") content << ",\"amount\":\"" << amount << "\"";
+                    if (type != "") content << ",\"type\":\"" << type << "\"";
+
+                    stringstream data;
+                    if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
+
+                    string url = pb->Build("POST", utils::V5_POSITION_MARGIN);
+                    auto result = url_base::HttpRequest::Instance().Post<SwapPositionMarginResponse>(url, data.str());
+                    return result;
+                }
 
             private:
                 std::shared_ptr<url_base::PrivateUrlBuilder> pb;

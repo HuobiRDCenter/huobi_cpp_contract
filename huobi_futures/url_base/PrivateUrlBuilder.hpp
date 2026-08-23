@@ -3,6 +3,9 @@
 #include <string>
 using std::string;
 
+#include <map>
+using std::map;
+
 #include <ctime>
 #include <sstream>
 
@@ -37,6 +40,40 @@ namespace huobi_futures
 
                 stringstream para;
                 para << "AccessKeyId=" << ak << "&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=" << HttpRequest::Instance().UrlEncode(pchar_time);
+
+                string signature = utils::Signer::CreateSignature(method, host, path, para.str(), sk);
+
+                string url = "https://" + host + path + "?" + para.str() + "&Signature=" + HttpRequest::Instance().UrlEncode(signature);
+
+                return url;
+            }
+
+            // GET 带业务参数：业务参数并入签名（按 key 排序），与 Java ApiSignature 一致。
+            // POST 不用此重载——业务参数进 body 不签名。
+            string Build(const string &method, const string &path, const map<string, string> &params)
+            {
+                time_t now;
+                time(&now);
+                char pchar_time[sizeof "2011-10-08T07:07:09"];
+                strftime(pchar_time, sizeof pchar_time, "%FT%T", gmtime(&now));
+
+                map<string, string> sorted = params;
+                sorted["AccessKeyId"] = ak;
+                sorted["SignatureMethod"] = "HmacSHA256";
+                sorted["SignatureVersion"] = "2";
+                sorted["Timestamp"] = pchar_time;
+
+                stringstream para;
+                bool first = true;
+                for (auto &kv : sorted)
+                {
+                    if (!first)
+                    {
+                        para << "&";
+                    }
+                    first = false;
+                    para << kv.first << "=" << HttpRequest::Instance().UrlEncode(kv.second);
+                }
 
                 string signature = utils::Signer::CreateSignature(method, host, path, para.str(), sk);
 

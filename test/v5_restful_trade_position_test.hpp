@@ -16,7 +16,7 @@ static const string V5_FAR_PRICE = "7300"; // 远低于市价的限价买单，�
 // 辅助：挂一个远价限价单，返回 order_id（供后续撤单/查询）
 static string PlaceFarOrder(OrderClient &client, const string &position_side = "long")
 {
-    auto r = client.TradeOrder(V5_CONTRACT, "isolated", position_side, "buy", "limit", "",
+    auto r = client.TradeOrder(V5_CONTRACT, "cross", position_side, "buy", "limit", "",
                                "", V5_FAR_PRICE, "1", "", "", "", "", "", "", "", "",
                                "", "", "", "");
     EXPECT_NE(r, nullptr);
@@ -34,7 +34,7 @@ TEST(V5Trade, TradeOrderFarPrice)
     extern map<string, string> config;
     init_config();
     OrderClient client(config["AccessKey"], config["SecretKey"]);
-    auto r = client.TradeOrder(V5_CONTRACT, "isolated", "long", "buy", "limit", "",
+    auto r = client.TradeOrder(V5_CONTRACT, "cross", "long", "buy", "limit", "",
                                "", V5_FAR_PRICE, "1", "", "", "", "", "", "", "", "",
                                "", "", "", "");
     ASSERT_NE(r, nullptr);
@@ -76,7 +76,7 @@ TEST(V5Trade, TradeOrderOpens)
     OrderClient client(config["AccessKey"], config["SecretKey"]);
     // 前置挂单再查当前委托
     string oid = PlaceFarOrder(client);
-    auto r = client.TradeOrderOpens(V5_CONTRACT, "isolated", "", "", "", "", "");
+    auto r = client.TradeOrderOpens(V5_CONTRACT, "cross", "", "", "", "", "");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
     if (!oid.empty())
@@ -93,7 +93,7 @@ TEST(V5Trade, GetTradeOrder)
     string oid = PlaceFarOrder(client);
     if (!oid.empty())
     {
-        auto r = client.GetTradeOrder(V5_CONTRACT, "isolated", oid, "");
+        auto r = client.GetTradeOrder(V5_CONTRACT, "cross", oid, "");
         ASSERT_NE(r, nullptr);
         EXPECT_EQ(r->code.value_or(0), 200);
         client.CancelTradeOrder(V5_CONTRACT, oid, "");
@@ -127,7 +127,7 @@ TEST(V5Position, PositionLever)
     extern map<string, string> config;
     init_config();
     OrderClient client(config["AccessKey"], config["SecretKey"]);
-    auto r = client.PositionLever(V5_CONTRACT, "isolated", "long");
+    auto r = client.PositionLever(V5_CONTRACT, "cross", "long");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
 }
@@ -137,7 +137,7 @@ TEST(V5Position, SetPositionLever)
     extern map<string, string> config;
     init_config();
     OrderClient client(config["AccessKey"], config["SecretKey"]);
-    auto r = client.SetPositionLever(V5_CONTRACT, "isolated", "10", "long");
+    auto r = client.SetPositionLever(V5_CONTRACT, "cross", "10", "long");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
 }
@@ -157,7 +157,7 @@ TEST(V5Position, PositionRiskLimit)
     extern map<string, string> config;
     init_config();
     OrderClient client(config["AccessKey"], config["SecretKey"]);
-    auto r = client.PositionRiskLimit(V5_CONTRACT, "isolated", "long");
+    auto r = client.PositionRiskLimit(V5_CONTRACT, "cross", "long");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
 }
@@ -167,7 +167,7 @@ TEST(V5Position, PositionRiskLimitTier)
     extern map<string, string> config;
     init_config();
     OrderClient client(config["AccessKey"], config["SecretKey"]);
-    auto r = client.PositionRiskLimitTier(V5_CONTRACT, "isolated");
+    auto r = client.PositionRiskLimitTier(V5_CONTRACT, "cross");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
 }

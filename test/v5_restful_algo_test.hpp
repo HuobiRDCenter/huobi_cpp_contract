@@ -16,7 +16,7 @@ extern const string V5_FAR_PRICE;
 // 辅助：创建一个远价限价的策略单，返回 algo_id（供后续撤单/查询）
 static string PlaceFarAlgoOrder(AlgoClient &client, const string &position_side = "long")
 {
-    auto r = client.AlgoOrder(V5_CONTRACT, "limit", position_side, "buy", "isolated",
+    auto r = client.AlgoOrder(V5_CONTRACT, "limit", position_side, "buy", "cross",
                               "", "1", "", "", "", "", "", "", "", "",
                               V5_FAR_PRICE, "", "", "", "", "", "");
     EXPECT_NE(r, nullptr);
@@ -34,7 +34,7 @@ TEST(V5Algo, AlgoOrder)
     extern map<string, string> config;
     init_config();
     AlgoClient client(config["AccessKey"], config["SecretKey"]);
-    auto r = client.AlgoOrder(V5_CONTRACT, "limit", "long", "buy", "isolated",
+    auto r = client.AlgoOrder(V5_CONTRACT, "limit", "long", "buy", "cross",
                               "", "1", "", "", "", "", "", "", "", "",
                               V5_FAR_PRICE, "", "", "", "", "", "");
     ASSERT_NE(r, nullptr);
@@ -96,7 +96,7 @@ TEST(V5Algo, AlgoQueryOrderHistory)
     init_config();
     AlgoClient client(config["AccessKey"], config["SecretKey"]);
     // 查询历史策略单
-    auto r = client.AlgoQueryOrderHistory("limit", V5_CONTRACT, "isolated", "", "", "", 0, 0, "");
+    auto r = client.AlgoQueryOrderHistory("limit", V5_CONTRACT, "cross", "", "", "", 0, 0, "");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
 }

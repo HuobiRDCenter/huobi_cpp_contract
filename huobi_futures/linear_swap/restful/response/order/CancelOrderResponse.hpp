@@ -23,24 +23,28 @@ namespace huobi_futures
 
                     struct Data
                     {
+                        std::optional<int32_t> code;
+
+                        std::optional<string> message;
+
+                        std::optional<string> order_id;
+
+                        std::optional<string> client_order_id;
+
+                        // v3 字段（保留，可选）
                         struct Error
                         {
                             std::optional<string> order_id;
-
                             std::optional<int32_t> err_code;
-
                             std::optional<string> err_msg;
-
                             JS_OBJ(order_id, err_code, err_msg);
                         };
-
                         std::optional<std::vector<Error>> errors;
-
                         std::optional<std::vector<std::string>> successes;
 
-                        JS_OBJ(errors, successes);
+                        JS_OBJ(code, message, order_id, client_order_id, errors, successes);
                     };
-                    std::optional<Data> data;
+                    std::optional<std::vector<Data>> data;
 
                     std::optional<int64_t> ts;
 

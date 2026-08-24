@@ -8,6 +8,8 @@ using std::list;
 #include <vector>
 using std::vector;
 
+#include <algorithm>
+
 #include "huobi_futures/wsbase/WebSocket.hpp"
 typedef huobi_futures::wsbase::WebSocket WebSocket;
 
@@ -239,10 +241,27 @@ namespace huobi_futures
                     char pchar_time[sizeof "2011-10-08T07:07:09"];
                     strftime(pchar_time, sizeof pchar_time, "%FT%T", gmtime(&now));
 
-                    stringstream para;
-                    para << "AccessKeyId=" << ak << "&SignatureMethod=HmacSHA256&SignatureVersion=2&Timestamp=" << HttpRequest::Instance().UrlEncode(pchar_time);
+                    // 构建参数并按 ASCII 排序
+                    map<string, string> params;
+                    params["AccessKeyId"] = ak;
+                    params["SignatureMethod"] = "HmacSHA256";
+                    params["SignatureVersion"] = "2";
+                    params["Timestamp"] = string(pchar_time);
 
-                    string signature = utils::Signer::CreateSignature("GET", host, path, para.str(), sk);
+                    // 按排序顺序构建参数字符串，每个值 URL 编码
+                    stringstream para;
+                    bool first = true;
+                    for (auto &p : params) {
+                        if (!first) para << "&";
+                        para << p.first << "=" << HttpRequest::Instance().UrlEncode(p.second);
+                        first = false;
+                    }
+
+                    // host 需转小写（参考 Java ApiSignature）
+                    string hostLower = host;
+                    std::transform(hostLower.begin(), hostLower.end(), hostLower.begin(), ::tolower);
+
+                    string signature = utils::Signer::CreateSignature("GET", hostLower, path, para.str(), sk);
 
                     nlohmann::json auth;
                     auth["op"] = "auth";

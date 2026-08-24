@@ -10,3 +10,12 @@ target_link_libraries(test Threads::Threads websockets OpenSSL::SSL OpenSSL::Cry
 add_executable(v5_test v5_main.cpp)
 target_link_libraries(v5_test Threads::Threads websockets OpenSSL::SSL OpenSSL::Crypto ${GTEST_BOTH_LIBRARIES} curl z glog::glog huobi_futures)
 add_test(V5Test v5_test)
+
+# V5 WebSocket 测试：通知推送 + 交易客户端
+add_executable(v5_ws_test v5_ws_main.cpp)
+target_link_libraries(v5_ws_test Threads::Threads websockets OpenSSL::SSL OpenSSL::Crypto ${GTEST_BOTH_LIBRARIES} curl z glog::glog huobi_futures)
+add_test(V5WSTest v5_ws_test)
+
+# 鉴权调试工具
+add_executable(test_auth_debug ../test_auth_debug.cpp)
+target_link_libraries(test_auth_debug Threads::Threads OpenSSL::SSL OpenSSL::Crypto curl z glog::glog huobi_futures)

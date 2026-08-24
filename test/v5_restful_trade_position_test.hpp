@@ -63,8 +63,8 @@ TEST(V5Trade, TradeCancelAfter)
     extern map<string, string> config;
     init_config();
     OrderClient client(config["AccessKey"], config["SecretKey"]);
-    // 设置 60s 后自动撤单，再关闭
-    auto r = client.TradeCancelAfter("0", "0");
+    // on_off=0 关闭自动撤单（空参接口 404，需显式 on_off）
+    auto r = client.TradeCancelAfter("0", "");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
 }
@@ -105,7 +105,7 @@ TEST(V5Trade, TradeOrderHistory)
     extern map<string, string> config;
     init_config();
     OrderClient client(config["AccessKey"], config["SecretKey"]);
-    auto r = client.TradeOrderHistory(V5_CONTRACT, "", "", "", "", "", "", "", "", "", "");
+    auto r = client.TradeOrderHistory(V5_CONTRACT, "cross", "", "", "", "", "", "", "", "", "");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
 }
@@ -137,7 +137,8 @@ TEST(V5Position, SetPositionLever)
     extern map<string, string> config;
     init_config();
     OrderClient client(config["AccessKey"], config["SecretKey"]);
-    auto r = client.SetPositionLever(V5_CONTRACT, "cross", "10", "long");
+    // Java 权威：BTC-USDT + isolated + lever 5（BTC 无挂单，可调杠杆；SPX500 有远价挂单会 1493）
+    auto r = client.SetPositionLever("BTC-USDT", "isolated", "5", "long");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
 }
@@ -157,7 +158,8 @@ TEST(V5Position, PositionRiskLimit)
     extern map<string, string> config;
     init_config();
     OrderClient client(config["AccessKey"], config["SecretKey"]);
-    auto r = client.PositionRiskLimit(V5_CONTRACT, "cross", "long");
+    // Java 权威：contract_code=BTC-USDT，不传 margin_mode/position_side
+    auto r = client.PositionRiskLimit("ETH-USDT", "cross", "");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
 }
@@ -167,7 +169,8 @@ TEST(V5Position, PositionRiskLimitTier)
     extern map<string, string> config;
     init_config();
     OrderClient client(config["AccessKey"], config["SecretKey"]);
-    auto r = client.PositionRiskLimitTier(V5_CONTRACT, "cross");
+    // Java 权威：contract_code=BTC-USDT，不传 margin_mode
+    auto r = client.PositionRiskLimitTier("ETH-USDT", "cross");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
 }

@@ -103,6 +103,8 @@ typedef huobi_futures::linear_swap::restful::response_order::SwapTradeOrderRespo
 
 #include "huobi_futures/linear_swap/restful/response/order/SwapTradeCancelAfterResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_order::SwapTradeCancelAfterResponse SwapTradeCancelAfterResponse;
+#include "huobi_futures/linear_swap/restful/response/order/CancelAllOrdersResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::CancelAllOrdersResponse CancelAllOrdersResponse;
 
 #include "huobi_futures/linear_swap/restful/response/order/SwapTradeOrderTradesResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_order::SwapTradeOrderTradesResponse SwapTradeOrderTradesResponse;
@@ -1811,7 +1813,7 @@ namespace huobi_futures
                 }
 
                 // #11 POST /v5/trade/cancel_all_orders - cancel all orders (V5)
-                std::shared_ptr<CancelOrderResponse> CancelAllOrders(
+                std::shared_ptr<CancelAllOrdersResponse> CancelAllOrders(
                     const string& contract_code = "", const string& side = "",
                     const string& position_side = "")
                 {
@@ -1824,7 +1826,7 @@ namespace huobi_futures
                     if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
 
                     string url = pb->Build("POST", utils::V5_TRADE_CANCEL_ALL_ORDERS);
-                    auto result = url_base::HttpRequest::Instance().Post<CancelOrderResponse>(url, data.str());
+                    auto result = url_base::HttpRequest::Instance().Post<CancelAllOrdersResponse>(url, data.str());
                     return result;
                 }
 
@@ -1941,7 +1943,7 @@ namespace huobi_futures
                     return result;
                 }
 
-                // #18 GET /v5/trade/cancel-after - cancel-after (V5, Java method: tradeCancelAfterResponse, GET with params!)
+                // #18 POST /v5/trade/cancel-after - cancel-after (V5, 清单 POST；Java impl doGetKey(GET) 实测 404，改 POST)
                 std::shared_ptr<LinearCancelAfterResponse> TradeCancelAfter(
                     const string& on_off = "", const string& time_out = "")
                 {
@@ -1949,8 +1951,14 @@ namespace huobi_futures
                     if (on_off != "") params["on_off"] = on_off;
                     if (time_out != "") params["time_out"] = time_out;
 
-                    string url = pb->Build("GET", utils::V5_TRADE_CANCEL_AFTER, params);
-                    auto result = url_base::HttpRequest::Instance().Get<LinearCancelAfterResponse>(url);
+                    stringstream content;
+                    if (on_off != "") content << ",\"on_off\":\"" << on_off << "\"";
+                    if (time_out != "") content << ",\"time_out\":\"" << time_out << "\"";
+                    stringstream data;
+                    if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
+
+                    string url = pb->Build("POST", utils::V5_TRADE_CANCEL_AFTER, params);
+                    auto result = url_base::HttpRequest::Instance().Post<LinearCancelAfterResponse>(url, data.str());
                     return result;
                 }
 
@@ -1982,7 +1990,7 @@ namespace huobi_futures
                 }
 
                 // #21 POST /v5/position/lever - set position lever (V5)
-                std::shared_ptr<PositionLeverResponse> SetPositionLever(
+                std::shared_ptr<SwapPositionLeverResponse> SetPositionLever(
                     const string& contract_code = "", const string& margin_mode = "",
                     const string& lever_rate = "", const string& position_side = "")
                 {
@@ -1996,7 +2004,7 @@ namespace huobi_futures
                     if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
 
                     string url = pb->Build("POST", utils::V5_POSITION_LEVER);
-                    auto result = url_base::HttpRequest::Instance().Post<PositionLeverResponse>(url, data.str());
+                    auto result = url_base::HttpRequest::Instance().Post<SwapPositionLeverResponse>(url, data.str());
                     return result;
                 }
 
@@ -2024,40 +2032,31 @@ namespace huobi_futures
                     return result;
                 }
 
-                // #24 POST /v5/position/risk/limit - get risk limit (V5, Java method: positionRiskLimitResponse, POST with params!)
+                // #24 GET /v5/position/risk/limit - get risk limit (V5, 清单 GET；Java impl 用 doPost 但实测 404，改 GET)
                 std::shared_ptr<SwapPositionRiskLimitResponse> PositionRiskLimit(
                     const string& contract_code = "", const string& margin_mode = "",
                     const string& position_side = "")
                 {
-                    stringstream content;
-                    if (contract_code != "") content << ",\"contract_code\":\"" << contract_code << "\"";
-                    if (margin_mode != "") content << ",\"margin_mode\":\"" << margin_mode << "\"";
-                    if (position_side != "") content << ",\"position_side\":\"" << position_side << "\"";
+                    map<string, string> params;
+                    if (contract_code != "") params["contract_code"] = contract_code;
+                    if (margin_mode != "") params["margin_mode"] = margin_mode;
+                    if (position_side != "") params["position_side"] = position_side;
 
-                    stringstream data;
-                    if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
-
-                    string url = pb->Build("POST", utils::V5_POSITION_RISK_LIMIT);
-                    auto result = url_base::HttpRequest::Instance().Post<SwapPositionRiskLimitResponse>(url, data.str());
+                    string url = pb->Build("GET", utils::V5_POSITION_RISK_LIMIT, params);
+                    auto result = url_base::HttpRequest::Instance().Get<SwapPositionRiskLimitResponse>(url);
                     return result;
                 }
 
-                // #25 POST /v5/position/risk/limit_tier - query risk limit tier (V5, Java: doPost=POST, body params)
+                // #25 GET /v5/position/risk/limit_tier - query risk limit tier (V5, 清单 GET)
                 std::shared_ptr<SwapPositionRiskLimitTierResponse> PositionRiskLimitTier(
                     const string& contract_code = "", const string& margin_mode = "")
                 {
-                    stringstream path;
-                    path << utils::V5_POSITION_RISK_LIMIT_TIER;
+                    map<string, string> params;
+                    if (contract_code != "") params["contract_code"] = contract_code;
+                    if (margin_mode != "") params["margin_mode"] = margin_mode;
 
-                    stringstream content;
-                    if (contract_code != "") content << ",\"contract_code\":\"" << contract_code << "\"";
-                    if (margin_mode != "") content << ",\"margin_mode\":\"" << margin_mode << "\"";
-
-                    stringstream data;
-                    if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
-
-                    string url = pb->Build("POST", path.str());
-                    auto result = url_base::HttpRequest::Instance().Post<SwapPositionRiskLimitTierResponse>(url, data.str());
+                    string url = pb->Build("GET", utils::V5_POSITION_RISK_LIMIT_TIER, params);
+                    auto result = url_base::HttpRequest::Instance().Get<SwapPositionRiskLimitTierResponse>(url);
                     return result;
                 }
 

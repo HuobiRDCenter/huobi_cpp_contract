@@ -21,12 +21,12 @@ namespace huobi_futures
 
                     struct Data
                     {
-                        std::string contract_code;
-                        std::string contract_type;
-                        std::string margin_mode;
+                        std::optional<std::string> contract_code;
+                        std::optional<std::string> contract_type;
+                        std::optional<std::string> margin_mode;
                         std::optional<std::string> position_side;
-                        std::string lever_rate;
-                        std::string available_lever;
+                        std::optional<std::string> lever_rate;
+                        std::optional<std::string> available_lever;
 
                         JS_OBJ(contract_code, contract_type, margin_mode, position_side, lever_rate, available_lever);
                     };

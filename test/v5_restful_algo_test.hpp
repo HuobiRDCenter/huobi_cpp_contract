@@ -13,12 +13,16 @@ typedef huobi_futures::linear_swap::restful::AlgoClient AlgoClient;
 extern const string V5_CONTRACT;
 extern const string V5_FAR_PRICE;
 
+// algo 用 BTC-USDT（对齐 Java SrategyAPITest），trigger_price 远低于市价不触发，0 风险
+static const string ALGO_CONTRACT = "BTC-USDT";
+static const string ALGO_TRIGGER_PRICE = "10000";
+
 // 辅助：创建一个远价限价的策略单，返回 algo_id（供后续撤单/查询）
 static string PlaceFarAlgoOrder(AlgoClient &client, const string &position_side = "long")
 {
-    auto r = client.AlgoOrder(V5_CONTRACT, "limit", position_side, "buy", "cross",
+    auto r = client.AlgoOrder(ALGO_CONTRACT, "trigger", position_side, "buy", "cross",
                               "", "1", "", "", "", "", "", "", "", "",
-                              V5_FAR_PRICE, "", "", "", "", "", "");
+                              ALGO_TRIGGER_PRICE, "", ALGO_TRIGGER_PRICE, "last", "", "optimal_20", "");
     EXPECT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
     // algo_id 在 data vector 的第一个元素里
@@ -34,16 +38,16 @@ TEST(V5Algo, AlgoOrder)
     extern map<string, string> config;
     init_config();
     AlgoClient client(config["AccessKey"], config["SecretKey"]);
-    auto r = client.AlgoOrder(V5_CONTRACT, "limit", "long", "buy", "cross",
+    auto r = client.AlgoOrder(ALGO_CONTRACT, "trigger", "long", "buy", "cross",
                               "", "1", "", "", "", "", "", "", "", "",
-                              V5_FAR_PRICE, "", "", "", "", "", "");
+                              ALGO_TRIGGER_PRICE, "", ALGO_TRIGGER_PRICE, "last", "", "optimal_20", "");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
     // 下单成功后立即撤单
     string algo_id = (r->data.has_value() && !r->data->empty()) ? r->data->at(0).algo_id.value_or("") : "";
     if (!algo_id.empty())
     {
-        auto c = client.AlgoCancelOrders(algo_id, "", V5_CONTRACT);
+        auto c = client.AlgoCancelOrders(algo_id, "", ALGO_CONTRACT);
         EXPECT_EQ(c->code.value_or(0), 200);
     }
 }
@@ -57,7 +61,7 @@ TEST(V5Algo, AlgoCancelOrders)
     string algo_id = PlaceFarAlgoOrder(client);
     if (!algo_id.empty())
     {
-        auto r = client.AlgoCancelOrders(algo_id, "", V5_CONTRACT);
+        auto r = client.AlgoCancelOrders(algo_id, "", ALGO_CONTRACT);
         ASSERT_NE(r, nullptr);
         EXPECT_EQ(r->code.value_or(0), 200);
     }
@@ -70,12 +74,12 @@ TEST(V5Algo, AlgoQueryOrders)
     AlgoClient client(config["AccessKey"], config["SecretKey"]);
     // 前置创建一个策略单再查询
     string algo_id = PlaceFarAlgoOrder(client);
-    auto r = client.AlgoQueryOrders("limit", algo_id, "", V5_CONTRACT);
+    auto r = client.AlgoQueryOrders("trigger", algo_id, "", ALGO_CONTRACT);
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
     if (!algo_id.empty())
     {
-        client.AlgoCancelOrders(algo_id, "", V5_CONTRACT);
+        client.AlgoCancelOrders(algo_id, "", ALGO_CONTRACT);
     }
 }
 
@@ -85,7 +89,7 @@ TEST(V5Algo, AlgoQueryOpenOrders)
     init_config();
     AlgoClient client(config["AccessKey"], config["SecretKey"]);
     // 查询所有未触发策略单
-    auto r = client.AlgoQueryOpenOrders("limit", V5_CONTRACT, "", "", 0, 0, "");
+    auto r = client.AlgoQueryOpenOrders("trigger", ALGO_CONTRACT, "", "", 0, 0, "");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
 }
@@ -96,7 +100,7 @@ TEST(V5Algo, AlgoQueryOrderHistory)
     init_config();
     AlgoClient client(config["AccessKey"], config["SecretKey"]);
     // 查询历史策略单
-    auto r = client.AlgoQueryOrderHistory("limit", V5_CONTRACT, "cross", "", "", "", 0, 0, "");
+    auto r = client.AlgoQueryOrderHistory("trigger", ALGO_CONTRACT, "cross", "", "", "", 0, 0, "");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
 }

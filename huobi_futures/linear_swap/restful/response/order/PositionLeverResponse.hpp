@@ -21,14 +21,14 @@ namespace huobi_futures
 
                     struct Data
                     {
-                        std::string contract_code;
-                        std::string margin_mode;
-                        std::string lever_rate;
+                        std::optional<std::string> contract_code;
+                        std::optional<std::string> margin_mode;
+                        std::optional<std::string> lever_rate;
 
                         JS_OBJ(contract_code, margin_mode, lever_rate);
                     };
 
-                    std::optional<Data> data;
+                    std::optional<std::vector<Data>> data;
 
                     std::optional<string> message;
 

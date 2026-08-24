@@ -48,7 +48,7 @@ namespace huobi_futures
                                contract_type, created_time, updated_time);
                     };
 
-                    std::optional<Data> data;
+                    std::optional<std::vector<Data>> data;
 
                     std::optional<string> message;
 

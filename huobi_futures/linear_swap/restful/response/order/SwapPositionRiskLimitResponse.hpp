@@ -21,20 +21,20 @@ namespace huobi_futures
 
                     struct Data
                     {
-                        std::string contract_code;
-                        std::string contract_type;
-                        std::string margin_mode;
-                        std::string position_side;
-                        std::string max_lever;
-                        std::string maintenance_margin_rate;
-                        std::string max_volume;
-                        std::string min_volume;
-                        std::string volume_unit;
+                        std::optional<std::string> contract_code;
+                        std::optional<std::string> contract_type;
+                        std::optional<std::string> margin_mode;
+                        std::optional<std::string> position_side;
+                        std::optional<std::string> max_lever;
+                        std::optional<std::string> maintenance_margin_rate;
+                        std::optional<std::string> max_volume;
+                        std::optional<std::string> min_volume;
+                        std::optional<std::string> volume_unit;
 
                         JS_OBJ(contract_code, contract_type, margin_mode, position_side, max_lever, maintenance_margin_rate, max_volume, min_volume, volume_unit);
                     };
 
-                    std::optional<Data> data;
+                    std::optional<std::vector<Data>> data;
 
                     std::optional<string> message;
 

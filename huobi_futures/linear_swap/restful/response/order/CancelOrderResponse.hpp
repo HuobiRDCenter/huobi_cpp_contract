@@ -44,7 +44,7 @@ namespace huobi_futures
 
                         JS_OBJ(code, message, order_id, client_order_id, errors, successes);
                     };
-                    std::optional<std::vector<Data>> data;
+                    std::optional<Data> data;
 
                     std::optional<int64_t> ts;
 

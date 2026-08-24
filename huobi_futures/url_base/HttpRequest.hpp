@@ -33,8 +33,6 @@ namespace huobi_futures
             {
                 std::unique_lock<std::mutex> lck (mtx);
 
-                LOG(INFO) << "get:" << url;
-
                 curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
                 curl_easy_setopt(curl, CURLOPT_HTTPGET, 1);
@@ -56,9 +54,7 @@ namespace huobi_futures
 
                 if (parseContext.parseTo(*pObj) != JS::Error::NoError)
                 {
-                    std::string errorStr = parseContext.makeErrorString();
-                    LOG(ERROR) << "Error parsing struct"
-                               << errorStr;
+                    LOG(ERROR) << "Error parsing struct: " << parseContext.makeErrorString();
                     LOG(ERROR) << sBuffer;
                     return NULL;
                 }
@@ -69,9 +65,6 @@ namespace huobi_futures
             std::shared_ptr<T> Post(const string &url, const string &body = "")
             {
                 std::unique_lock<std::mutex> lck (mtx);
-
-                LOG(INFO) << "post:" << url << "\n"
-                          << body;
 
                 curl_easy_setopt(curl, CURLOPT_URL, url.c_str());
 
@@ -89,7 +82,6 @@ namespace huobi_futures
                 {
                     LOG(ERROR) << "curl_easy_perform error:" << curl_easy_strerror(res);
                 }
-                //LOG(INFO) << sBuffer;
 
                 std::shared_ptr<T> pObj = std::make_shared<T>();
                 JS::ParseContext parseContext(sBuffer);
@@ -97,9 +89,8 @@ namespace huobi_futures
 
                 if (parseContext.parseTo(*pObj) != JS::Error::NoError)
                 {
-                    std::string errorStr = parseContext.makeErrorString();
-                    LOG(ERROR) << "Error parsing struct:\n"
-                               << sBuffer;
+                    LOG(ERROR) << "Error parsing struct: " << parseContext.makeErrorString();
+                    LOG(ERROR) << sBuffer;
                     return NULL;
                 }
                 return pObj;

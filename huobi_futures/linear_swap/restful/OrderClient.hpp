@@ -17,6 +17,9 @@ typedef huobi_futures::linear_swap::restful::response_order::PlaceOrderResponse 
 #include "huobi_futures/linear_swap/restful/response/order/BatchOrderResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_order::BatchOrderResponse BatchOrderResponse;
 
+#include "huobi_futures/linear_swap/restful/response/order/SwapTradeBatchResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::SwapTradeBatchResponse SwapTradeBatchResponse;
+
 #include "huobi_futures/linear_swap/restful/response/order/CancelOrderResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_order::CancelOrderResponse CancelOrderResponse;
 
@@ -25,6 +28,9 @@ typedef huobi_futures::linear_swap::restful::response_order::GetOrderInfoRespons
 
 #include "huobi_futures/linear_swap/restful/response/order/GetOrderDetailResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_order::GetOrderDetailResponse GetOrderDetailResponse;
+
+#include "huobi_futures/linear_swap/restful/response/order/GetOrderTradesResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::GetOrderTradesResponse GetOrderTradesResponse;
 
 #include "huobi_futures/linear_swap/restful/response/order/GetTradeOrderResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_order::GetTradeOrderResponse GetTradeOrderResponse;
@@ -100,6 +106,9 @@ typedef huobi_futures::linear_swap::restful::response_order::SwapTradeOrderOpens
 
 #include "huobi_futures/linear_swap/restful/response/order/SwapTradeOrderResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_order::SwapTradeOrderResponse SwapTradeOrderResponse;
+
+#include "huobi_futures/linear_swap/restful/response/order/SwapTradePositionResponse.hpp"
+typedef huobi_futures::linear_swap::restful::response_order::SwapTradePositionResponse SwapTradePositionResponse;
 
 #include "huobi_futures/linear_swap/restful/response/order/SwapTradeCancelAfterResponse.hpp"
 typedef huobi_futures::linear_swap::restful::response_order::SwapTradeCancelAfterResponse SwapTradeCancelAfterResponse;
@@ -1732,7 +1741,7 @@ namespace huobi_futures
                 }
 
                 // #8 POST /v5/trade/batch_orders - trade batch orders (V5)
-                std::shared_ptr<BatchOrderResponse> TradeBatchOrders(
+                std::shared_ptr<SwapTradeBatchResponse> TradeBatchOrders(
                     const string& contract_code = "", const string& margin_mode = "",
                     const string& position_side = "", const string& side = "",
                     const string& type = "", const string& price_match = "",
@@ -1771,7 +1780,7 @@ namespace huobi_futures
                     data << "[{" << (content.str().empty() ? "" : content.str().substr(1)) << "}]";
 
                     string url = pb->Build("POST", utils::V5_TRADE_BATCH_ORDERS);
-                    auto result = url_base::HttpRequest::Instance().Post<BatchOrderResponse>(url, data.str());
+                    auto result = url_base::HttpRequest::Instance().Post<SwapTradeBatchResponse>(url, data.str());
                     return result;
                 }
 
@@ -1794,7 +1803,7 @@ namespace huobi_futures
                 }
 
                 // #10 POST /v5/trade/cancel_batch_orders - cancel batch orders (V5, body format: {"contract_code":"...", "order_id":[...]})
-                std::shared_ptr<CancelOrderResponse> CancelTradeBatchOrders(
+                std::shared_ptr<SwapTradeBatchResponse> CancelTradeBatchOrders(
                     const string& contract_code = "", const string& order_id = "",
                     const string& client_order_id = "")
                 {
@@ -1808,7 +1817,7 @@ namespace huobi_futures
                     if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
 
                     string url = pb->Build("POST", utils::V5_TRADE_CANCEL_BATCH_ORDERS);
-                    auto result = url_base::HttpRequest::Instance().Post<CancelOrderResponse>(url, data.str());
+                    auto result = url_base::HttpRequest::Instance().Post<SwapTradeBatchResponse>(url, data.str());
                     return result;
                 }
 
@@ -1831,7 +1840,7 @@ namespace huobi_futures
                 }
 
                 // #12 POST /v5/trade/position - query position (V5)
-                std::shared_ptr<SwapTradeOrderResponse> TradePosition(
+                std::shared_ptr<SwapTradePositionResponse> TradePosition(
                     const string& contract_code = "", const string& margin_mode = "",
                     const string& position_side = "", const string& client_order_id = "")
                 {
@@ -1845,15 +1854,15 @@ namespace huobi_futures
                     if (!content.str().empty()) data << "{" << content.str().substr(1) << "}";
 
                     string url = pb->Build("POST", utils::V5_TRADE_POSITION);
-                    auto result = url_base::HttpRequest::Instance().Post<SwapTradeOrderResponse>(url, data.str());
+                    auto result = url_base::HttpRequest::Instance().Post<SwapTradePositionResponse>(url, data.str());
                     return result;
                 }
 
                 // #13 POST /v5/trade/position_all - query all positions (V5)
-                std::shared_ptr<SwapTradeOrderResponse> TradePositionAll()
+                std::shared_ptr<SwapTradePositionResponse> TradePositionAll()
                 {
                     string url = pb->Build("POST", utils::V5_TRADE_POSITION_ALL);
-                    auto result = url_base::HttpRequest::Instance().Post<SwapTradeOrderResponse>(url, "");
+                    auto result = url_base::HttpRequest::Instance().Post<SwapTradePositionResponse>(url, "");
                     return result;
                 }
 
@@ -1878,8 +1887,8 @@ namespace huobi_futures
                     return result;
                 }
 
-                // #15 GET /v5/trade/order/details - get order details (V5)
-                std::shared_ptr<GetOrderDetailResponse> TradeOrderDetails(
+                // #15 GET /v5/trade/order/details - get order trade details (V5, data 为成交数组)
+                std::shared_ptr<GetOrderTradesResponse> TradeOrderDetails(
                     const string& contract_code = "", const string& order_id = "",
                     const string& client_order_id = "", const string& start_time = "",
                     const string& end_time = "", const string& from = "",
@@ -1896,7 +1905,7 @@ namespace huobi_futures
                     if (direct != "") params["direct"] = direct;
 
                     string url = pb->Build("GET", utils::V5_TRADE_ORDER_DETAILS, params);
-                    auto result = url_base::HttpRequest::Instance().Get<GetOrderDetailResponse>(url);
+                    auto result = url_base::HttpRequest::Instance().Get<GetOrderTradesResponse>(url);
                     return result;
                 }
 

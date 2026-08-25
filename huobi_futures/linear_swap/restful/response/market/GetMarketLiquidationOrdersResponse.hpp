@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <optional>
+#include <memory>
 #include "huobi_futures/json_struct/json_struct.h"
 
 namespace huobi_futures
@@ -32,7 +33,8 @@ namespace huobi_futures
                     };
 
                     std::optional<int32_t> code;
-                    std::optional<std::vector<Data>> data;
+                    // V5 /v5/market/liquidation_orders：无强平时 data 为 null，optional<vector> 遇 null 必炸，改 unique_ptr
+                    std::unique_ptr<std::vector<Data>> data;
                     std::optional<std::string> message;
                     std::optional<int64_t> ts;
 

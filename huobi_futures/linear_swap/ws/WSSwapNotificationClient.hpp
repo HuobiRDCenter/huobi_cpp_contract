@@ -87,13 +87,13 @@ namespace huobi_futures
                         return false;
                     }
                     std::thread t1([&] { p_ws->RunForever(); });
-                    t1.detach();
+                    run_thread = std::move(t1);
                     return true;
                 }
 
                 // 订阅 topic，鉴权成功后发送。topic 例：orders / trade / positions 等
-                // 多个 topic 分多条 sub 帧发送（与 Java doSub 一致）
-                bool Sub(const vector<string> &topics, _v5_notify_fun fun)
+                // V5 推送 sub 帧：{"op":"sub","topic":"orders","contract_code":"SPX500-USDT"}（对齐 Java doSub）
+                bool Sub(const vector<string> &topics, const string &contract_code, _v5_notify_fun fun)
                 {
                     while (!can_work)
                     {
@@ -104,14 +104,19 @@ namespace huobi_futures
                     {
                         sub_map_call_fun[topic] = fun;
                         stringstream ss;
-                        ss << "{\"op\":\"sub\",\"topic\":\"" << topic << "\"}";
+                        ss << "{\"op\":\"sub\",\"topic\":\"" << topic << "\"";
+                        if (!contract_code.empty())
+                        {
+                            ss << ",\"contract_code\":\"" << contract_code << "\"";
+                        }
+                        ss << "}";
                         p_ws->SendMsg(ss.str());
                         LOG(INFO) << "send:" << ss.str();
                     }
                     return true;
                 }
 
-                bool Unsub(const vector<string> &topics)
+                bool Unsub(const vector<string> &topics, const string &contract_code = "")
                 {
                     while (!can_work)
                     {
@@ -121,7 +126,12 @@ namespace huobi_futures
                     for (auto &topic : topics)
                     {
                         stringstream ss;
-                        ss << "{\"op\":\"unsub\",\"topic\":\"" << topic << "\"}";
+                        ss << "{\"op\":\"unsub\",\"topic\":\"" << topic << "\"";
+                        if (!contract_code.empty())
+                        {
+                            ss << ",\"contract_code\":\"" << contract_code << "\"";
+                        }
+                        ss << "}";
                         p_ws->SendMsg(ss.str());
                         LOG(INFO) << "send:" << ss.str();
                         sub_map_call_fun.erase(topic);
@@ -134,6 +144,11 @@ namespace huobi_futures
                     if (p_ws == NULL)
                     {
                         return;
+                    }
+                    p_ws->Stop();
+                    if (run_thread.joinable())
+                    {
+                        run_thread.join();
                     }
                     delete p_ws;
                     p_ws = NULL;
@@ -221,6 +236,11 @@ namespace huobi_futures
                             LOG(ERROR) << "V5 auth failed:" << plaintext;
                             Disconnect();
                         }
+                        // auth ack 也按 topic 路由交 callback（测试用于判断鉴权就绪）
+                        for (auto &kv : sub_map_call_fun)
+                        {
+                            if (kv.second) kv.second(plaintext);
+                        }
                     }
                     else if (op == "notify")
                     {
@@ -241,6 +261,13 @@ namespace huobi_futures
                     else if (op == "sub" || op == "unsub")
                     {
                         LOG(INFO) << "recv " << op << ":" << plaintext;
+                        // sub/unsub ack 按 topic 路由交 callback（测试用于判断订阅就绪）
+                        string topic = jdata.contains("topic") ? jdata["topic"].get<string>() : "";
+                        auto it = sub_map_call_fun.find(topic);
+                        if (it != sub_map_call_fun.end() && it->second)
+                        {
+                            it->second(plaintext);
+                        }
                     }
                     else if (op == "pong")
                     {
@@ -298,6 +325,7 @@ namespace huobi_futures
                 string host;
                 string path;
                 WebSocket *p_ws = NULL;
+                std::thread run_thread;
                 string ak;
                 string sk;
 

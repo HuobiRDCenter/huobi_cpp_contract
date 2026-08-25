@@ -90,7 +90,7 @@ namespace huobi_futures
                         return false;
                     }
                     std::thread t1([&] { p_ws->RunForever(); });
-                    t1.detach();
+                    run_thread = std::move(t1);
                     return true;
                 }
 
@@ -125,6 +125,11 @@ namespace huobi_futures
                     if (p_ws == NULL)
                     {
                         return;
+                    }
+                    p_ws->Stop();
+                    if (run_thread.joinable())
+                    {
+                        run_thread.join();
                     }
                     delete p_ws;
                     p_ws = NULL;
@@ -212,7 +217,7 @@ namespace huobi_futures
                         return;
                     }
 
-                    // 其余帧（auth ack / 应答 / notify）全交 callback，caller 用 cid 关联
+                    // auth ack：设鉴权状态并交 callback（对齐 Java WssTradeHandle：auth ack 也交 caller）
                     if (jdata.contains("op") && jdata["op"].get<string>() == "auth")
                     {
                         LOG(INFO) << "recv auth:" << plaintext;
@@ -224,6 +229,10 @@ namespace huobi_futures
                         {
                             LOG(ERROR) << "V5 trade auth failed:" << plaintext;
                             Disconnect();
+                        }
+                        if (callback)
+                        {
+                            callback(plaintext);
                         }
                         return;
                     }
@@ -278,6 +287,7 @@ namespace huobi_futures
                 string host;
                 string path;
                 WebSocket *p_ws = NULL;
+                std::thread run_thread;
                 string ak;
                 string sk;
 

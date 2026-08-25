@@ -139,6 +139,16 @@ namespace huobi_futures
                 }
             }
 
+            // 请求停止 RunForever 循环并唤醒阻塞的 lws_service，供上层 Disconnect 安全 join 线程
+            void Stop()
+            {
+                has_closed = true;
+                if (context)
+                {
+                    lws_cancel_service(context);
+                }
+            }
+
         private:
             bool GetUrlInfo(const string &in_url, string &out_name, string &out_host, int &out_port, string &out_path)
             {

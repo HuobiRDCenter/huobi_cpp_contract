@@ -90,8 +90,8 @@ TEST(V5Account, SetFeeDeductionCurrency)
 }
 
 // V5 market 接口（公开，无需 key）。
-// 注：MarketClient 中 GetFundingRate/GetPriceLimit/GetOpenInterest 等存在 v3/V5 重载，
-// 歧义方法暂跳过，只测无歧义的 V5 方法。
+// 注：V5 market 方法统一带 Market 前缀（GetMarketRiskLimit / GetMarketPriceLimit / ...），
+// 与 v3 同名方法不构成重载歧义，可直接调用。
 
 TEST(V5Market, GetMarketRiskLimit)
 {
@@ -158,10 +158,7 @@ TEST(V5Market, GetOpenInterest)
 {
     init_config();
     MarketClient client;
-    // GetOpenInterest 有 v3/V5 重载歧义，static_cast 选 V5(单参) 重载
-    auto result = (std::shared_ptr<GetMarketOpenInterestResponse>(MarketClient::*)(const string &))
-        &MarketClient::GetOpenInterest;
-    auto r = (client.*result)("BTC-USDT");
+    auto r = client.GetMarketOpenInterest("BTC-USDT");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
     ASSERT_TRUE(r->data.has_value());
@@ -173,9 +170,7 @@ TEST(V5Market, GetPriceLimit)
 {
     init_config();
     MarketClient client;
-    auto mfp = (std::shared_ptr<GetMarketPriceLimitResponse>(MarketClient::*)(const string &))
-        &MarketClient::GetPriceLimit;
-    auto r = (client.*mfp)("BTC-USDT");
+    auto r = client.GetMarketPriceLimit("BTC-USDT");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
     ASSERT_TRUE(r->data.has_value());
@@ -188,9 +183,7 @@ TEST(V5Market, GetLiquidationOrders)
 {
     init_config();
     MarketClient client;
-    auto mfp = (std::shared_ptr<GetMarketLiquidationOrdersResponse>(MarketClient::*)(const string &, const string &, const string &, const string &, const string &, int64_t, int32_t))
-        &MarketClient::GetLiquidationOrders;
-    auto r = (client.*mfp)("BTC-USDT", "", "", "", "", 0, 0);
+    auto r = client.GetMarketLiquidationOrders("BTC-USDT", "", "", "", "", 0, 0);
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
     // data 可能为 null（无强平），unique_ptr 不为空即有数据
@@ -232,9 +225,7 @@ TEST(V5Market, GetEstimatedSettlementPrice)
 {
     init_config();
     MarketClient client;
-    auto mfp = (std::shared_ptr<GetMarketEstimatedSettlementPriceResponse>(MarketClient::*)(const string &))
-        &MarketClient::GetEstimatedSettlementPrice;
-    auto r = (client.*mfp)("BTC-USDT");
+    auto r = client.GetMarketEstimatedSettlementPrice("BTC-USDT");
     ASSERT_NE(r, nullptr);
     EXPECT_EQ(r->code.value_or(0), 200);
     ASSERT_TRUE(r->data.has_value());

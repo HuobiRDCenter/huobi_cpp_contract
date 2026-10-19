@@ -11,6 +11,8 @@
 
 #include "huobi_futures/linear_swap/ws/WSSwapTradeClient.hpp"
 typedef huobi_futures::linear_swap::ws::WSSwapTradeClient WSSwapTradeClient;
+// 用例结束用 REST 撤单清理挂单，避免单独跑某个用例时在账户里留下挂单
+#include "huobi_futures/linear_swap/restful/OrderClient.hpp"
 
 #include "huobi_futures/nlohmann_json/json.hpp"
 
@@ -88,10 +90,15 @@ TEST_F(WSTradeTest, PlaceOrder) {
     EXPECT_TRUE(respRecv) << "place_order response not received within 10s";
     EXPECT_FALSE(respData.empty()) << "place_order data empty";
 
-    // parse response and check order_id
+    // parse response and check order_id，随后撤单清理（避免单独跑本用例时账户里留挂单）
     try {
         auto data = nlohmann::json::parse(respData);
         EXPECT_TRUE(data.contains("order_id")) << "order_id missing in response";
+        if (data.contains("order_id")) {
+            huobi_futures::linear_swap::restful::OrderClient rest(config["AccessKey"], config["SecretKey"]);
+            auto cancel = rest.CancelTradeOrder("SPX500-USDT", data["order_id"].get<std::string>(), "");
+            if (cancel) EXPECT_EQ(cancel->code.value_or(0), 200) << "cleanup cancel_order failed";
+        }
     } catch (const std::exception &e) {
         FAIL() << "Failed to parse response data: " << e.what();
     }
@@ -159,13 +166,17 @@ TEST_F(WSTradeTest, PlaceBatchOrders) {
     EXPECT_TRUE(respRecv) << "place_batch_orders response not received within 10s";
     EXPECT_FALSE(respData.empty()) << "place_batch_orders data empty";
 
+    // check order_id，随后撤单清理（避免单独跑本用例时账户里留挂单）
     try {
         auto dataArr = nlohmann::json::parse(respData);
         EXPECT_TRUE(dataArr.is_array()) << "response data should be array";
         EXPECT_FALSE(dataArr.empty()) << "response data array empty";
-        if (!dataArr.empty()) {
-            auto first = dataArr[0];
-            EXPECT_TRUE(first.contains("order_id")) << "order_id missing in first response";
+        huobi_futures::linear_swap::restful::OrderClient rest(config["AccessKey"], config["SecretKey"]);
+        for (auto &item : dataArr) {
+            if (item.contains("order_id")) {
+                auto cancel = rest.CancelTradeOrder("SPX500-USDT", item["order_id"].get<std::string>(), "");
+                if (cancel) EXPECT_EQ(cancel->code.value_or(0), 200) << "cleanup cancel_order failed";
+            }
         }
     } catch (const std::exception &e) {
         FAIL() << "Failed to parse response data: " << e.what();

@@ -1160,7 +1160,9 @@ namespace huobi_futures
                 }
 
                 // GET请求 - 查询持仓总量（#32 公开无需鉴权）
-                std::shared_ptr<GetMarketOpenInterestResponse> GetOpenInterest(const string &contract_code)
+                // 注：V5 方法统一加 Market 前缀，避免与 v3 同名重载产生调用歧义（GetOpenInterest/GetPriceLimit/
+                // GetLiquidationOrders/GetEstimatedSettlementPrice 在 v3 都有同名方法）
+                std::shared_ptr<GetMarketOpenInterestResponse> GetMarketOpenInterest(const string &contract_code)
                 {
                     // path
                     stringstream path;
@@ -1186,7 +1188,7 @@ namespace huobi_futures
                 }
 
                 // GET请求 - 查询价格限制（#33 公开无需鉴权）
-                std::shared_ptr<GetMarketPriceLimitResponse> GetPriceLimit(const string &contract_code)
+                std::shared_ptr<GetMarketPriceLimitResponse> GetMarketPriceLimit(const string &contract_code)
                 {
                     // path
                     stringstream path;
@@ -1212,7 +1214,7 @@ namespace huobi_futures
                 }
 
                 // GET请求 - 查询强平订单（#34 公开无需鉴权）
-                std::shared_ptr<GetMarketLiquidationOrdersResponse> GetLiquidationOrders(
+                std::shared_ptr<GetMarketLiquidationOrdersResponse> GetMarketLiquidationOrders(
                     const string &contract_code = "",
                     const string &pair = "",
                     const string &start_time = "",
@@ -1385,7 +1387,7 @@ namespace huobi_futures
                 }
 
                 // GET请求 - 查询预估结算价（#38 公开无需鉴权）
-                std::shared_ptr<GetMarketEstimatedSettlementPriceResponse> GetEstimatedSettlementPrice(const string &contract_code)
+                std::shared_ptr<GetMarketEstimatedSettlementPriceResponse> GetMarketEstimatedSettlementPrice(const string &contract_code)
                 {
                     // path
                     stringstream path;

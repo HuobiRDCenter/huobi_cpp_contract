@@ -1,0 +1,28 @@
+README.md
+  h_fc49d7c42aae14 1,3-12,20-25,82-170,226,247-252
+docs/v5-interface-list.md
+  h_fc49d7c42aae14 3-8,16-25,27,33-40,44-60,64-72,76-91,95-101,107,109-117,122,124-147,158,160,162-164,171-173,177,182-189,194-202,205,217-223
+example/CMakeLists.txt
+  h_fc49d7c42aae14 3-6
+example/v5_example.cpp
+  h_fc49d7c42aae14 1-72
+huobi_futures/linear_swap/restful/MarketClient.hpp
+  h_fc49d7c42aae14 1163-1165,1191,1217,1390
+test/CMakeLists.txt
+  h_fc49d7c42aae14 5-8,11,16
+test/v5_restful_account_market_test.hpp
+  h_fc49d7c42aae14 93-94,161,173,186,228
+test/v5_ws_trade_test.hpp
+  h_fc49d7c42aae14 14-15,93,97-101,169,174-179
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "13322139ecf0ec7b22723eb0e28f6ae726ba5dd1",
+  "prompts": {},
+  "humans": {
+    "h_fc49d7c42aae14": {
+      "author": "felix.yang <felix.yang@htx-inc.com>"
+    }
+  }
+}

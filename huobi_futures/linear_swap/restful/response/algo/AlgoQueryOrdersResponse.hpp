@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <optional>
+#include <memory>
 #include "huobi_futures/json_struct/json_struct.h"
 
 namespace huobi_futures
@@ -65,8 +66,9 @@ namespace huobi_futures
                     std::optional<std::vector<Data>> data;
                     std::optional<std::string> message;
                     std::optional<int64_t> ts;
+                    std::unique_ptr<std::vector<std::string>> args;
 
-                    JS_OBJ(code, data, message, ts);
+                    JS_OBJ(code, data, message, ts, args);
                 };
             }
         }

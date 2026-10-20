@@ -3,6 +3,7 @@
 #include <libwebsockets.h>
 #include <ctime>
 #include <stdbool.h>
+#include <cstdlib>
 
 #include <string>
 using std::string;
@@ -80,6 +81,19 @@ namespace huobi_futures
                 ctx_info.port = CONTEXT_PORT_NO_LISTEN;
                 ctx_info.protocols = protocols;
                 ctx_info.fd_limit_per_thread = 3;
+                const char *proxy_env_name = NULL;
+                const char *proxy_url = GetProxyEnvironment(name, proxy_env_name);
+                unsigned int proxy_port = 0;
+                if (proxy_url != NULL)
+                {
+                    if (!ParseHttpProxy(proxy_url, proxy_address, proxy_port))
+                    {
+                        LOG(ERROR) << "Invalid HTTP proxy URL in " << proxy_env_name;
+                        return false;
+                    }
+                    ctx_info.http_proxy_address = proxy_address.c_str();
+                    ctx_info.http_proxy_port = proxy_port;
+                }
                 if (name == "wss")
                 {
                     ctx_info.options |= LWS_SERVER_OPTION_DO_SSL_GLOBAL_INIT;
@@ -150,6 +164,128 @@ namespace huobi_futures
             }
 
         private:
+            static const char *GetProxyEnvironment(const string &scheme, const char *&name)
+            {
+                const char *preferred_names[4];
+                if (scheme == "wss")
+                {
+                    preferred_names[0] = "HTTPS_PROXY";
+                    preferred_names[1] = "https_proxy";
+                    preferred_names[2] = "HTTP_PROXY";
+                    preferred_names[3] = "http_proxy";
+                }
+                else
+                {
+                    preferred_names[0] = "HTTP_PROXY";
+                    preferred_names[1] = "http_proxy";
+                    preferred_names[2] = "HTTPS_PROXY";
+                    preferred_names[3] = "https_proxy";
+                }
+
+                for (const char *candidate : preferred_names)
+                {
+                    const char *value = std::getenv(candidate);
+                    if (value != NULL && value[0] != '\0')
+                    {
+                        name = candidate;
+                        return value;
+                    }
+                }
+                return NULL;
+            }
+
+            static bool ParseHttpProxy(const string &proxy_url, string &out_address, unsigned int &out_port)
+            {
+                size_t scheme_end = proxy_url.find("://");
+                size_t authority_start = 0;
+                if (scheme_end != string::npos)
+                {
+                    if (proxy_url.substr(0, scheme_end) != "http")
+                    {
+                        return false;
+                    }
+                    authority_start = scheme_end + 3;
+                }
+
+                size_t authority_end = proxy_url.find_first_of("/?#", authority_start);
+                string authority = proxy_url.substr(authority_start, authority_end - authority_start);
+                if (authority.empty())
+                {
+                    return false;
+                }
+
+                // libwebsockets accepts proxy credentials as user:password@host.
+                size_t at = authority.rfind('@');
+                string credentials = at == string::npos ? "" : authority.substr(0, at + 1);
+                string host_port = at == string::npos ? authority : authority.substr(at + 1);
+                if (host_port.empty())
+                {
+                    return false;
+                }
+
+                string host;
+                string port_text;
+                if (host_port[0] == '[')
+                {
+                    size_t bracket = host_port.find(']');
+                    if (bracket == string::npos)
+                    {
+                        return false;
+                    }
+                    host = host_port.substr(0, bracket + 1);
+                    if (bracket + 1 < host_port.size())
+                    {
+                        if (host_port[bracket + 1] != ':')
+                        {
+                            return false;
+                        }
+                        port_text = host_port.substr(bracket + 2);
+                    }
+                }
+                else
+                {
+                    size_t colon = host_port.rfind(':');
+                    if (colon != string::npos)
+                    {
+                        // An unbracketed IPv6 address is ambiguous with a port.
+                        if (host_port.find(':') != colon)
+                        {
+                            return false;
+                        }
+                        host = host_port.substr(0, colon);
+                        port_text = host_port.substr(colon + 1);
+                    }
+                    else
+                    {
+                        host = host_port;
+                    }
+                }
+
+                if (host.empty())
+                {
+                    return false;
+                }
+                unsigned long parsed_port = 80;
+                if (!port_text.empty())
+                {
+                    char *end = NULL;
+                    parsed_port = std::strtoul(port_text.c_str(), &end, 10);
+                    if (end == port_text.c_str() || *end != '\0' || parsed_port == 0 || parsed_port > 65535)
+                    {
+                        return false;
+                    }
+                }
+                else if ((!host_port.empty() && host_port[host_port.size() - 1] == ':') ||
+                         (host_port[0] == '[' && host_port.find(']') + 1 < host_port.size()))
+                {
+                    return false;
+                }
+
+                out_address = credentials + host;
+                out_port = static_cast<unsigned int>(parsed_port);
+                return true;
+            }
+
             bool GetUrlInfo(const string &in_url, string &out_name, string &out_host, int &out_port, string &out_path)
             {
                 int index = in_url.find("://");
@@ -250,6 +386,7 @@ namespace huobi_futures
 
             lws_context *context = NULL;
             lws *wsi = NULL;
+            string proxy_address;
 
             mutex mtx;
             list<string> data_buf;

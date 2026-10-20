@@ -54,7 +54,10 @@ namespace huobi_futures
 
                 if (parseContext.parseTo(*pObj) != JS::Error::NoError)
                 {
-                    LOG(ERROR) << "Error parsing struct: " << parseContext.makeErrorString();
+                    long response_code = 0;
+                    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+                    LOG(ERROR) << "Error parsing struct: " << parseContext.makeErrorString()
+                               << " (HTTP " << response_code << ", " << sBuffer.size() << " response bytes)";
                     LOG(ERROR) << sBuffer;
                     return NULL;
                 }
@@ -89,7 +92,10 @@ namespace huobi_futures
 
                 if (parseContext.parseTo(*pObj) != JS::Error::NoError)
                 {
-                    LOG(ERROR) << "Error parsing struct: " << parseContext.makeErrorString();
+                    long response_code = 0;
+                    curl_easy_getinfo(curl, CURLINFO_RESPONSE_CODE, &response_code);
+                    LOG(ERROR) << "Error parsing struct: " << parseContext.makeErrorString()
+                               << " (HTTP " << response_code << ", " << sBuffer.size() << " response bytes)";
                     LOG(ERROR) << sBuffer;
                     return NULL;
                 }

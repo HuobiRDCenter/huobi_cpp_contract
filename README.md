@@ -168,7 +168,7 @@ cmake --build build -j8      # SDK + example + v5_example + v5_test + v5_ws_test
 ```
 
 > 老 v3 测试 target 依赖的 TriggerOrderClient / 老 DTO 存在存量语法错误，已设为 `EXCLUDE_FROM_ALL`，默认构建不包含；显式 `cmake --build build --target test` 目前仍会失败，与 v5 无关。
-> 本机直连 `api.hbdm.com` 不通时，跑测试前 `export https_proxy=http://127.0.0.1:7897 http_proxy=http://127.0.0.1:7897`。
+> 本机直连 `api.hbdm.com` 不通时，跑测试前设置 `http_proxy`/`https_proxy`。WebSocket 连接也会读取 `HTTP_PROXY`/`HTTPS_PROXY`（兼容小写）；`wss` 优先用 `HTTPS_PROXY`，未设置代理时直连。
 
 ## Usage
 

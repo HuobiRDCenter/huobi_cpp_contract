@@ -9,7 +9,7 @@ The SDK provides two interface groups:
 | **v5（新增，推荐）** | HTX 合约 V5，统一/多资产保证金账户可用，55 个接口（REST 43 + WS 12） | `AccountClient` / `OrderClient` / `MarketClient`（V5 方法）、`AlgoClient`、`WSSwapNotificationClient`、`WSSwapTradeClient` |
 | **v3（历史）** | 老 `linear-swap-api` / coin futures / coin swap 接口 | 见 [Client](#Client) 表 |
 
-> v5 接口清单、逐接口文档链接、测试方法与实测状态见 [docs/v5-interface-list.md](docs/v5-interface-list.md)。老 v3 接口在统一/多资产保证金账户下会返回 6002/1051/1066，新业务建议直接用 v5。
+> 面向客户的接入说明、55 项接口映射、SDK 源码和示例位置见 [合约 V5 C++ SDK 使用说明](docs/contract-v5-customer-guide.md)。老 v3 接口在统一/多资产保证金账户下会返回 6002/1051/1066，新业务建议直接用 v5。
 
 If you already use SDK v1 or v2, it is strongly suggested migrate to v3 as we refactor the implementation to make it simpler and easy to maintain. The SDK v3 is completely consistent with the API documentation of the new HTX open platform. Compared to SDK versions v1 and v2, due to changes in parameters of many interfaces, in order to match the latest interface parameter situation, v3 version has made adjustments to parameters of more than 80 interfaces to ensure that requests can be correctly initiated and accurate response data can be obtained. Meanwhile, the v3 version has added over 130 new interfaces available for use, greatly expanding the number of available interfaces.
 
@@ -81,7 +81,7 @@ ws.RunForever();
 
 ## V5 API
 
-v5 接口共 **55 个**（REST 43 + WS 12），已在真实账户上实测通过；逐接口文档链接、C++ 测试方法与验证强度见 [docs/v5-interface-list.md](docs/v5-interface-list.md)。
+V5 交付范围共 **55 项操作**（REST 43 + WS 12）。完整接口与 SDK 方法映射、使用示例和测试源码位置见 [合约 V5 C++ SDK 使用说明](docs/contract-v5-customer-guide.md)。
 
 ### V5 REST
 
@@ -161,8 +161,8 @@ wsTrade.CancelOrder(R"({"contract_code":"BTC-USDT","order_id":"order_id"})");
 cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 cmake --build build -j8      # SDK + example + v5_example + v5_test + v5_ws_test
 ./build/example/v5_example   # 最小示例：公开行情可直接跑；账户/交易需 env key
-./build/test/v5_test         # REST 42 用例；私有接口需 env: HTX_ACCESS_KEY / HTX_SECRET_KEY
-./build/test/v5_ws_test      # WS 17 用例（含 5 个离线 sanity）
+./build/test/v5_test         # REST 50 个测试用例；私有接口需 HTX_ACCESS_KEY / HTX_SECRET_KEY
+./build/test/v5_ws_test      # WS 25 个测试用例（含离线 sanity 与清理保护）
 
 ./build/test/v5_test --gtest_filter='V5Market.*'    # 只跑公开接口，无需 key
 ```

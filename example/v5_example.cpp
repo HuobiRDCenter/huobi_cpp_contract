@@ -1,7 +1,7 @@
 // V5 接口最小示例。
 //   - 公开行情接口无需 key，可直接运行；
 //   - 账户/交易接口需要环境变量：export HTX_ACCESS_KEY=xxx HTX_SECRET_KEY=xxx
-// 完整接口清单见 docs/v5-interface-list.md。
+// 接口映射与更多调用示例见 docs/contract-v5-customer-guide.md。
 #include <cstdlib>
 #include <iostream>
 

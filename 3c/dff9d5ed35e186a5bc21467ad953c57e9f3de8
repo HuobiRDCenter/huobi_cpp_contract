@@ -1,0 +1,21 @@
+example/v5_example.cpp
+  s_05c3a7120d0e9e::t_fcabfa014e50c0 4
+docs/contract-v5-customer-guide.md
+  s_05c3a7120d0e9e::t_73b14e457d1661 1-137
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.6.24",
+  "base_commit_sha": "3cdff9d5ed35e186a5bc21467ad953c57e9f3de8",
+  "prompts": {},
+  "sessions": {
+    "s_05c3a7120d0e9e": {
+      "agent_id": {
+        "tool": "codex",
+        "id": "01a15459-554e-70e3-abc3-54e6b69cdf27",
+        "model": "gpt-6-luna"
+      },
+      "human_author": "felix.yang <felix.yang@htx-inc.com>"
+    }
+  }
+}
